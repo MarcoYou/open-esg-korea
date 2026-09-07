@@ -22,9 +22,10 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
-def source_block(page: str, **extra: Any) -> dict[str, Any]:
+def source_block(page: str, *, provider: str = "KRX ESG 포털", page_url: str | None = None,
+                 **extra: Any) -> dict[str, Any]:
     """모든 응답이 싣는 출처. 등급은 「어디서 언제 본 값인가」가 없으면 비교가 불가능하다."""
-    return {"provider": "KRX ESG 포털", "page_url": codes.PAGE_URLS.get(page, codes.BASE_URL),
+    return {"provider": provider, "page_url": page_url or codes.PAGE_URLS.get(page, codes.BASE_URL),
             "fetched_at": _utc_now_iso(), **extra}
 
 
@@ -38,6 +39,7 @@ class ToolEnvelope:
     data: dict[str, Any] = field(default_factory=dict)
     source: dict[str, Any] = field(default_factory=dict)
     next_actions: list[str] = field(default_factory=list)
+    license: str = codes.LICENSE_NOTICE          # 소스가 다르면(GIR 등) 그 소스의 고지로 바꾼다
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -48,7 +50,7 @@ class ToolEnvelope:
             "warnings": list(self.warnings),
             "data": self.data,
             "source": self.source,
-            "license": codes.LICENSE_NOTICE,
+            "license": self.license,
             "next_actions": self.next_actions,
         }
 

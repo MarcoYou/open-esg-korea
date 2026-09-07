@@ -26,8 +26,22 @@ from open_esg_korea.krx.client import KrxEsgClient, get_client
 from open_esg_korea.services.contracts import AnalysisStatus
 
 _CODE_RE = re.compile(r"^\(?(\d{6})\)?")
-_LEGAL_RE = re.compile(r"(?:\(주\)|（주）|㈜|주식회사)")
+_LEGAL_RE = re.compile(r"(?:\(주\)|（주）|㈜|㈐|\(유\)|주식회사|유한회사|유한책임회사|합자회사|합명회사"
+                       r"|사회복지법인|재단법인|사단법인|학교법인|의료법인)")
 _NON_WORD_RE = re.compile(r"[^0-9a-z가-힣&]+")
+
+# 알파벳의 한글 음차 — GIR·공고 헤더는 「에스케이하이닉스」, 포털·DART 는 「SK하이닉스」(OPM 실측 유형). 긴 표기부터.
+_LETTER_KO = {"에이치": "h", "더블유": "w", "더블류": "w", "제트": "z", "엑스": "x", "에스": "s", "에프": "f",
+              "에이": "a", "제이": "j", "케이": "k", "브이": "v", "와이": "y", "아이": "i", "아르": "r",
+              "엘": "l", "엠": "m", "엔": "n", "오": "o", "피": "p", "큐": "q", "알": "r", "티": "t", "유": "u",
+              "비": "b", "씨": "c", "디": "d", "지": "g"}
+_LETTER_KO_ORDER = sorted(_LETTER_KO, key=len, reverse=True)
+
+# 낱말 브랜드의 영문↔한글 — 글자 음차로는 못 잇는 것만(「POSCO홀딩스」↔「포스코홀딩스」). 포털·DART 는 영문, GIR 은 한글.
+_WORD_ALIASES = {"posco": "포스코", "naver": "네이버", "kakao": "카카오", "hanwha": "한화", "doosan": "두산",
+                 "hyundai": "현대", "samsung": "삼성", "lotte": "롯데", "kumho": "금호", "hanjin": "한진",
+                 "hanon": "한온", "coway": "코웨이", "kepco": "한국전력", "hanil": "한일", "daewoo": "대우",
+                 "hite": "하이트", "amorepacific": "아모레퍼시픽", "hanssem": "한샘", "hanmi": "한미", "orion": "오리온"}
 _DART_ERRORS = (DartClientError, httpx.HTTPError, asyncio.TimeoutError, TimeoutError)
 
 OUTSIDE_INDEX_WARNING = ("포털 검색기(유가증권) 색인 밖의 종목입니다 — 코스닥 등. 등급표는 조회되지만 "
@@ -38,6 +52,34 @@ def normalize(name: str) -> str:
     s = unicodedata.normalize("NFKC", name or "").casefold()
     s = _LEGAL_RE.sub("", s)
     return _NON_WORD_RE.sub("", s)
+
+
+def name_keys(name: str) -> set[str]:
+    """이름 대조용 키 집합 — 정규화 이름 + 앞머리 한글 음차를 알파벳으로 되돌린 변형(2글자 이상).
+
+    「에스케이하이닉스」→ {에스케이하이닉스, sk하이닉스}. 「엔」처럼 알파벳이자 낱말 첫 글자인 음절이 있어 어디까지
+    글자로 읽을지 하나로 못 정하므로 길이별 변형을 모두 만든다(OPM 방식). 양쪽 키가 하나라도 겹치면 같은 이름으로 본다.
+    """
+    n = normalize(name)
+    keys = {n} if n else set()
+    for en, ko in _WORD_ALIASES.items():
+        if n.startswith(en):
+            keys.add(ko + n[len(en):])
+        elif n.startswith(ko):
+            keys.add(en + n[len(ko):])
+    letters: list[str] = []
+    i = 0
+    while i < len(n):
+        for kw in _LETTER_KO_ORDER:
+            if n.startswith(kw, i):
+                letters.append(_LETTER_KO[kw])
+                i += len(kw)
+                break
+        else:
+            break
+        if len(letters) >= 2:
+            keys.add("".join(letters) + n[i:])
+    return keys
 
 
 @dataclass(slots=True)

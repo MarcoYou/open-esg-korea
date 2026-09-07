@@ -26,7 +26,8 @@ def register_tools(mcp):
             info = await client.issue_info(res.selected["isu_cd"]) or {}
             env.data = {"company": {**res.selected, "isin": info.get("rep_isu_cd") or None,
                                     "issuer_code": info.get("isur_cd") or None}}
-            env.next_actions = [f"esg_ratings(company=\"{res.selected['isu_cd']}\")"]
+            env.next_actions = [f"esg_ratings(company=\"{res.selected['isu_cd']}\")",
+                                f"ghg_emissions(company=\"{res.selected['isu_cd']}\")"]
         else:
             env.data = {"query": query, "candidates": res.candidates}
         payload = env.to_dict()
