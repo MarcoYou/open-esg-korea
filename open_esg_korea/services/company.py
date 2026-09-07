@@ -23,6 +23,7 @@ import httpx
 
 from open_esg_korea.dart.corp_codes import STALE_AFTER_DAYS, DartClientError, DartCorpIndex, get_index
 from open_esg_korea.krx.client import KrxEsgClient, get_client
+from open_esg_korea.services.aliases import COMPANY_ALIASES, INDUSTRY_SUFFIXES
 from open_esg_korea.services.contracts import AnalysisStatus
 
 _CODE_RE = re.compile(r"^\(?(\d{6})\)?")
@@ -51,22 +52,60 @@ OUTSIDE_INDEX_WARNING = ("포털 검색기(유가증권) 색인 밖의 종목입
 def normalize(name: str) -> str:
     s = unicodedata.normalize("NFKC", name or "").casefold()
     s = _LEGAL_RE.sub("", s)
-    return _NON_WORD_RE.sub("", s)
+    return _NON_WORD_RE.sub("", s).replace("&", "앤")
+
+
+def _letter_runs(n: str) -> list[tuple[int, int, str]]:
+    """(시작, 끝, 알파벳) — 한글 음차가 2글자 이상 이어진 구간. 「앤」은 run 안에서 그대로 둔다(케이티앤지 → kt앤g)."""
+    runs = []
+    i = 0
+    while i < len(n):
+        j, letters, out = i, 0, ""
+        while j < len(n):
+            for kw in _LETTER_KO_ORDER:
+                if n.startswith(kw, j):
+                    out += _LETTER_KO[kw]
+                    letters += 1
+                    j += len(kw)
+                    break
+            else:
+                if n[j] == "앤" and letters:
+                    out += "앤"
+                    j += 1
+                    continue
+                break
+        if letters >= 2:
+            runs.append((i, j, out))
+            i = j
+        else:
+            i += 1
+    return runs
 
 
 def name_keys(name: str) -> set[str]:
-    """이름 대조용 키 집합 — 정규화 이름 + 앞머리 한글 음차를 알파벳으로 되돌린 변형(2글자 이상).
+    """이름 대조용 키 집합 — 정규화 이름 + 한글 음차를 알파벳으로 되돌린 변형 + 영문 브랜드 별칭.
 
-    「에스케이하이닉스」→ {에스케이하이닉스, sk하이닉스}. 「엔」처럼 알파벳이자 낱말 첫 글자인 음절이 있어 어디까지
-    글자로 읽을지 하나로 못 정하므로 길이별 변형을 모두 만든다(OPM 방식). 양쪽 키가 하나라도 겹치면 같은 이름으로 본다.
+    「에스케이하이닉스」→ {에스케이하이닉스, sk하이닉스}, 「삼성에스디에스」→ {…, 삼성sds}, 「케이티앤지」→ {…, kt앤g}.
+    「엔」처럼 알파벳이자 낱말 첫 글자인 음절이 있어 앞머리 run 은 어디까지 글자로 읽을지 하나로 못 정하므로
+    길이별 변형을 모두 만든다(OPM 방식). 양쪽 키가 하나라도 겹치면 같은 이름으로 본다.
     """
     n = normalize(name)
-    keys = {n} if n else set()
+    if not n:
+        return set()
+    keys = {n}
     for en, ko in _WORD_ALIASES.items():
         if n.startswith(en):
             keys.add(ko + n[len(en):])
         elif n.startswith(ko):
             keys.add(en + n[len(ko):])
+    runs = _letter_runs(n)
+    if runs:
+        out, pos = "", 0
+        for a, b, latin in runs:
+            out += n[pos:a] + latin
+            pos = b
+        keys.add(out + n[pos:])
+    # 앞머리 run 의 길이별 변형 — 「제이와이피엔터테인먼트」는 jyp엔터테인먼트가 맞고 jypn터테인먼트가 아니다.
     letters: list[str] = []
     i = 0
     while i < len(n):
@@ -80,6 +119,15 @@ def name_keys(name: str) -> set[str]:
         if len(letters) >= 2:
             keys.add("".join(letters) + n[i:])
     return keys
+
+
+def canonical_query(query: str) -> tuple[str, str | None]:
+    """별칭 사전 — 통칭을 포털 약명으로. (쓸 이름, 별칭이 적용됐으면 원래 질의) 를 돌려준다."""
+    n = normalize(query)
+    official = COMPANY_ALIASES.get(n)
+    if official and normalize(official) != n:
+        return official, query
+    return query, None
 
 
 @dataclass(slots=True)
@@ -136,6 +184,10 @@ def _names_of(row: dict[str, Any]) -> list[str]:
     return [normalize(n) for n in (row.get("name", ""), row.get("eng_name", "")) if n]
 
 
+def _keys_of(row: dict[str, Any]) -> set[str]:
+    return name_keys(row.get("name", "")) | name_keys(row.get("eng_name", ""))
+
+
 async def resolve_company(query: str, client: KrxEsgClient | None = None,
                           dart: DartCorpIndex | None = None) -> CompanyResolution:
     client = client or get_client()
@@ -163,15 +215,23 @@ async def resolve_company(query: str, client: KrxEsgClient | None = None,
         return CompanyResolution(AnalysisStatus.ERROR, q,
                                  warnings=[f"종목코드 {code} 를 KRX ESG 포털에서 찾지 못했습니다."])
 
+    q, aliased_from = canonical_query(q)
+    if aliased_from:
+        warnings.append(f"「{aliased_from}」를 통칭으로 보고 **{q}** 로 찾았습니다.")
     nq = normalize(q)
     if not nq:
         return CompanyResolution(AnalysisStatus.ERROR, q, warnings=["회사명을 해석할 수 없습니다."])
+    qkeys = name_keys(q)
 
-    exact = [r for r in index if normalize(r["name"]) == nq]
+    exact = [r for r in index if qkeys & name_keys(r["name"])]
     if len(exact) == 1:
         dart_by_code = {r["isu_cd"]: r for r in dart.peek()}
         return CompanyResolution(AnalysisStatus.EXACT, q, selected=_pick(
-            exact[0], by_code=by_code, dart_by_code=dart_by_code, match="exact"))
+            exact[0], by_code=by_code, dart_by_code=dart_by_code, match="exact"), warnings=warnings)
+    if len(exact) > 1:
+        dart_by_code = {r["isu_cd"]: r for r in dart.peek()}
+        return CompanyResolution(AnalysisStatus.AMBIGUOUS, q, warnings=warnings, candidates=[
+            _candidate(r, by_code=by_code, dart_by_code=dart_by_code) for r in exact[:10]])
 
     # 포털에 정확히 없다 → 이제 DART 명부를 (필요하면 내려받아) 연다.
     dart_rows = await _dart_rows(dart, warnings)
@@ -179,7 +239,7 @@ async def resolve_company(query: str, client: KrxEsgClient | None = None,
     pick = lambda row, match: _pick(row, by_code=by_code, dart_by_code=dart_by_code, match=match)  # noqa: E731
     cand = lambda row: _candidate(row, by_code=by_code, dart_by_code=dart_by_code)  # noqa: E731
 
-    dart_exact = [r for r in dart_rows if nq in _names_of(r)]
+    dart_exact = [r for r in dart_rows if qkeys & _keys_of(r)]
     if len(dart_exact) == 1:
         sel = pick(dart_exact[0], "exact")
         if not sel["in_index"]:
@@ -189,18 +249,23 @@ async def resolve_company(query: str, client: KrxEsgClient | None = None,
         return CompanyResolution(AnalysisStatus.AMBIGUOUS, q, candidates=[cand(r) for r in dart_exact[:10]],
                                  warnings=warnings)
 
+    def overlaps(keys: set[str]) -> bool:
+        return any(a in b or b in a for a in qkeys for b in keys if a and b)
+
     partial: dict[str, dict] = {}
     for r in index:
-        n = normalize(r["name"])
-        if nq in n or n in nq:
+        if overlaps(name_keys(r["name"])):
             partial[r["isu_cd"]] = r
     for r in dart_rows:
         if r["isu_cd"] in partial:
             continue
-        if any(nq in n or n in nq for n in _names_of(r)):
+        if overlaps(_keys_of(r)):
             partial[r["isu_cd"]] = r
     if len(partial) == 1:
         (r,) = partial.values()
+        # 업종어만 빠진 질의(「삼성화재」= 삼성화재해상보험)는 추정이 아니라 정확 일치다.
+        if any(name_keys(q + suf) & name_keys(r["name"]) for suf in INDUSTRY_SUFFIXES):
+            return CompanyResolution(AnalysisStatus.EXACT, q, selected=pick(r, "exact"), warnings=warnings)
         sel = pick(r, "partial")
         warnings.append(f"「{q}」를 **{sel['name']}**({sel['isu_cd']})로 추정했습니다 — 이름이 정확히 일치하지 "
                         "않습니다. 다른 회사라면 종목코드로 다시 물어보세요.")
@@ -215,7 +280,7 @@ async def resolve_company(query: str, client: KrxEsgClient | None = None,
 
     names: dict[str, dict] = {}
     for r in list(dart_rows) + index:          # 같은 코드는 포털 행이 나중에 덮어 이름이 포털 약명이 된다
-        for n in _names_of(r):
+        for n in (_keys_of(r) if "eng_name" in r else name_keys(r["name"])):
             names[n] = r
     close = difflib.get_close_matches(nq, list(names), n=5, cutoff=0.6)
     cands = [cand(names[c]) for c in close]

@@ -35,6 +35,8 @@ open_esg_korea/
   data/listed_companies.json  # OpenDART corpCode.xml 상장사 ~3,900행 스냅샷. scripts/refresh_listed_companies.py 로만 갱신
   data/ghg_inventory.json     # 국가 온실가스 인벤토리 1990~ (162 분야). scripts/refresh_ghg_inventory.py 로만 갱신
   services/        # payload(ToolEnvelope) 를 만드는 도메인 로직
+  services/company.py   # 회사 식별 — name_keys(법인격·음차·영문 브랜드·업종어 규칙) 한 곳
+  services/aliases.py   # 규칙으로 못 잇는 통칭 사전(「현대차」→ 현대자동차). 값은 포털 약명
   tools/           # public MCP tool facade — 렌더링만 (자동 발견, register_tools)
   resources.py     # oek://tools_guide
 tests/fixtures/    # 2026-09-07 실호출 응답 스냅샷
@@ -50,7 +52,7 @@ docs/mcp-draft.md  # 설계 초안·로드맵
 5. **외부 실패는 degrade, 코드버그는 crash.** `services/safety.py` 의 집합에 없는 예외는 그대로 터뜨린다.
 6. **테스트는 network 0.** 새 화면을 붙이면 fixture 를 `tests/fixtures/` 에 스냅샷으로 넣는다.
 7. **커밋/푸시는 사용자 명시 요청 시만.**
-8. **온실가스는 GIR 값 그대로.** 명세서(규제 기준, 직접+간접)·인증 배출량·국가 인벤토리(kt)는 기준이 다르므로 한 표에 섞지 않는다. GIR 에 없는 회사는 `no_data` 이지 0 이 아니다. GIR 법인명과 포털·DART 이름은 다르다(「에스케이하이닉스 주식회사」) — 대조는 `services/company.name_keys`(법인격 제거·음차·브랜드 별칭) 한 곳에서만 한다.
+8. **온실가스는 GIR 값 그대로.** 명세서(규제 기준, 직접+간접)·인증 배출량·국가 인벤토리(kt)는 기준이 다르므로 한 표에 섞지 않는다. GIR 에 없는 회사는 `no_data` 이지 0 이 아니다. GIR 법인명과 포털·DART 이름은 다르다(「에스케이하이닉스 주식회사」) — 대조는 `services/company.name_keys`(법인격 제거·음차·브랜드 별칭) 한 곳에서만 한다. 통칭(「현대차」)은 `services/aliases.py` 사전에만 넣고, 규칙으로 되는 것은 사전에 넣지 않는다.
 9. **DART 명부는 보조다.** 포털에서 못 찾았을 때만 부른다. 키가 없으면 동봉 스냅샷, 실시간이 실패해도 스냅샷으로 내려간다 — 보조 색인이 죽어도 유가증권 조회는 살아야 한다. 스냅샷은 손으로 고치지 않고 `scripts/refresh_listed_companies.py` 로만 갱신한다(정렬·메타가 diff 의 근거). 테스트는 늘 `dart_index` fixture 를 주입한다(이 머신 환경변수에 좌우되지 않게).
 
 ## Out of Scope (현재)
