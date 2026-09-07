@@ -65,6 +65,7 @@ Claude Desktop `claude_desktop_config.json` 예:
 - 스냅샷 수동 갱신: `OPENDART_API_KEY=... uv run python scripts/refresh_listed_companies.py` (월간 워크플로 `refresh-listed-companies` 가 같은 일을 하고 PR 을 엽니다 — 저장소 secret `OPENDART_API_KEY` 필요).
 - [MCP 초안·로드맵](docs/mcp-draft.md) — 데이터 소스 지도, 엔드포인트 확인 내용, Phase 2·3
 - `python scripts/probe_krx.py 005930 2025` — 포털 응답 스키마 점검
+- `uv run python scripts/smoke_governance_report.py` — KIND 공시 원문이 아직 읽히는지 점검(실서버)
 
 ## 개발
 

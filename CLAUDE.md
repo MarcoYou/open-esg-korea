@@ -18,6 +18,7 @@ uv run pytest -q                                   # network 0 (httpx.MockTransp
 uv run python -m open_esg_korea                    # streamable-http :8000 → /mcp, /health
 uv run python -m open_esg_korea --transport stdio  # Claude Desktop 로컬 연결용
 python3 scripts/probe_krx.py 005930 2025           # 포털 응답 스키마가 바뀌었는지 (network)
+uv run python scripts/smoke_governance_report.py   # KIND 원문이 아직 읽히는지 (network) — 원칙 28개가 아니면 실패
 OPENDART_API_KEY=… uv run python scripts/refresh_listed_companies.py   # 상장사 명부 스냅샷 갱신 (월간 워크플로가 대신 함)
 python3 scripts/refresh_ghg_inventory.py --url '<포털 15049589 다운로드 URL>'  # 국가 인벤토리 스냅샷 (연 1회, 12월 공표 후)
 ```
