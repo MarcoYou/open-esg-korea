@@ -147,3 +147,50 @@ async def test_markdown_shows_snippets_and_the_source_pdf(krx_client, kind_clien
     assert "### 3쪽" in text and "재생에너지" in text
     assert "원문 PDF: [삼성전자 지속가능경영보고서_2025.pdf]" in text
     assert "공시 원문" in text                          # 평가기관 고지가 아니라 공시 고지
+
+
+# ── 격자 모드 (실험적) ────────────────────────────────────────────────────────
+def test_grid_recovers_the_left_hand_table_rows():
+    """글자 정렬로 열을 가르면 행 라벨·단위·값이 한 줄에 모인다 — 괘선이 없어 선 기반 검출은 0개다.
+
+    다만 이 쪽엔 표가 **좌우로 두 개** 놓여 있어 한 행에 두 표가 이어진다 — 격자를 믿기 전에
+    알아야 할 한계다(그래서 `table=True` 는 기본값이 아니다).
+    """
+    rows = [r for g in extract.page_tables(PDF, 3) for r in g]
+    row = next(r for r in rows if r[0].startswith("재생에너지") and "전환율" in " ".join(r))
+    filled = [c for c in row if c]
+    assert filled[:9] == ["재생에너지", "전환율", "%", "93.1", "23.2", "93.4", "24.3", "93.4", "24.8"]
+    # 오른쪽 표가 같은 행에 이어 붙는다 — 심지어 「폐기물 처리량」이 `폐` + `기물 처리량` 으로 갈린다.
+    assert len(filled) > 9 and "".join(filled[9:]).startswith("폐기물")
+
+
+def test_split_numbers_are_flagged_not_served_silently():
+    """열을 잘못 자르면 `307,325` 가 `3` + `07,325` 로 갈린다. 고칠 순 없어도 짚어는 준다."""
+    flat = extract.page_texts(PDF)[2]
+    grids = extract.page_tables(PDF, 3)
+    flagged = {grids[i][r][c] for i, g in enumerate(grids) for r, c in extract.suspect_cells(g, flat)}
+    assert "07,325" in flagged                       # 평문에는 `307,325` 로만 있는 조각
+    assert "329,861" not in flagged                  # 멀쩡한 값은 짚지 않는다
+
+
+def test_intact_values_are_never_flagged():
+    flat = extract.page_texts(PDF)[2]
+    for grid in extract.page_tables(PDF, 3):
+        for r, c in extract.suspect_cells(grid, flat):
+            assert grid[r][c] not in flat.split()    # 평문 토큰이면 의심할 이유가 없다
+
+
+async def test_grid_is_opt_in_and_comes_with_a_warning(krx_client, kind_client):
+    plain = await build_report_text_payload("삼성전자", page=3)
+    assert "tables" not in plain["data"]             # 기본은 격자를 만들지 않는다
+
+    payload = await build_report_text_payload("삼성전자", page=3, table=True)
+    data = payload["data"]
+    assert data["tables"] and data["suspect_cells"] > 0
+    assert any("검증되지 않은 실험 결과" in w for w in payload["warnings"])
+
+
+async def test_markdown_marks_suspect_cells(krx_client, kind_client):
+    text = _render(await build_report_text_payload("삼성전자", page=3, table=True))
+    assert "### 격자 (실험적" in text
+    assert "⚠07,325" in text

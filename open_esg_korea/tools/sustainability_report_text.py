@@ -8,6 +8,8 @@ from open_esg_korea.tools._shared import candidates_table, dash, footer, head
 
 #: 한 번에 보여줄 쪽 본문의 글자 상한. 넘으면 잘라 내고 그렇다고 말한다.
 _MAX_PAGE_CHARS = 6000
+#: 격자 md 행 상한.
+_MAX_GRID_ROWS = 30
 
 
 def _report_lines(d: dict) -> list[str]:
@@ -17,6 +19,26 @@ def _report_lines(d: dict) -> list[str]:
              + (f" · {d['page_count']}쪽" if d.get("page_count") else "")]
     if att:
         lines.append(f"- 원문 PDF: [{att['name']}]({att['url']})")
+    return lines
+
+
+def _table_lines(d: dict) -> list[str]:
+    """격자(실험적). 쪼개진 것으로 보이는 칸은 `⚠` 를 달아 둔다 — 조용히 틀린 값을 주지 않는다."""
+    grids = d.get("tables")
+    if not grids:
+        return []
+    lines = ["", f"### 격자 (실험적 · 의심 칸 {d.get('suspect_cells', 0)}개)"]
+    for g in grids:
+        suspect = {(s["row"], s["col"]) for s in g["suspect"]}
+        rows = g["rows"]
+        width = max(len(r) for r in rows)
+        lines += ["", "| " + " | ".join(str(i) for i in range(width)) + " |", "|" + "---|" * width]
+        for r, row in enumerate(rows[:_MAX_GRID_ROWS]):
+            cells = [(row[c] if c < len(row) else "").replace("|", r"\|") for c in range(width)]
+            cells = [f"⚠{v}" if (r, c) in suspect else v for c, v in enumerate(cells)]
+            lines.append("| " + " | ".join(cells) + " |")
+        if len(rows) > _MAX_GRID_ROWS:
+            lines.append(f'\n_{len(rows) - _MAX_GRID_ROWS}행 생략 — 전부 보려면_ `format="json"`.')
     return lines
 
 
@@ -48,6 +70,7 @@ def _render(payload: dict) -> str:
         if len(text) > _MAX_PAGE_CHARS:
             lines.append(f"… {len(text) - _MAX_PAGE_CHARS}자 생략")
         lines.append("```")
+        lines += _table_lines(d)
     else:
         lines += ["", "**공시에 적힌 보고 내용(목차)**", "", "```", d.get("toc", ""), "```", "",
                   '_본문에서 찾으려면_ `find="Scope 3"` _· 쪽을 보려면_ `page=73`']
@@ -59,14 +82,15 @@ def register_tools(mcp):
 
     @mcp.tool()
     async def sustainability_report_text(company: str, find: str = "", page: int | None = None,
-                                         year: int | None = None, format: str = "md") -> str:
+                                         table: bool = False, year: int | None = None,
+                                         format: str = "md") -> str:
         """desc: 지속가능경영보고서 **PDF 본문**에서 찾아 읽는다 — 키워드가 몇 쪽에 있는지, 그 대목이 뭐라고 쓰였는지.
         when: "Scope 3 뭐라고 썼나", "재생에너지 목표가 뭔가", "협력회사 인권 실사 내용", "그 표 보여줘", "보고서 목차".
         rule: 회사가 공시에 첨부한 PDF 를 읽는다(첨부가 없으면 no_data — 회사 사이트에만 올렸을 수 있다). 검색은 공백을 무시한다 — 원문이 자간을 벌려 조판해 「온실가스 배출량」처럼 띄어져 있기 때문이다. 못 찾으면 「없다」가 아니라 「이 표기로 못 찾았다」이다. 이미지 PDF 는 읽지 못한다(OCR 하지 않는다). **표의 수치를 기계적으로 뽑지 않는다** — 납작해진 원문을 주니 어느 연도·부문 값인지는 원문 PDF 로 확인하라.
-        params: company, find(키워드, 선택), page(쪽 번호 1부터, 선택), year(보고서 연도, 비우면 최신), format(md|json)
+        params: company, find(키워드, 선택), page(쪽 번호 1부터, 선택), table(그 쪽을 격자로도 — 실험적, 선택), year(보고서 연도, 비우면 최신), format(md|json)
         ref: sustainability_reports, governance_report, ghg_emissions
         """
-        payload = await build_report_text_payload(company, find=find, page=page, year=year)
+        payload = await build_report_text_payload(company, find=find, page=page, table=table, year=year)
         if format == "json":
             return as_pretty_json(payload)
         if payload["status"] in ("ambiguous", "error"):

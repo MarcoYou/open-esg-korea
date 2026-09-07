@@ -100,8 +100,21 @@ def _pick_attachment(attachments: list[dict[str, str]]) -> dict[str, str] | None
     return (korean or attachments)[0]
 
 
+def _grids(data: bytes, page: int, flat: str) -> tuple[list[dict[str, Any]], int]:
+    """격자 + **믿으면 안 되는 칸 표시**. 고칠 수 없으니 어디가 위험한지라도 말한다."""
+    out: list[dict[str, Any]] = []
+    total_bad = 0
+    for grid in extract.page_tables(data, page):
+        bad = extract.suspect_cells(grid, flat)
+        total_bad += len(bad)
+        out.append({"rows": grid, "cells": sum(len(r) for r in grid),
+                    "suspect": [{"row": r, "col": c, "value": grid[r][c]} for r, c in bad]})
+    return out, total_bad
+
+
 async def build_report_text_payload(company: str, *, find: str = "", page: int | None = None,
-                                    year: int | None = None, client: KrxEsgClient | None = None,
+                                    table: bool = False, year: int | None = None,
+                                    client: KrxEsgClient | None = None,
                                     kind: KindClient | None = None) -> dict[str, Any]:
     # 목록·자율공시 서식은 이미 있는 도구가 만든다 — 첨부 주소를 그쪽에서 받아 온다(규칙: 같은 일을 두 번 짜지 않는다).
     base = await build_sustainability_reports_payload(company, year=year, client=client, kind=kind)
@@ -115,7 +128,7 @@ async def build_report_text_payload(company: str, *, find: str = "", page: int |
 
     detail = data_in.get("detail") or {}
     attachment = _pick_attachment(detail.get("attachments") or [])
-    out: dict[str, Any] = {"company": data_in["company"], "find": find, "page": page,
+    out: dict[str, Any] = {"company": data_in["company"], "find": find, "page": page, "table": table,
                            "report": {k: detail.get(k) for k in ("year", "acpt_no", "report_title")},
                            "attachment": attachment}
     if attachment is None:
@@ -166,6 +179,23 @@ async def build_report_text_payload(company: str, *, find: str = "", page: int |
                 env.warnings.append(f"{page}쪽을 정렬해서 읽지 못해 평문으로 보여줍니다: {exc}")
         env.warnings.append("표는 원문 배치를 납작하게 편 것입니다 — 값이 어느 열(연도·부문)인지는 "
                             "원문 PDF 로 확인하세요. 수치를 기계적으로 뽑지 않습니다.")
+        if table:
+            if data is None:
+                env.warnings.append("문서가 커서 격자(table=True)는 만들지 않았습니다.")
+            else:
+                try:
+                    grids, bad = _grids(data, page, pages[page - 1])
+                except extract.PdfReadError as exc:
+                    env.warnings.append(f"격자를 만들지 못했습니다: {exc}")
+                else:
+                    out["tables"] = grids
+                    out["suspect_cells"] = bad
+                    env.warnings.append(
+                        "격자(table=True)는 **검증되지 않은 실험 결과**입니다. 이 서식은 괘선이 없어 "
+                        "글자 위치로 열을 가르는데, 한 쪽에 표가 좌우로 놓이면 행이 섞이고 숫자가 갈라집니다"
+                        + (f" — 이 쪽에서 {bad}칸이 그렇게 보입니다(표시해 뒀습니다)." if bad else
+                           " — 이 쪽에선 그런 칸이 잡히지 않았습니다(없다는 보장은 아닙니다).")
+                        + " 값을 쓰기 전에 위 원문 배치와 대조하세요.")
     elif find:
         out["mode"] = "find"
         hits = extract.search(pages, find)
