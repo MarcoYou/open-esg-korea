@@ -1,0 +1,33 @@
+[project]
+name = "open-esg-korea"
+version = "0.1.0"
+description = "한국 상장사 ESG 정보(KRX ESG 포털)를 MCP 프로토콜로 제공하는 서버"
+requires-python = ">=3.10"
+dependencies = [
+    # mcp 2.0 에서 `mcp.server.fastmcp` 가 제거됐다 — OPM 과 같은 이유로 상한을 둔다.
+    "mcp[cli]>=2.0.0,<3",
+    "httpx>=0.28.1",
+]
+
+[project.license]
+text = "LicenseRef-PolyForm-Noncommercial-1.0.0"
+
+[project.scripts]
+open-esg-korea = "open_esg_korea.server:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["open_esg_korea"]
