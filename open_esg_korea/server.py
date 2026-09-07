@@ -38,7 +38,11 @@ def build_mcp() -> MCPServer:
             "agency and the year next to a grade. A `-`/null grade means \"not rated by that agency\", never "
             "\"bad\". Read `status` and `warnings` before answering. State only values that appear in the response.\n\n"
             "Ratings are copyrighted by each agency and published on the KRX portal for non-commercial internal "
-            "use; keep the `source` and `license` lines when you relay them."
+            "use; keep the `source` and `license` lines when you relay them.\n\n"
+            "GHG emissions (`ghg_emissions`, `ghg_industry`, `ghg_national_inventory`) come from the Greenhouse Gas "
+            "Inventory and Research Center (GIR): verified regulatory figures (direct + indirect) for companies under "
+            "the ETS / target-management scheme, in tCO2eq. They differ from Scope 1/2/3 figures in sustainability "
+            "reports; a company absent from GIR is not \"zero emissions\", it is simply below the reporting threshold."
         ),
     )
     register_all_tools(mcp)
@@ -48,9 +52,10 @@ def build_mcp() -> MCPServer:
     async def _health(_request):
         from starlette.responses import JSONResponse
         from open_esg_korea.dart.corp_codes import get_index
+        from open_esg_korea.gir.client import get_gir_client
         from open_esg_korea.krx.client import get_client
         return JSONResponse({"status": "ok", "tools": len(await mcp.list_tools()), "krx": get_client().stats(),
-                             "dart": get_index().stats()})
+                             "dart": get_index().stats(), "gir": get_gir_client().stats()})
 
     return mcp
 

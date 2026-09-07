@@ -11,14 +11,15 @@ import json
 import httpx
 
 from open_esg_korea.dart.corp_codes import DartClientError
+from open_esg_korea.gir.client import GirClientError
 from open_esg_korea.krx.client import KrxClientError
 
-EXTERNAL_ERRORS = (KrxClientError, DartClientError, httpx.HTTPError, asyncio.TimeoutError, TimeoutError)
+EXTERNAL_ERRORS = (KrxClientError, DartClientError, GirClientError, httpx.HTTPError, asyncio.TimeoutError, TimeoutError)
 
 
 def classify(exc: BaseException) -> tuple[str, str]:
     if isinstance(exc, (httpx.TimeoutException, asyncio.TimeoutError, TimeoutError)):
-        return ("timeout", "외부 소스(KRX ESG 포털·DART) 응답이 지연되고 있습니다. 잠시 후 다시 시도하세요.")
+        return ("timeout", "외부 소스(KRX ESG 포털·DART·GIR) 응답이 지연되고 있습니다. 잠시 후 다시 시도하세요.")
     if isinstance(exc, httpx.HTTPStatusError) and exc.response is not None:
         code = exc.response.status_code
         if code in (403, 429):
@@ -30,6 +31,8 @@ def classify(exc: BaseException) -> tuple[str, str]:
         return ("bad_response", str(exc) or "KRX ESG 포털 응답을 해석할 수 없습니다.")
     if isinstance(exc, DartClientError):
         return ("bad_response", str(exc) or "DART 응답을 해석할 수 없습니다.")
+    if isinstance(exc, GirClientError):
+        return ("bad_response", str(exc) or "GIR 응답을 해석할 수 없습니다.")
     return ("transient", "외부 소스 조회가 일시적으로 실패했습니다. 잠시 후 다시 시도하세요.")
 
 

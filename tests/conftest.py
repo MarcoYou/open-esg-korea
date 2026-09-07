@@ -16,6 +16,8 @@ import httpx
 import pytest
 
 from open_esg_korea.dart.corp_codes import BUNDLE_PATH, CORP_CODE_PATH, OPENDART_BASE_URL, DartCorpIndex, set_index
+from open_esg_korea.gir import codes as gcodes
+from open_esg_korea.gir.client import GirClient, set_gir_client
 from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient, set_client
 
@@ -46,10 +48,34 @@ def dart_route(request: httpx.Request) -> httpx.Response:
     return httpx.Response(200, content=corpcode_zip(), headers={"content-type": "application/x-msdownload"})
 
 
+def gir_route(request: httpx.Request) -> httpx.Response:
+    """GIR 명세서(HTML)·ETRS(CSV cp949) — 2024/3차·4차만 fixture, 그 밖의 해는 빈 표."""
+    url = urlparse(str(request.url))
+    qs = {k: v[0] for k, v in parse_qs(url.query).items()}
+    if url.netloc == "www.gir.go.kr" and url.path == gcodes.STATEMENT_PATH:
+        if qs.get("condition.year") == "2024":
+            return httpx.Response(200, text=(FIX / "gir_statement_2024_subset.html").read_text(encoding="utf-8"))
+        return httpx.Response(200, text='<html><table><tr><th>법인명</th></tr></table></html>')
+    if url.netloc == "etrs.gir.go.kr" and url.path == gcodes.CERTIFIED_PATH:
+        if qs.get("condition.pfYy") == "2024":
+            return httpx.Response(200, content=(FIX / "etrs_certified_2024_subset.csv").read_bytes(),
+                                  headers={"content-type": "text/csv; charset=MS949"})
+        return httpx.Response(200, content="번호,부문,업종,업체명,이행연도,배출권 할당량(톤),인증 배출량(톤)\r\n".encode("cp949"))
+    if url.netloc == "etrs.gir.go.kr" and url.path == gcodes.ALLOCATION_PATH:
+        period = qs.get("condition.plPeriDgr")
+        if period in ("3", "4"):
+            return httpx.Response(200, content=(FIX / f"etrs_allocation_p{period}_subset.csv").read_bytes(),
+                                  headers={"content-type": "text/csv; charset=MS949"})
+        return httpx.Response(200, content="번호,부문,업종,업체명,유상여부\r\n".encode("cp949"))
+    return httpx.Response(404, text="no such gir page")
+
+
 def route(request: httpx.Request) -> httpx.Response:
     url = urlparse(str(request.url))
     if url.netloc.endswith("opendart.fss.or.kr"):
         return dart_route(request)
+    if url.netloc.endswith("gir.go.kr"):
+        return gir_route(request)
     form = {k: v[0] for k, v in parse_qs(request.content.decode("utf-8")).items()}
     qs = {k: v[0] for k, v in parse_qs(url.query).items()}
     isu = form.get("isu_cd", "")
@@ -111,7 +137,15 @@ def dart_index() -> DartCorpIndex:
 
 
 @pytest.fixture
-def krx_client(dart_index) -> KrxEsgClient:
+def gir_client() -> GirClient:
+    client = GirClient(httpx.AsyncClient(transport=httpx.MockTransport(route)), min_interval=0.0)
+    set_gir_client(client)
+    yield client
+    set_gir_client(None)
+
+
+@pytest.fixture
+def krx_client(dart_index, gir_client) -> KrxEsgClient:
     http = httpx.AsyncClient(base_url=codes.BASE_URL, transport=httpx.MockTransport(route))
     client = KrxEsgClient(http, min_interval=0.0)
     set_client(client)

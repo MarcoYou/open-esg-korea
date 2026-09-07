@@ -49,3 +49,12 @@ def ox(v: bool | None, neutral: bool = False) -> str:
 
 def dash(v: Any) -> str:
     return "-" if v in (None, "") else str(v)
+
+
+def num(v: Any) -> str:
+    """정수는 천 단위 구분, 실수는 소수 1자리, 없으면 '-'."""
+    if v in (None, ""):
+        return "-"
+    if isinstance(v, float):
+        return f"{v:,.1f}"
+    return f"{v:,}"
