@@ -13,8 +13,9 @@ import httpx
 from open_esg_korea.dart.corp_codes import DartClientError
 from open_esg_korea.gir.client import GirClientError
 from open_esg_korea.krx.client import KrxClientError
+from open_esg_korea.krx.kind import KindClientError
 
-EXTERNAL_ERRORS = (KrxClientError, DartClientError, GirClientError, httpx.HTTPError, asyncio.TimeoutError, TimeoutError)
+EXTERNAL_ERRORS = (KrxClientError, KindClientError, DartClientError, GirClientError, httpx.HTTPError, asyncio.TimeoutError, TimeoutError)
 
 
 def classify(exc: BaseException) -> tuple[str, str]:
@@ -33,6 +34,8 @@ def classify(exc: BaseException) -> tuple[str, str]:
         return ("bad_response", str(exc) or "DART 응답을 해석할 수 없습니다.")
     if isinstance(exc, GirClientError):
         return ("bad_response", str(exc) or "GIR 응답을 해석할 수 없습니다.")
+    if isinstance(exc, KindClientError):
+        return ("bad_response", str(exc) or "KIND 공시 원문 응답을 해석할 수 없습니다.")
     return ("transient", "외부 소스 조회가 일시적으로 실패했습니다. 잠시 후 다시 시도하세요.")
 
 
