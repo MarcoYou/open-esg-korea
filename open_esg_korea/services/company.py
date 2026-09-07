@@ -121,6 +121,16 @@ def name_keys(name: str) -> set[str]:
     return keys
 
 
+def partial_overlap(query: str, name: str) -> bool:
+    """부분일치 — 한쪽은 원형, 다른 쪽은 키 집합. 변형끼리는 비교하지 않는다:
+    「삼성화재」의 브랜드 변형 samsung화재 안에 「에이엠에스」의 음차 변형 ams 가 들어가는 식의 우연이 생긴다."""
+    qraw, nraw = normalize(query), normalize(name)
+    if not qraw or not nraw:
+        return False
+    return (any(a in nraw or nraw in a for a in name_keys(query))
+            or any(qraw in b or b in qraw for b in name_keys(name)))
+
+
 def canonical_query(query: str) -> tuple[str, str | None]:
     """별칭 사전 — 통칭을 포털 약명으로. (쓸 이름, 별칭이 적용됐으면 원래 질의) 를 돌려준다."""
     n = normalize(query)
@@ -249,17 +259,14 @@ async def resolve_company(query: str, client: KrxEsgClient | None = None,
         return CompanyResolution(AnalysisStatus.AMBIGUOUS, q, candidates=[cand(r) for r in dart_exact[:10]],
                                  warnings=warnings)
 
-    def overlaps(keys: set[str]) -> bool:
-        return any(a in b or b in a for a in qkeys for b in keys if a and b)
-
     partial: dict[str, dict] = {}
     for r in index:
-        if overlaps(name_keys(r["name"])):
+        if partial_overlap(q, r["name"]):
             partial[r["isu_cd"]] = r
     for r in dart_rows:
         if r["isu_cd"] in partial:
             continue
-        if overlaps(_keys_of(r)):
+        if partial_overlap(q, r["name"]) or partial_overlap(q, r.get("eng_name", "")):
             partial[r["isu_cd"]] = r
     if len(partial) == 1:
         (r,) = partial.values()

@@ -181,3 +181,10 @@ def test_name_keys_transliterate_runs_anywhere():
     assert "kt앤g" in name_keys("케이티앤지") and "kt앤g" in name_keys("KT&G")
     assert name_keys("이마트") == {"이마트"}                       # 1글자 run 은 건드리지 않는다
     assert "jyp엔터테인먼트" in name_keys("제이와이피엔터테인먼트")
+
+
+def test_partial_overlap_never_compares_variant_against_variant():
+    from open_esg_korea.services.company import partial_overlap
+    assert partial_overlap("삼성화재", "삼성화재해상보험")
+    assert partial_overlap("엘지", "LG화학") and partial_overlap("sk하이", "에스케이하이닉스")
+    assert not partial_overlap("삼성화재", "에이엠에스")      # samsung화재 ⊃ ams 우연 — 실서버에서 잡힌 오답
