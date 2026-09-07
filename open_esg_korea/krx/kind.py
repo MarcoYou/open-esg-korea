@@ -29,6 +29,8 @@ DEFAULT_TTL = 24 * 3600
 _MAX_CACHE_ENTRIES = 8
 #: 12MB 를 받는 데 30초는 모자랐다(실측). 연결은 짧게, 읽기는 넉넉히.
 _TIMEOUT = httpx.Timeout(connect=10.0, read=120.0, write=30.0, pool=10.0)
+#: 첨부 PDF 상한. 실측 분포는 4MB(삼성)~81MB(NAVER) 다 — 그 위는 받지 않고 주소만 준다.
+MAX_FILE_BYTES = 100 * 1024 * 1024
 
 #: <option value='20250530001923|Y'selected="selected">기업지배구조 보고서 공시 (2025.05.30)</option>
 #: 첨부서류 쪽은 `|Y` 없이 문서번호만 온다.
@@ -172,6 +174,36 @@ class KindClient:
         }
         self._store(key, result)
         return result
+
+    async def file(self, url: str, *, max_bytes: int = MAX_FILE_BYTES) -> bytes:
+        """첨부 파일(보고서 PDF) 원본. **캐시하지 않는다** — 4~80MB 라 메모리에 들고 있을 것이 못 된다.
+
+        부르는 쪽이 텍스트만 뽑아 남기고 바이트는 버린다. 크기는 받기 전에 헤더로 막는다.
+        """
+        head = await self._throttled_get_head(url)
+        size = int(head.headers.get("content-length") or 0)
+        if size > max_bytes:
+            raise KindClientError(f"첨부 파일이 너무 큽니다({size / 1e6:.0f}MB, 상한 {max_bytes / 1e6:.0f}MB). "
+                                  f"원문 주소로 직접 받으세요: {url}")
+        resp = await self._throttled_get(url)
+        resp.raise_for_status()
+        if len(resp.content) > max_bytes:
+            raise KindClientError(f"첨부 파일이 너무 큽니다({len(resp.content) / 1e6:.0f}MB).")
+        return resp.content
+
+    async def _throttled_get_head(self, url: str) -> httpx.Response:
+        """KIND 는 HEAD 에 405 를 준다 — 1바이트 Range 로 크기만 물어본다."""
+        async with self._lock:
+            wait = self._min_interval - (time.monotonic() - self._last_call)
+            if wait > 0:
+                await asyncio.sleep(wait)
+            self._last_call = time.monotonic()
+            self.calls += 1
+        resp = await self._http.get(url, headers={"Range": "bytes=0-0"})
+        if "content-range" in resp.headers:
+            total = resp.headers["content-range"].rsplit("/", 1)[-1]
+            resp.headers = httpx.Headers({**resp.headers, "content-length": total})
+        return resp
 
     def stats(self) -> dict:
         return {"calls": self.calls, "cache_hits": self.cache_hits, "cache_entries": len(self._cache)}

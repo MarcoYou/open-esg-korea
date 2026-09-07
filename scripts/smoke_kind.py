@@ -25,6 +25,7 @@ from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient, set_client
 from open_esg_korea.krx.kind import KindClient, set_kind_client
 from open_esg_korea.services.governance_report_payload import build_governance_report_payload
+from open_esg_korea.services.report_text import build_report_text_payload
 from open_esg_korea.services.reports import build_sustainability_reports_payload
 
 DEFAULT_COMPANIES = ["삼성전자", "KB금융", "에코프로비엠"]
@@ -72,6 +73,25 @@ async def check_sustainability(company: str) -> int:
     if reports and not detail.get("unread") and not detail.get("report_title"):
         print("    ✗ 자율공시 서식에서 항목을 하나도 읽지 못했다 — 서식이 바뀌었는지 원문을 확인하라.")
         return 1
+    if not (detail.get("attachments") or []):
+        return 0
+    return await check_report_text(company)
+
+
+async def check_report_text(company: str) -> int:
+    """첨부 PDF 본문이 아직 읽히는지. 글자가 안 나오면 스캔본으로 바뀐 것이거나 파서가 깨진 것이다."""
+    try:
+        payload = await build_report_text_payload(company, find="온실가스")
+    except Exception as exc:                                  # noqa: BLE001
+        print(f"  ✗ 본문: {type(exc).__name__}: {exc}")
+        return 1
+    data = payload["data"]
+    pages = data.get("page_count")
+    print(f"  {'✓' if pages else '·'} 본문: {pages or '-'}쪽 "
+          f"「온실가스」 {data.get('total_hits', 0)}건 / {len(data.get('match_pages') or [])}쪽")
+    if payload["status"] == "no_data":
+        for w in payload["warnings"][-1:]:
+            print(f"    ! {w[:100]}")
     return 0
 
 

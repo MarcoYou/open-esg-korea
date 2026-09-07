@@ -10,7 +10,7 @@ import io
 import json
 import pathlib
 import zipfile
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 import httpx
 import pytest
@@ -95,6 +95,12 @@ KIND_BODIES = {"/external/2025/05/30/001005/20250530001923/99667.htm": "kind_gov
                "/external/2025/06/27/000633/20250627000755/99998.htm": "kind_sr_attach_005930_2025.html"}
 
 
+#: 첨부 PDF — 삼성전자 2025 보고서에서 3쪽(표지·서술·수치 표)만 뽑은 진짜 PDF 343KB.
+KIND_FILES = {"/external/2025/06/27/000633/20250627000755/"
+              "%EC%82%BC%EC%84%B1%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_2025.pdf":
+              "sr_005930_2025_3pages.pdf"}
+
+
 def kind_route(request: httpx.Request) -> httpx.Response:
     """KIND 원문 뷰어 — ①뷰어 ②경로 ③본문 세 단을 그대로 흉내낸다."""
     url = urlparse(str(request.url))
@@ -110,6 +116,14 @@ def kind_route(request: httpx.Request) -> httpx.Response:
     name = KIND_BODIES.get(url.path)
     if name:
         return httpx.Response(200, text=_read(name), headers={"content-type": "text/html"})
+    name = KIND_FILES.get(url.path) or KIND_FILES.get(unquote(url.path))
+    if name:
+        data = (FIX / name).read_bytes()
+        rng = request.headers.get("Range")
+        if rng:                                   # 크기만 물어보는 1바이트 Range (KIND 는 HEAD 에 405 를 준다)
+            return httpx.Response(206, content=data[:1], headers={
+                "content-type": "application/pdf", "content-range": f"bytes 0-0/{len(data)}"})
+        return httpx.Response(200, content=data, headers={"content-type": "application/pdf"})
     return httpx.Response(404, text="no such kind page")
 
 

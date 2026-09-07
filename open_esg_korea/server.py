@@ -54,8 +54,11 @@ def build_mcp() -> MCPServer:
         from open_esg_korea.dart.corp_codes import get_index
         from open_esg_korea.gir.client import get_gir_client
         from open_esg_korea.krx.client import get_client
+        from open_esg_korea.krx.kind import get_kind_client
+        from open_esg_korea.services.report_text import cache_stats
         return JSONResponse({"status": "ok", "tools": len(await mcp.list_tools()), "krx": get_client().stats(),
-                             "dart": get_index().stats(), "gir": get_gir_client().stats()})
+                             "dart": get_index().stats(), "gir": get_gir_client().stats(),
+                             "kind": get_kind_client().stats(), "pdf_text_cache": cache_stats()})
 
     return mcp
 

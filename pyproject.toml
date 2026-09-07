@@ -7,6 +7,10 @@ dependencies = [
     # mcp 2.0 에서 `mcp.server.fastmcp` 가 제거됐다 — OPM 과 같은 이유로 상한을 둔다.
     "mcp[cli]>=2.0.0,<3",
     "httpx>=0.28.1",
+    # 지속가능경영보고서 PDF. 훑기는 pypdfium2(87쪽 0.3초), 표 정렬은 pdfplumber(0.18초/쪽).
+    # 둘 다 permissive — PyMuPDF(AGPL)·OpenDataLoader(Java 런타임)를 쓰지 않는 이유는 docs/mcp-draft.md 참고.
+    "pypdfium2>=4.30",
+    "pdfplumber>=0.11",
 ]
 
 [project.license]

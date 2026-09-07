@@ -40,6 +40,8 @@ open_esg_korea/
   services/governance_report.py          # 지배구조보고서 원문 파서(세부원칙·서식 표·미준수 사유) — 정규식, lxml 없음
   services/governance_report_payload.py  # 접수번호 고르기 → 원문 → 파서 → scope/find
   services/sustainability_notice.py      # 지속가능경영보고서 자율공시 서식(61979) 파서 — 목차·검증·첨부 PDF 주소
+  services/report_text.py                # 첨부 PDF → 페이지 텍스트 캐시 → 검색·발췌 (바이트는 안 남긴다)
+  pdf/extract.py                         # PDF → 텍스트. 훑기 pypdfium2(0.3s/87쪽) · 표 정렬 pdfplumber(0.18s/쪽)
   services/company.py   # 회사 식별 — name_keys(법인격·음차·영문 브랜드·업종어 규칙) 한 곳
   services/aliases.py   # 규칙으로 못 잇는 통칭 사전(「현대차」→ 현대자동차). 값은 포털 약명
   tools/           # public MCP tool facade — 렌더링만 (자동 발견, register_tools)
@@ -63,11 +65,16 @@ docs/mcp-draft.md  # 설계 초안·로드맵
    원문 파싱 0건은 「읽지 못함」이지 「0개 준수」가 아니다 — 응답 문구에서 반드시 구분한다. 금융회사는 「지배구조 연차보고서」로
    갈음해 세부원칙이 없다(`no_data`). 서식 표는 `aclass="krx-cg_…"` 인 것만이다 — 자유편집 표는 회사마다 열이 달라 싣지 않는다.
    접수번호는 KIND 번호다. DART 뷰어(`rcpNo=`)에 넣으면 다른 회사 공시가 열린다(실측 2026-09-07) — DART 링크를 만들지 않는다.
+11. **PDF 는 두 엔진, 바이트는 안 남긴다.** 훑기는 pypdfium2(87쪽 0.3초), 표 정렬은 pdfplumber(0.18초/쪽).
+   pypdf 는 숫자를 깨뜨리고(`567 ,056` 56건) PyMuPDF 는 AGPL 이라 안 쓴다. 캐시에 남기는 것은 **페이지 텍스트뿐**이고
+   원본 바이트(4~80MB)는 버린다 — 「찾기→그 쪽 보기」를 위해 25MB 이하 한 건만 10분 들고 있는다.
+   검색은 반드시 공백을 지우고 한다: 원문 자간 때문에 그냥 찾으면 「온실가스배출량」이 0쪽으로 나온다(실제 16쪽).
 
 ## Out of Scope (현재)
 
-- 지속가능경영보고서 **PDF 본문** — 자율공시 서식(목차·검증·기간·PDF 주소)까지는 `sustainability_reports` 가 읽는다.
-  PDF 본문은 100~200쪽 디자인 문서라 pypdf 로도 표가 뭉개진다 — 수치를 잘못 읽느니 안 읽는다(로드맵 2b-2b 에서 따로 검증)
+- 보고서 **표의 수치 자동 추출** — 본문 텍스트는 `sustainability_report_text` 가 읽지만, 표 값을 (연도·부문)에
+  대응시키지 않는다. 2단 조판에서 두 표가 섞이는 것을 실측했다 — 틀린 숫자를 주느니 납작한 원문을 주고 넘긴다
+- 스캔·이미지 PDF — OCR 하지 않는다. 「글자가 없다」를 「내용이 없다」로 답하지 않는다
 - 온실가스 Scope 1·2·3 분리 수치 — GIR 는 합산 규제치만 준다. 보고서 원문(Phase 2 후반)에서 읽어야 한다
 - 명세서 대상이 아닌 소규모 배출 회사의 배출량 — 공개 소스가 없다
 - 코스닥 종목의 보고서·지배구조 화면 — 포털이 유가증권만 싣는다. 코스닥은 회사명→코드(DART 명부)→등급표까지만 된다.
