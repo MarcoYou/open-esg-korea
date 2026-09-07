@@ -192,6 +192,9 @@ KIND_VIEWER_PATH = "/common/disclsviewer.do"
 KIND_FORM_GOV_REPORT = "99667"      # 기업지배구조보고서 (세부원칙 28개 + 서식 표)
 KIND_FORM_ANNUAL_REPORT = "99669"   # 금융회사 지배구조 연차보고서 — 본문은 안내문뿐, 내용은 첨부 PDF
 
+KIND_FORM_SUSTAINABILITY_NOTICE = "61979"   # 지속가능경영보고서 등 관련사항(자율공시) — 목차·검증·회사 사이트
+KIND_FORM_ATTACHMENT = "99998"              # 기타공개첨부서류 — 보고서 PDF 본체가 여기 링크로 걸린다
+
 #: KRX 공시 목록 제목의 접미사. 서식번호와 **독립된** 두 번째 신호 — 본문을 받기 전에 걸러낼 수 있다.
 KIND_ANNUAL_REPORT_MARK = "(연차보고서)"
 

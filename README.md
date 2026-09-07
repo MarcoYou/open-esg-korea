@@ -29,7 +29,7 @@ Claude Desktop `claude_desktop_config.json` 예:
 |---|---|
 | `company` | 회사명/종목코드 → 포털 종목코드·ISIN. 모든 도구의 입구 |
 | `esg_ratings` | KCGS·MSCI·한국ESG연구소·S&P·서스틴베스트 ESG/E/S/G 등급(연도별) + KCGS 3년 추이 |
-| `sustainability_reports` | 지속가능경영보고서 목록 — 작성기준(GRI/SASB/TCFD/SDGs)·제3자 검증기관·원문 링크 |
+| `sustainability_reports` | 지속가능경영보고서 목록 + 최신 한 건의 공시 원문 — 보고 대상 기간·목차·검증기관·회사 공개처·첨부 PDF 주소 |
 | `governance_indicators` | 기업지배구조 핵심지표 15개 O/X · 준수율 · 회사 비교 |
 | `governance_policies` | 지배구조 정책 채택 여부 74개 항목 |
 | `governance_report` | 기업지배구조보고서 **원문** — 세부원칙 28개 답변·서식 표·미준수 사유(왜 미준수인지) |
@@ -55,6 +55,8 @@ Claude Desktop `claude_desktop_config.json` 예:
 - 지배구조는 두 층입니다. `governance_indicators`(15개 O/X)·`governance_policies`(74개 Y/N)는 **KRX 가 집계한 값**이고,
   `governance_report` 는 **회사가 쓴 원문**(KIND)입니다 — 「왜 미준수인가」는 원문에만 있습니다. 원문에서 아무것도 읽지 못하면
   「0개 준수」가 아니라 「읽지 못함」으로 답합니다. 금융회사는 「지배구조 연차보고서」로 갈음해 세부원칙이 없습니다(미제출·미준수가 아닙니다).
+- 지속가능경영보고서 **PDF 본문은 아직 읽지 않습니다** — 공시 원문에서 목차·보고 기간·검증 범위를 주고 PDF 는 주소만 줍니다.
+  PDF 는 100~200쪽 디자인 문서라 표·수치 추출은 따로 검증할 일입니다(로드맵 2b-2b).
 - 공시 목록의 접수번호는 **KIND(거래소) 번호**입니다. DART 접수번호와 체계가 달라, 같은 번호로 DART 뷰어를 열면 다른 회사 공시가 나옵니다.
 - 평가정보는 각 기관의 저작물입니다(KCGS: 비상업적 내부 용도). 응답의 `license` 를 유지하세요. 공시 원문은 제출 회사의 문서이므로
   `governance_report` 는 그 고지를 따로 싣습니다.
@@ -65,7 +67,7 @@ Claude Desktop `claude_desktop_config.json` 예:
 - 스냅샷 수동 갱신: `OPENDART_API_KEY=... uv run python scripts/refresh_listed_companies.py` (월간 워크플로 `refresh-listed-companies` 가 같은 일을 하고 PR 을 엽니다 — 저장소 secret `OPENDART_API_KEY` 필요).
 - [MCP 초안·로드맵](docs/mcp-draft.md) — 데이터 소스 지도, 엔드포인트 확인 내용, Phase 2·3
 - `python scripts/probe_krx.py 005930 2025` — 포털 응답 스키마 점검
-- `uv run python scripts/smoke_governance_report.py` — KIND 공시 원문이 아직 읽히는지 점검(실서버)
+- `uv run python scripts/smoke_kind.py` — KIND 공시 원문(지배구조·지속가능)이 아직 읽히는지 점검(실서버)
 
 ## 개발
 

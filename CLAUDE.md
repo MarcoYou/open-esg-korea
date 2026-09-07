@@ -18,7 +18,7 @@ uv run pytest -q                                   # network 0 (httpx.MockTransp
 uv run python -m open_esg_korea                    # streamable-http :8000 → /mcp, /health
 uv run python -m open_esg_korea --transport stdio  # Claude Desktop 로컬 연결용
 python3 scripts/probe_krx.py 005930 2025           # 포털 응답 스키마가 바뀌었는지 (network)
-uv run python scripts/smoke_governance_report.py   # KIND 원문이 아직 읽히는지 (network) — 원칙 28개가 아니면 실패
+uv run python scripts/smoke_kind.py                # KIND 원문(지배구조·지속가능)이 아직 읽히는지 (network)
 OPENDART_API_KEY=… uv run python scripts/refresh_listed_companies.py   # 상장사 명부 스냅샷 갱신 (월간 워크플로가 대신 함)
 python3 scripts/refresh_ghg_inventory.py --url '<포털 15049589 다운로드 URL>'  # 국가 인벤토리 스냅샷 (연 1회, 12월 공표 후)
 ```
@@ -39,6 +39,7 @@ open_esg_korea/
   services/        # payload(ToolEnvelope) 를 만드는 도메인 로직
   services/governance_report.py          # 지배구조보고서 원문 파서(세부원칙·서식 표·미준수 사유) — 정규식, lxml 없음
   services/governance_report_payload.py  # 접수번호 고르기 → 원문 → 파서 → scope/find
+  services/sustainability_notice.py      # 지속가능경영보고서 자율공시 서식(61979) 파서 — 목차·검증·첨부 PDF 주소
   services/company.py   # 회사 식별 — name_keys(법인격·음차·영문 브랜드·업종어 규칙) 한 곳
   services/aliases.py   # 규칙으로 못 잇는 통칭 사전(「현대차」→ 현대자동차). 값은 포털 약명
   tools/           # public MCP tool facade — 렌더링만 (자동 발견, register_tools)
@@ -65,7 +66,8 @@ docs/mcp-draft.md  # 설계 초안·로드맵
 
 ## Out of Scope (현재)
 
-- 지속가능경영보고서 원문 본문(PDF) — 지배구조보고서 원문은 `governance_report` 로 읽는다(KIND HTML). PDF 는 아직
+- 지속가능경영보고서 **PDF 본문** — 자율공시 서식(목차·검증·기간·PDF 주소)까지는 `sustainability_reports` 가 읽는다.
+  PDF 본문은 100~200쪽 디자인 문서라 pypdf 로도 표가 뭉개진다 — 수치를 잘못 읽느니 안 읽는다(로드맵 2b-2b 에서 따로 검증)
 - 온실가스 Scope 1·2·3 분리 수치 — GIR 는 합산 규제치만 준다. 보고서 원문(Phase 2 후반)에서 읽어야 한다
 - 명세서 대상이 아닌 소규모 배출 회사의 배출량 — 공개 소스가 없다
 - 코스닥 종목의 보고서·지배구조 화면 — 포털이 유가증권만 싣는다. 코스닥은 회사명→코드(DART 명부)→등급표까지만 된다.

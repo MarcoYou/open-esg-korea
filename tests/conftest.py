@@ -79,15 +79,20 @@ def _read(name: str) -> str:
 #: 접수번호 → 뷰어 fixture. 삼성전자 2025(일반 서식)와 KB금융 2025(연차보고서 갈음) 두 갈래.
 KIND_VIEWERS = {"20250530001005": "kind_viewer_005930_2025.html",
                 "20260601000268": "kind_viewer_005930_2026.html",
-                "20250305001136": "kind_viewer_105560_2025.html"}
+                "20250305001136": "kind_viewer_105560_2025.html",
+                "20250627000633": "kind_viewer_sr_005930_2025.html"}
 #: 문서번호 → 경로 응답(`parent.setPath(...)`) fixture.
 KIND_CONTENTS = {"20250530001923": "kind_contents_005930_2025.html",
                  "20260601000417": "kind_contents_005930_2026.html",
-                 "20250226002153": "kind_contents_105560_2025.html"}
+                 "20250226002153": "kind_contents_105560_2025.html",
+                 "20250623001134": "kind_contents_sr_005930_2025.html",
+                 "20250627000755": "kind_contents_sr_att_005930_2025.html"}
 #: 본문 주소 끝 → 본문 fixture. 삼성전자 본문은 원칙 3개만 남긴 subset(원본 5.7MB).
 KIND_BODIES = {"/external/2025/05/30/001005/20250530001923/99667.htm": "kind_gov_005930_2025_subset.html",
                "/external/2026/06/01/000268/20260601000417/99667.htm": "kind_gov_005930_2026_subset.html",
-               "/external/2025/03/05/001136/20250226002153/99669.htm": "kind_gov_105560_2025.html"}
+               "/external/2025/03/05/001136/20250226002153/99669.htm": "kind_gov_105560_2025.html",
+               "/external/2025/06/27/000633/20250623001134/61979.htm": "kind_sr_notice_005930_2025.html",
+               "/external/2025/06/27/000633/20250627000755/99998.htm": "kind_sr_attach_005930_2025.html"}
 
 
 def kind_route(request: httpx.Request) -> httpx.Response:
@@ -187,7 +192,8 @@ def gir_client() -> GirClient:
 
 
 @pytest.fixture
-def krx_client(dart_index, gir_client) -> KrxEsgClient:
+def krx_client(dart_index, gir_client, kind_client) -> KrxEsgClient:
+    """KIND 도 함께 갈아 끼운다 — sustainability_reports 가 공시 원문을 곁들여 읽기 때문이다(network 0 유지)."""
     http = httpx.AsyncClient(base_url=codes.BASE_URL, transport=httpx.MockTransport(route))
     client = KrxEsgClient(http, min_interval=0.0)
     set_client(client)

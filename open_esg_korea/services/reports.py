@@ -5,10 +5,14 @@ from __future__ import annotations
 import re
 from typing import Any
 
+import httpx
+
 from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient, get_client
+from open_esg_korea.krx.kind import KindClient, KindClientError, get_kind_client
 from open_esg_korea.services.company import company_block, resolve_company
 from open_esg_korea.services.contracts import AnalysisStatus, ToolEnvelope, clean, source_block
+from open_esg_korea.services.sustainability_notice import parse_attachments, parse_notice
 
 _STANDARD_RE = re.compile(r'stan-icon\s+([a-z_]+)')
 _STANDARD_LABEL = {"gri": "GRI", "sasb": "SASB", "tcfd": "TCFD", "un_sdgs": "UN SDGs"}
@@ -38,9 +42,44 @@ def parse_report_row(r: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _pick_report(reports: list[dict[str, Any]], year: int | None) -> dict[str, Any] | None:
+    """원문 서식을 읽을 한 건. 연도를 주면 그 해, 아니면 최신(목록이 최신순으로 온다)."""
+    if year is None:
+        return reports[0]
+    return next((r for r in reports if r["year"] == str(year)), None)
+
+
+async def _fetch_notice(report: dict[str, Any], warnings: list[str],
+                        kind: KindClient | None) -> dict[str, Any]:
+    """자율공시 본문 + 첨부(PDF 주소). **목록을 죽이지 않는다** — KIND 가 막히면 경고만 남기고 넘어간다.
+
+    PDF 본문은 읽지 않는다(4MB 안팎, 표 위주라 텍스트 추출은 따로 검증할 일이다) — 주소만 준다.
+    """
+    kind = kind or get_kind_client()
+    detail: dict[str, Any] = {"year": report["year"], "acpt_no": report["acpt_no"]}
+    try:
+        doc = await kind.document(report["acpt_no"])
+        detail.update(parse_notice(doc["html"]))
+        detail["form_no"] = doc["form_no"]
+        attachments: list[dict[str, str]] = []
+        for other in doc["docs"]:
+            if other["kind"] != "attached":
+                continue
+            att = await kind.document(report["acpt_no"], doc_no=str(other["doc_no"]))
+            attachments.extend(parse_attachments(att["html"], att["body_url"]))
+        detail["attachments"] = attachments
+        if not attachments:
+            warnings.append("공시에 첨부된 보고서 파일이 없습니다 — 회사 사이트에만 올렸을 수 있습니다.")
+    except (KindClientError, httpx.HTTPError, TimeoutError) as exc:
+        warnings.append(f"공시 원문(KIND)을 읽지 못해 목록만 보여줍니다: {exc}")
+        detail["unread"] = True
+    return detail
+
+
 async def build_sustainability_reports_payload(company: str, *, from_year: int | None = None,
-                                               to_year: int | None = None,
-                                               client: KrxEsgClient | None = None) -> dict[str, Any]:
+                                               to_year: int | None = None, year: int | None = None,
+                                               client: KrxEsgClient | None = None,
+                                               kind: KindClient | None = None) -> dict[str, Any]:
     client = client or get_client()
     res = await resolve_company(company, client)
     env = ToolEnvelope(tool="sustainability_reports", status=res.status, subject=company,
@@ -66,6 +105,13 @@ async def build_sustainability_reports_payload(company: str, *, from_year: int |
         },
         "reports": reports,
     }
+    if reports:
+        target = _pick_report(reports, year)
+        if target is None:
+            env.warnings.append(f"{year}년 보고서가 목록에 없어 원문 서식은 읽지 않았습니다. "
+                                f"있는 연도: {', '.join(r['year'] for r in reports if r['year'])}.")
+        else:
+            env.data["detail"] = await _fetch_notice(target, env.warnings, kind)
     return env.to_dict()
 
 
