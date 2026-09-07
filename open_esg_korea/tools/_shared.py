@@ -24,8 +24,9 @@ def candidates_table(payload: dict[str, Any], tool: str) -> str:
         return "\n".join(lines)
     else:
         lines.append("혹시 이 회사인가요?")
-    lines += ["", "| 회사명 | 종목코드 |", "|---|---|"]
-    lines += [f"| {c.get('name', '')} | `{c.get('isu_cd', '')}` |" for c in cands]
+    lines += ["", "| 회사명 | 종목코드 | 포털 색인 |", "|---|---|---|"]
+    lines += [f"| {c.get('name', '')} | `{c.get('isu_cd', '')}` | {'유가증권' if c.get('in_index', True) else '밖(코스닥 등)'} |"
+              for c in cands]
     return "\n".join(lines)
 
 

@@ -47,8 +47,10 @@ def build_mcp() -> MCPServer:
     @mcp.custom_route("/health", methods=["GET"])
     async def _health(_request):
         from starlette.responses import JSONResponse
+        from open_esg_korea.dart.corp_codes import get_index
         from open_esg_korea.krx.client import get_client
-        return JSONResponse({"status": "ok", "tools": len(await mcp.list_tools()), "krx": get_client().stats()})
+        return JSONResponse({"status": "ok", "tools": len(await mcp.list_tools()), "krx": get_client().stats(),
+                             "dart": get_index().stats()})
 
     return mcp
 

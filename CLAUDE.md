@@ -1,6 +1,6 @@
 # open-esg-korea
 
-한국 상장사 ESG 정보를 MCP 로 제공하는 Python 서버. 1차 소스는 KRX ESG 포털(esg.krx.co.kr).
+한국 상장사 ESG 정보를 MCP 로 제공하는 Python 서버. 1차 소스는 KRX ESG 포털(esg.krx.co.kr), 보조 소스는 DART 고유번호 명부(회사명 색인).
 형제 프로젝트 [open-proxy-mcp](https://github.com/MarcoYou/open-proxy-mcp)(DART 공시) 의 골격을 따른다.
 
 ## Purpose
@@ -27,6 +27,7 @@ open_esg_korea/
   server.py        # build_mcp() / build_app() / main()
   krx/codes.py     # 화면 code · 기관 슬롯 · 지표/정책 라벨 사전 — 한 벌만
   krx/client.py    # POST 하나(ESG99000001.jspx) + 간격 0.5s + 24h 메모리 캐시
+  dart/corp_codes.py # OpenDART corpCode.xml → 상장사 명부(코스닥 회사명 검색). 키 있을 때만, 7일 메모리 캐시
   services/        # payload(ToolEnvelope) 를 만드는 도메인 로직
   tools/           # public MCP tool facade — 렌더링만 (자동 발견, register_tools)
   resources.py     # oek://tools_guide
@@ -43,9 +44,10 @@ docs/mcp-draft.md  # 설계 초안·로드맵
 5. **외부 실패는 degrade, 코드버그는 crash.** `services/safety.py` 의 집합에 없는 예외는 그대로 터뜨린다.
 6. **테스트는 network 0.** 새 화면을 붙이면 fixture 를 `tests/fixtures/` 에 스냅샷으로 넣는다.
 7. **커밋/푸시는 사용자 명시 요청 시만.**
+8. **DART 는 보조다.** `OPENDART_API_KEY`(또는 `DART_API_KEY`) 가 없으면 조용히 꺼지고 Phase 1 처럼 동작해야 한다. 포털에서 못 찾았을 때만 부르고, 실패는 경고 한 줄로 낮춘다 — 보조 색인이 죽어도 유가증권 조회는 살아야 한다. 테스트는 늘 `dart_index` fixture 를 주입한다(이 머신 환경변수에 좌우되지 않게).
 
-## Out of Scope (Phase 1)
+## Out of Scope (현재)
 
-- 보고서 원문 본문(PDF·DART 절 읽기) — Phase 2
+- 보고서 원문 본문(PDF·DART 절 읽기) — Phase 2 후반
 - 온실가스 배출량 등 정량 수치 — Phase 3
-- 코스닥 회사명 검색 — 포털 검색기가 유가증권만 다룬다(종목코드 직접 조회는 됨)
+- 코스닥 종목의 보고서·지배구조 화면 — 포털이 유가증권만 싣는다. 코스닥은 회사명→코드(DART 명부)→등급표까지만 된다.

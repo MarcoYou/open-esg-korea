@@ -93,3 +93,13 @@ def test_upstream_failure_degrades_instead_of_is_error(client, krx_client, monke
                        "params": {"name": "esg_ratings", "arguments": {"company": "삼성전자"}}})
     assert r.json()["result"].get("isError") is not True
     assert "[degraded=" in _result_text(r)
+
+
+def test_company_kosdaq_name_over_the_wire_carries_corp_code(client):
+    r = _post(client, {"jsonrpc": "2.0", "id": 9, "method": "tools/call",
+                       "params": {"name": "company", "arguments": {"query": "에코프로비엠", "format": "json"}}})
+    payload = json.loads(_result_text(r))
+    assert payload["status"] == "exact"
+    assert payload["data"]["company"]["isu_cd"] == "247540"
+    assert payload["data"]["company"]["corp_code"] == "01160363"
+    assert payload["data"]["company"]["in_index"] is False
