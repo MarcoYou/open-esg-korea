@@ -1,0 +1,72 @@
+{
+ "block1": [
+  {
+   "isu_cd": "051910",
+   "com_abbrv": "LG화학"
+  },
+  {
+   "isu_cd": "035420",
+   "com_abbrv": "NAVER"
+  },
+  {
+   "isu_cd": "096770",
+   "com_abbrv": "SK이노베이션"
+  },
+  {
+   "isu_cd": "000660",
+   "com_abbrv": "SK하이닉스"
+  },
+  {
+   "isu_cd": "006400",
+   "com_abbrv": "삼성SDI"
+  },
+  {
+   "isu_cd": "207940",
+   "com_abbrv": "삼성바이오로직스"
+  },
+  {
+   "isu_cd": "005930",
+   "com_abbrv": "삼성전자"
+  },
+  {
+   "isu_cd": "000810",
+   "com_abbrv": "삼성화재해상보험"
+  },
+  {
+   "isu_cd": "068270",
+   "com_abbrv": "셀트리온"
+  },
+  {
+   "isu_cd": "450080",
+   "com_abbrv": "에코프로머티"
+  },
+  {
+   "isu_cd": "005380",
+   "com_abbrv": "현대자동차"
+  },
+  {
+   "isu_cd": "028050",
+   "com_abbrv": "삼성E&A"
+  },
+  {
+   "isu_cd": "448730",
+   "com_abbrv": "삼성FN리츠"
+  },
+  {
+   "isu_cd": "006660",
+   "com_abbrv": "삼성공조"
+  },
+  {
+   "isu_cd": "028260",
+   "com_abbrv": "삼성물산"
+  },
+  {
+   "isu_cd": "032830",
+   "com_abbrv": "삼성생명"
+  },
+  {
+   "isu_cd": "018260",
+   "com_abbrv": "삼성에스디에스"
+  }
+ ]
+}

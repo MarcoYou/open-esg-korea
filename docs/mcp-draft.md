@@ -1,6 +1,8 @@
 # open-esg-korea MCP 초안
 
-> 상태: Draft v0.1 (2026-09-07). KRX ESG 포털 실제 엔드포인트를 호출해 확인한 내용 기반.
+> 상태: v0.2 (2026-09-07). Phase 1(KRX 도구 7개, MCP 서버) 구현 완료. 구조는 [open-proxy-mcp](https://github.com/MarcoYou/open-proxy-mcp) 를 따른다.
+>
+> 실행·구조·규칙은 `CLAUDE.md`, 도구 목록은 `README.md` 가 정본이다. 이 문서는 **설계 판단과 확인 사실**을 남긴다.
 
 ## 1. 한 줄 목표
 
@@ -30,11 +32,13 @@
 | 기업 ESG 조회 · 3년 추이 | `02/02010000/esg02010000_09` | `isu_cd` | 연도별 KCGS 등급 + 매출·영업이익 |
 | 기업 ESG 조회 · 보고서 요약 | `02/02010000/esg02010000_04` | `isu_cd` | 지속가능경영보고서 건수, GRI/SASB/TCFD/SDGs 채택, 검증기관 |
 | 기업 ESG 조회 · 종목 정보 | `02/02010000/esg02010000_05` | `isu_cd` | 발행인코드, ISIN, 약명 |
-| 지속가능경영보고서 목록 (전체) | `02/02020000/esg02020000` | `sch_yy`, `upjong`, `isu_cd`(선택), `curPage` | **상장사 795개(2025) 전체 등급 스크리닝 가능**, 접수번호(acpt_no) 포함 |
+| 지속가능경영보고서 목록 (전체) | `02/02020000/esg02020000` | `sch_yy`(필수), `upjong`(코드, 예 3015), `pageSize=1000`, `curPage` | **유가증권 795사(2025) 전체 등급 한 번에** — 스크리너 모집단. 접수번호(acpt_no) 포함. `sch_yy` 없으면 빈 결과 |
 | 지속가능경영보고서 상세 | `02/02030000/esg02030000_01` | `isu_cd`, `fr_work_dt`, `to_work_dt` | 연도별 보고서, 업종, 작성기준, 제3자 검증기관 |
 | 기업지배구조보고서 공시 목록 | `02/02040000/esg02040000_01` | `isu_cd`, 기간 | 공시 제목·일시·접수번호 |
 | 지배구조 핵심지표 15개 | `POST /contents/02/02040100/ESG02040100.jspx` | `isu_cd`, `sch_yy` | O/X 15개 + 준수율(`obr_rt`) |
-| 지배구조 정책 채택 여부 | `POST /contents/02/02040200/ESG02040200.jspx` | `isu_cd`, `sch_yy` | O/X 수십 개 (집중투표제, 전자투표, 스톡옵션 등) |
+| 지배구조 정책 채택 여부 | `POST /contents/02/02040200/ESG02040200.jspx` | `isu_cd`, `sch_yy` | O/X 74개 (집중투표제, 전자투표, 스톡옵션 등) |
+| 회사명 검색기 | `POST …/ESG99000001.jspx?code=/COM/finder_esg_company` | `searchText`(빈 값이면 전체) | **유가증권 834사** 코드·약명 — 회사 색인으로 쓴다 |
+| 자동완성 | `POST /contents/02/02030200/suggestionMarket.jspx` | `sch_com_nm` | 검색기와 같은 범위 |
 
 응답 예 (삼성전자, 2025, `esg02010000_01`):
 
@@ -76,9 +80,22 @@
 | 환경부 온실가스종합정보센터(GIR) 명세서 | 등급이 아닌 **실측 수치**(Scope 1·2 배출량, 에너지 사용량). 정량 질문 대응 | 법인명 → 사업자번호 매핑 필요 |
 | KCGS 원 사이트 | KRX에는 등급만 있고 평가 근거·이슈 리스트가 없다 | 종목코드 |
 
-## 4. 도구(tool) 설계 초안
+### 3-3. 확인된 제약 (Phase 1 구현 중)
+
+- **커버리지는 유가증권(KOSPI)**: 검색기 834사, 연도별 목록 795사. 코스닥 종목(예 에코프로비엠 247540)은 색인에 없지만
+  `isu_cd` 를 직접 주면 등급표·3년 추이는 나온다. → `company` 는 6자리 코드를 색인 없이 통과시키고 그 사실을 경고로 남긴다.
+- `sch_yy` 를 비우면 등급표는 전부 `-`, 목록은 빈 배열. → 서버가 올해를 넣고, 없으면 전년으로 한 번 물러서며 그 사실을 밝힌다.
+- 업종 필터는 이름이 아니라 코드(3015=전기·전자). `krx/codes.py` 의 `UPJONG_CODES` 로 이름→코드 변환.
+- 지배구조 정책 화면은 77행이지만 응답 키는 74개(73~75번은 키 없음).
+- 접수번호는 KIND 번호다. DART 뷰어(`rcpNo=`)도 거래소 접수번호를 열어 준다(OPM 실측) — 두 링크를 모두 준다.
+
+## 4. 도구(tool) 설계
 
 원칙: 도구 하나 = 사람이 화면 하나에서 얻는 답. 회사 식별은 한 번만 한다.
+
+Phase 1 에서 구현된 이름(OPM 식 짧은 명사)과 초안 이름의 대응: `resolve_company`→`company`, `get_esg_ratings`+`get_esg_rating_history`→`esg_ratings`(추이 포함),
+`list_sustainability_reports`→`sustainability_reports`, `get_governance_indicators`→`governance_indicators`, `get_governance_policies`→`governance_policies`,
+`list_esg_disclosures`→`esg_disclosures`, `screen_companies`→`esg_screener`.
 
 | 도구 | 입력 | 출력 | 뒷단 |
 |---|---|---|---|
@@ -128,7 +145,7 @@ AI 클라이언트 ─MCP(stdio | streamable HTTP)─▶ open-esg-korea server
                                               └─ cache/        (연 단위 데이터 → 24h TTL, 전체 목록은 디스크 캐시)
 ```
 
-- 언어: Python + FastMCP (mcp-builder 스킬 기준). httpx 비동기, pydantic 스키마.
+- 언어: Python + `mcp` 2.x `MCPServer`(OPM 과 동일). httpx 비동기. 배포 형태도 OPM 과 같게 streamable-http(무상태·JSON 응답·호스트 보호) 기본, stdio 는 로컬용.
 - 캐시가 중요한 이유: 등급은 연 1회 갱신인데 `screen_companies` 는 795행을 훑는다.
   전체 목록을 하루 한 번 받아 두면 스크리닝이 로컬 필터로 끝난다.
 - 배포: 로컬 stdio 우선 → 이후 Vercel/Cloud Run 에 HTTP 로 공개.
@@ -145,8 +162,8 @@ AI 클라이언트 ─MCP(stdio | streamable HTTP)─▶ open-esg-korea server
 
 | Phase | 범위 | 완료 기준 |
 |---|---|---|
-| 0 | 이 문서 + 엔드포인트 프로브 스크립트 | `python scripts/probe_krx.py 005930` 이 JSON 출력 |
-| 1 | KRX 도구 8개 (4절 상단), stdio 서버 | Claude Desktop 에서 "삼성전자 ESG 등급" 질의 응답 |
+| 0 ✅ | 이 문서 + 엔드포인트 프로브 스크립트 | `python scripts/probe_krx.py 005930` 이 JSON 출력 |
+| 1 ✅ | KRX 도구 7개, streamable-http + stdio 서버, network-0 테스트 35개 | `uv run pytest -q` 초록 · 실서버 스모크(삼성전자·에코프로비엠·스크리너) 응답 확인 |
 | 2 | DART 연동: 접수번호 → 원문 절 읽기 | 보고서 원문 인용 가능 |
 | 3 | GIR 배출량, 기관별 등급 정규화 점수 | 정량 비교 질의 응답 |
 
@@ -154,4 +171,4 @@ AI 클라이언트 ─MCP(stdio | streamable HTTP)─▶ open-esg-korea server
 
 1. 등급 스케일을 기관 간 비교 가능한 공통 점수로 변환할지, 원값만 줄지 (원값 우선 제안).
 2. `screen_companies` 의 전체 목록 캐시가 7절 라이선스와 충돌하는지 (메모리 캐시·비영구로 시작 제안).
-3. 코스닥 커버리지: 목록 엔드포인트가 유가증권 중심인지 확인 필요(`market_gubun` 파라미터 실험).
+3. ~~코스닥 커버리지~~ → 확인: 포털 자체가 유가증권만 색인한다(`market_gubun` 은 무시됨). 코스닥 회사명 검색은 OPM 의 DART corpCode 색인을 빌려오는 것이 Phase 2 후보.
