@@ -2,8 +2,9 @@
 
 두 겹 색인:
 1. **포털 검색기**(빈 검색어 → 유가증권 834사). 24시간 캐시. 여기 있으면 보고서·지배구조 화면까지 다 있다.
-2. **DART 고유번호 명부**(`dart/corp_codes.py`, 키 있을 때만). 포털에서 못 찾았을 때만 부른다 — 코스닥 회사명은
+2. **DART 고유번호 명부**(`dart/corp_codes.py`). 포털에서 못 찾았을 때만 부른다 — 코스닥 회사명은
    여기서 종목코드를 얻고, 포털에는 그 코드로 등급표를 묻는다. 정식 상호(「현대자동차」)로 유가증권을 찾을 때도 돕는다.
+   키가 있으면 실시간 명부, 없으면 저장소에 동봉한 스냅샷(월 1회 갱신)이다 — 그래서 키 없이도 코스닥이 된다.
 
 6자리 숫자는 코드로 보고 색인을 거치지 않는다. DART 가 실패하면 그 사실만 경고로 남기고 포털만으로 답한다
 — 보조 색인이 죽었다고 유가증권 조회까지 죽으면 안 된다.
@@ -20,7 +21,7 @@ from typing import Any
 
 import httpx
 
-from open_esg_korea.dart.corp_codes import DartClientError, DartCorpIndex, get_index
+from open_esg_korea.dart.corp_codes import STALE_AFTER_DAYS, DartClientError, DartCorpIndex, get_index
 from open_esg_korea.krx.client import KrxEsgClient, get_client
 from open_esg_korea.services.contracts import AnalysisStatus
 
@@ -56,15 +57,21 @@ async def load_index(client: KrxEsgClient | None = None) -> list[dict[str, str]]
 
 
 async def _dart_rows(dart: DartCorpIndex, warnings: list[str]) -> list[dict[str, str]]:
-    """보조 색인. 꺼져 있으면 빈 목록, 실패하면 경고 한 줄 남기고 빈 목록."""
+    """보조 색인. 실시간 → 번들 순으로 시도하고, 둘 다 안 되면 경고 한 줄 남기고 빈 목록."""
     if not dart.enabled:
         return []
     try:
-        return await dart.listed()
+        rows = await dart.listed()
     except _DART_ERRORS as exc:
         warnings.append(f"DART 고유번호 명부를 불러오지 못해 코스닥 회사명 검색을 건너뜁니다 ({type(exc).__name__}). "
                         "코스닥 종목은 6자리 종목코드로 조회하세요.")
         return []
+    if dart.source == "bundle":
+        age = dart.bundle_age_days()
+        if age is not None and age > STALE_AFTER_DAYS:
+            warnings.append(f"상장사 명부 스냅샷이 {age}일 전({dart.bundle_date()}) 것입니다 — 그 뒤 상장·개명한 회사는 "
+                            "회사명으로 찾지 못할 수 있습니다. 종목코드로 조회하거나 스냅샷을 갱신하세요.")
+    return rows
 
 
 def _pick(row: dict[str, Any], *, by_code: dict[str, dict], dart_by_code: dict[str, dict], match: str) -> dict[str, Any]:
@@ -170,9 +177,15 @@ async def resolve_company(query: str, client: KrxEsgClient | None = None,
             names[n] = r
     close = difflib.get_close_matches(nq, list(names), n=5, cutoff=0.6)
     cands = [cand(names[c]) for c in close]
-    hint = ("코스닥 종목이면 6자리 종목코드로 조회하세요." if dart.enabled else
-            "코스닥 종목이면 6자리 종목코드로 조회하세요. OPENDART_API_KEY 를 설정하면 코스닥 회사명 검색도 됩니다.")
-    scope = "KRX ESG 포털 검색기(유가증권)·DART 상장사 명부" if dart_rows else "KRX ESG 포털 검색기(유가증권)"
+    hint = "코스닥 종목이면 6자리 종목코드로 조회하세요."
+    if dart_rows:
+        scope = ("KRX ESG 포털 검색기(유가증권)·DART 상장사 명부" if dart.source == "live" else
+                 f"KRX ESG 포털 검색기(유가증권)·상장사 명부 스냅샷({dart.bundle_date()})")
+        if dart.source != "live":
+            hint += " 그 뒤 상장·개명한 회사면 OPENDART_API_KEY 를 설정해 실시간 명부로 찾을 수 있습니다."
+    else:
+        scope = "KRX ESG 포털 검색기(유가증권)"
+        hint += " OPENDART_API_KEY 를 설정하면 코스닥 회사명 검색도 됩니다."
     warnings.append(f"「{q}」에 해당하는 회사를 {scope}에서 찾지 못했습니다. {hint}")
     return CompanyResolution(AnalysisStatus.ERROR, q, candidates=cands, warnings=warnings)
 

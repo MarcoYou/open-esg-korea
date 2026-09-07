@@ -1,0 +1,38 @@
+# 상장사 명부 스냅샷 월간 갱신 — OpenDART corpCode.xml → open_esg_korea/data/listed_companies.json
+#
+# Why: 코스닥 회사명 검색용 사전을 저장소에 동봉해 서버가 키 없이도 돌게 한다. 상호 변경·신규 상장은 드물어
+# 월 1회면 충분하다. 저장소 secret `OPENDART_API_KEY` 가 필요하다(없으면 이 워크플로만 실패하고 서버는 무관).
+# 변경이 있으면 PR 을 연다 — 사람이 diff(추가·삭제·개명)를 보고 머지한다.
+name: refresh-listed-companies
+
+on:
+  schedule:
+    - cron: "0 21 1 * *"        # 매월 1일 06:00 KST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --dev
+      - name: Refresh snapshot
+        env:
+          OPENDART_API_KEY: ${{ secrets.OPENDART_API_KEY }}
+        run: uv run python scripts/refresh_listed_companies.py | tee refresh.log
+      - name: Verify
+        run: uv run pytest -q tests/test_dart_corp_codes.py
+      - name: Open PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/refresh-listed-companies
+          title: "chore: 상장사 명부 스냅샷 갱신"
+          commit-message: "chore: 상장사 명부 스냅샷 갱신 (OpenDART corpCode.xml)"
+          body-path: refresh.log
+          add-paths: open_esg_korea/data/listed_companies.json
+          delete-branch: true

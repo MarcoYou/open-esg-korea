@@ -14,7 +14,7 @@ def register_tools(mcp):
     async def company(query: str, format: str = "md") -> str:
         """desc: 회사 식별 — 회사명/종목코드 → KRX ESG 포털 종목코드(isu_cd)·약명·ISIN. 모든 ESG 도구의 공통 입구.
         when: 회사명이 애매하거나 후속 도구에 넣을 종목코드를 확정할 때. 확정 후에는 다른 도구에 종목코드를 넘긴다.
-        rule: 포털 검색기 색인은 유가증권(KOSPI)이다. 코스닥 회사명은 DART 고유번호 명부(OPENDART_API_KEY 설정 시)로 종목코드를 찾고, 없으면 6자리 종목코드로 직접 조회한다. 부분 일치가 하나면 추정 선택하고 그 사실을 밝힌다. corp_code 는 DART 도구(open-proxy-mcp)에 그대로 넘길 수 있다.
+        rule: 포털 검색기 색인은 유가증권(KOSPI)이다. 코스닥 회사명은 DART 상장사 명부(동봉 스냅샷, OPENDART_API_KEY 가 있으면 실시간)로 종목코드를 찾는다. 못 찾으면 6자리 종목코드로 직접 조회한다. 부분 일치가 하나면 추정 선택하고 그 사실을 밝힌다. corp_code 는 DART 도구(open-proxy-mcp)에 그대로 넘길 수 있다.
         params: query(회사명 또는 6자리 종목코드), format(md|json)
         ref: esg_ratings, governance_indicators, sustainability_reports
         """

@@ -15,7 +15,7 @@ from urllib.parse import parse_qs, urlparse
 import httpx
 import pytest
 
-from open_esg_korea.dart.corp_codes import CORP_CODE_PATH, OPENDART_BASE_URL, DartCorpIndex, set_index
+from open_esg_korea.dart.corp_codes import BUNDLE_PATH, CORP_CODE_PATH, OPENDART_BASE_URL, DartCorpIndex, set_index
 from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient, set_client
 
@@ -95,14 +95,15 @@ def route(request: httpx.Request) -> httpx.Response:
     return httpx.Response(500, text="unrouted")
 
 
-def make_dart_index(api_key: str) -> DartCorpIndex:
+def make_dart_index(api_key: str, *, bundle: bool = False) -> DartCorpIndex:
+    """기본은 번들 없이(fixture 15행만) — 저장소 스냅샷 내용에 테스트가 흔들리지 않게. `bundle=True` 면 실제 스냅샷을 쓴다."""
     http = httpx.AsyncClient(base_url=OPENDART_BASE_URL, transport=httpx.MockTransport(route))
-    return DartCorpIndex(http, api_key=api_key)
+    return DartCorpIndex(http, api_key=api_key, bundle_path=BUNDLE_PATH if bundle else None)
 
 
 @pytest.fixture
 def dart_index() -> DartCorpIndex:
-    """키가 있는 DART 명부(fixture 15행). 이 머신의 환경변수와 무관하게 늘 같은 상태."""
+    """키가 있는 DART 명부(fixture 15행, 번들 없음). 이 머신의 환경변수와 무관하게 늘 같은 상태."""
     index = make_dart_index("test")
     set_index(index)
     yield index

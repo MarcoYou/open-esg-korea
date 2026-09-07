@@ -106,14 +106,41 @@ async def test_kosdaq_code_gets_corp_code_when_dart_is_loaded(krx_client, dart_i
     assert res.selected["corp_code"] == "01160363" and res.selected["in_index"] is False
 
 
-async def test_without_dart_key_behaviour_is_phase_1_plus_a_hint(krx_client):
+async def test_without_dart_key_the_bundled_snapshot_resolves_kosdaq_names(krx_client):
+    from tests.conftest import make_dart_index
+    idx = make_dart_index("", bundle=True)
+    res = await resolve_company("에코프로비엠", krx_client, dart=idx)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "247540"
+    assert res.selected["corp_code"] == "01160363" and idx.downloads == 0
+    miss = await resolve_company("존재하지않는회사명", krx_client, dart=idx)
+    assert miss.status is AnalysisStatus.ERROR and any("스냅샷" in w for w in miss.warnings)
+
+
+async def test_stale_bundle_adds_a_warning(krx_client, monkeypatch):
+    from tests.conftest import make_dart_index
+    idx = make_dart_index("", bundle=True)
+    monkeypatch.setattr(idx, "bundle_age_days", lambda: 400)
+    res = await resolve_company("에코프로비엠", krx_client, dart=idx)
+    assert res.status is AnalysisStatus.EXACT and any("400일" in w for w in res.warnings)
+
+
+async def test_without_any_dart_index_behaviour_is_phase_1_plus_a_hint(krx_client):
     from tests.conftest import make_dart_index
     res = await resolve_company("에코프로비엠", krx_client, dart=make_dart_index(""))
     assert res.status is AnalysisStatus.ERROR
     assert any("OPENDART_API_KEY" in w for w in res.warnings)
 
 
-async def test_dart_outage_does_not_break_portal_resolution(krx_client):
+async def test_dart_outage_falls_back_to_the_bundle(krx_client):
+    from tests.conftest import make_dart_index
+    down = make_dart_index("down", bundle=True)
+    ok = await resolve_company("삼성전자", krx_client, dart=down)
+    assert ok.status is AnalysisStatus.EXACT and ok.warnings == []
+    res = await resolve_company("에코프로비엠", krx_client, dart=down)
+    assert res.status is AnalysisStatus.EXACT and down.source == "bundle"
+
+
+async def test_dart_outage_without_a_bundle_does_not_break_portal_resolution(krx_client):
     from tests.conftest import make_dart_index
     down = make_dart_index("down")
     ok = await resolve_company("삼성전자", krx_client, dart=down)
