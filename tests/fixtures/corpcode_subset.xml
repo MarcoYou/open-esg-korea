@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<result>
+  <list><corp_code>00126380</corp_code><corp_name>삼성전자</corp_name><corp_eng_name>SAMSUNG ELECTRONICS CO,.LTD</corp_eng_name><stock_code>005930</stock_code><modify_date>20251201</modify_date></list>
+  <list><corp_code>00164779</corp_code><corp_name>SK하이닉스</corp_name><corp_eng_name>SK hynix Inc.</corp_eng_name><stock_code>000660</stock_code><modify_date>20240328</modify_date></list>
+  <list><corp_code>00164742</corp_code><corp_name>현대자동차</corp_name><corp_eng_name>HYUNDAI MOTOR CO</corp_eng_name><stock_code>005380</stock_code><modify_date>20260331</modify_date></list>
+  <list><corp_code>00266961</corp_code><corp_name>NAVER</corp_name><corp_eng_name>NAVER Corporation</corp_eng_name><stock_code>035420</stock_code><modify_date>20240311</modify_date></list>
+  <list><corp_code>01311408</corp_code><corp_name>에코프로머티</corp_name><corp_eng_name>ECOPRO MATERIALS CO., LTD.</corp_eng_name><stock_code>450080</stock_code><modify_date>20260430</modify_date></list>
+  <list><corp_code>00536541</corp_code><corp_name>에코프로</corp_name><corp_eng_name>ECOPRO CO.,LTD</corp_eng_name><stock_code>086520</stock_code><modify_date>20241227</modify_date></list>
+  <list><corp_code>01160363</corp_code><corp_name>에코프로비엠</corp_name><corp_eng_name>ECOPRO BM CO.,LTD.</corp_eng_name><stock_code>247540</stock_code><modify_date>20250714</modify_date></list>
+  <list><corp_code>01566248</corp_code><corp_name>에코프로에이치엔</corp_name><corp_eng_name>ECOPRO HN CO., LTD</corp_eng_name><stock_code>383310</stock_code><modify_date>20230223</modify_date></list>
+  <list><corp_code>00989619</corp_code><corp_name>알테오젠</corp_name><corp_eng_name>Alteogen Inc.</corp_eng_name><stock_code>196170</stock_code><modify_date>20251229</modify_date></list>
+  <list><corp_code>00541349</corp_code><corp_name>셀트리온제약</corp_name><corp_eng_name>Celltrion Pharm Inc.</corp_eng_name><stock_code>068760</stock_code><modify_date>20240701</modify_date></list>
+  <list><corp_code>00199252</corp_code><corp_name>HLB</corp_name><corp_eng_name>HLB Co.,LTD.</corp_eng_name><stock_code>028300</stock_code><modify_date>20260806</modify_date></list>
+  <list><corp_code>00149293</corp_code><corp_name>신한은행</corp_name><corp_eng_name>SHINHAN BANK</corp_eng_name><stock_code>000010</stock_code><modify_date>20230410</modify_date></list>
+  <list><corp_code>00000001</corp_code><corp_name>정다운</corp_name><corp_eng_name>JUNGDAWN A</corp_eng_name><stock_code>208140</stock_code><modify_date>20240101</modify_date></list>
+  <list><corp_code>00000002</corp_code><corp_name>정다운</corp_name><corp_eng_name>JUNGDAWN B</corp_eng_name><stock_code>999001</stock_code><modify_date>20170630</modify_date></list>
+  <list><corp_code>01234567</corp_code><corp_name>농협금융지주</corp_name><corp_eng_name>NH Financial Group</corp_eng_name><stock_code> </stock_code><modify_date>20250101</modify_date></list>
+</result>

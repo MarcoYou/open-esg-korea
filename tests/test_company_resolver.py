@@ -50,3 +50,101 @@ async def test_no_match_is_error_with_close_suggestions(krx_client):
     res = await resolve_company("삼성전지", krx_client)
     assert res.status is AnalysisStatus.ERROR
     assert any(c["isu_cd"] == "005930" for c in res.candidates)
+
+
+# ── Phase 2: DART 명부로 코스닥 회사명 ───────────────────────────────────────────
+
+async def test_kosdaq_name_resolves_through_dart_with_corp_code_and_warning(krx_client):
+    res = await resolve_company("에코프로비엠", krx_client)
+    assert res.status is AnalysisStatus.EXACT
+    assert res.selected == {"isu_cd": "247540", "name": "에코프로비엠", "in_index": False, "match": "exact",
+                            "corp_code": "01160363"}
+    assert any("색인 밖" in w for w in res.warnings)
+
+
+async def test_dart_exact_beats_portal_partial(krx_client):
+    """「에코프로」— 포털 부분일치는 에코프로머티 하나지만 DART 에 정확히 「에코프로」(086520)가 있다."""
+    res = await resolve_company("에코프로", krx_client)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "086520"
+    assert res.selected["in_index"] is False
+
+
+async def test_english_name_from_dart_works(krx_client):
+    res = await resolve_company("Alteogen Inc.", krx_client)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "196170"
+
+
+async def test_kospi_exact_hit_gets_corp_code_only_if_dart_is_already_loaded(krx_client, dart_index):
+    res = await resolve_company("삼성전자", krx_client)
+    assert res.selected["corp_code"] is None and dart_index.downloads == 0     # 포털에서 끝나면 DART 를 안 부른다
+    await dart_index.listed()
+    res = await resolve_company("삼성전자", krx_client)
+    assert res.selected["corp_code"] == "00126380" and res.selected["in_index"] is True
+
+
+async def test_partial_across_both_indexes_is_ambiguous_portal_first(krx_client):
+    res = await resolve_company("에코프", krx_client)
+    assert res.status is AnalysisStatus.AMBIGUOUS
+    assert res.candidates[0] == {"isu_cd": "450080", "name": "에코프로머티", "in_index": True, "corp_code": "01311408"}
+    assert {c["isu_cd"] for c in res.candidates} >= {"450080", "086520", "247540", "383310"}
+
+
+async def test_kosdaq_partial_with_one_candidate_is_inferred(krx_client):
+    res = await resolve_company("알테오", krx_client)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "196170"
+    assert any("추정" in w for w in res.warnings) and any("색인 밖" in w for w in res.warnings)
+
+
+async def test_duplicate_dart_names_stay_ambiguous(krx_client):
+    res = await resolve_company("정다운", krx_client)
+    assert res.status is AnalysisStatus.AMBIGUOUS and len(res.candidates) == 2
+
+
+async def test_kosdaq_code_gets_corp_code_when_dart_is_loaded(krx_client, dart_index):
+    await dart_index.listed()
+    res = await resolve_company("247540", krx_client)
+    assert res.selected["corp_code"] == "01160363" and res.selected["in_index"] is False
+
+
+async def test_without_dart_key_the_bundled_snapshot_resolves_kosdaq_names(krx_client):
+    from tests.conftest import make_dart_index
+    idx = make_dart_index("", bundle=True)
+    res = await resolve_company("에코프로비엠", krx_client, dart=idx)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "247540"
+    assert res.selected["corp_code"] == "01160363" and idx.downloads == 0
+    miss = await resolve_company("존재하지않는회사명", krx_client, dart=idx)
+    assert miss.status is AnalysisStatus.ERROR and any("스냅샷" in w for w in miss.warnings)
+
+
+async def test_stale_bundle_adds_a_warning(krx_client, monkeypatch):
+    from tests.conftest import make_dart_index
+    idx = make_dart_index("", bundle=True)
+    monkeypatch.setattr(idx, "bundle_age_days", lambda: 400)
+    res = await resolve_company("에코프로비엠", krx_client, dart=idx)
+    assert res.status is AnalysisStatus.EXACT and any("400일" in w for w in res.warnings)
+
+
+async def test_without_any_dart_index_behaviour_is_phase_1_plus_a_hint(krx_client):
+    from tests.conftest import make_dart_index
+    res = await resolve_company("에코프로비엠", krx_client, dart=make_dart_index(""))
+    assert res.status is AnalysisStatus.ERROR
+    assert any("OPENDART_API_KEY" in w for w in res.warnings)
+
+
+async def test_dart_outage_falls_back_to_the_bundle(krx_client):
+    from tests.conftest import make_dart_index
+    down = make_dart_index("down", bundle=True)
+    ok = await resolve_company("삼성전자", krx_client, dart=down)
+    assert ok.status is AnalysisStatus.EXACT and ok.warnings == []
+    res = await resolve_company("에코프로비엠", krx_client, dart=down)
+    assert res.status is AnalysisStatus.EXACT and down.source == "bundle"
+
+
+async def test_dart_outage_without_a_bundle_does_not_break_portal_resolution(krx_client):
+    from tests.conftest import make_dart_index
+    down = make_dart_index("down")
+    ok = await resolve_company("삼성전자", krx_client, dart=down)
+    assert ok.status is AnalysisStatus.EXACT and ok.warnings == []
+    miss = await resolve_company("에코프로비엠", krx_client, dart=down)
+    assert miss.status is AnalysisStatus.ERROR
+    assert any("불러오지 못해" in w for w in miss.warnings)
