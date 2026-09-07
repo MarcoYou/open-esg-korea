@@ -20,6 +20,7 @@ from open_esg_korea.gir import codes as gcodes
 from open_esg_korea.gir.client import GirClient, set_gir_client
 from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient, set_client
+from open_esg_korea.krx.kind import KindClient, set_kind_client
 
 FIX = pathlib.Path(__file__).parent / "fixtures"
 
@@ -70,12 +71,51 @@ def gir_route(request: httpx.Request) -> httpx.Response:
     return httpx.Response(404, text="no such gir page")
 
 
+
+def _read(name: str) -> str:
+    return (FIX / name).read_text(encoding="utf-8")
+
+
+#: 접수번호 → 뷰어 fixture. 삼성전자 2025(일반 서식)와 KB금융 2025(연차보고서 갈음) 두 갈래.
+KIND_VIEWERS = {"20250530001005": "kind_viewer_005930_2025.html",
+                "20260601000268": "kind_viewer_005930_2026.html",
+                "20250305001136": "kind_viewer_105560_2025.html"}
+#: 문서번호 → 경로 응답(`parent.setPath(...)`) fixture.
+KIND_CONTENTS = {"20250530001923": "kind_contents_005930_2025.html",
+                 "20260601000417": "kind_contents_005930_2026.html",
+                 "20250226002153": "kind_contents_105560_2025.html"}
+#: 본문 주소 끝 → 본문 fixture. 삼성전자 본문은 원칙 3개만 남긴 subset(원본 5.7MB).
+KIND_BODIES = {"/external/2025/05/30/001005/20250530001923/99667.htm": "kind_gov_005930_2025_subset.html",
+               "/external/2026/06/01/000268/20260601000417/99667.htm": "kind_gov_005930_2026_subset.html",
+               "/external/2025/03/05/001136/20250226002153/99669.htm": "kind_gov_105560_2025.html"}
+
+
+def kind_route(request: httpx.Request) -> httpx.Response:
+    """KIND 원문 뷰어 — ①뷰어 ②경로 ③본문 세 단을 그대로 흉내낸다."""
+    url = urlparse(str(request.url))
+    qs = {k: v[0] for k, v in parse_qs(url.query).items()}
+    if url.path == codes.KIND_VIEWER_PATH:
+        if qs.get("method") == "search":
+            name = KIND_VIEWERS.get(qs.get("acptno", ""))
+            #: 모르는 접수번호에도 200 을 준다 — 옵션 없는 껍데기(실제 KIND 도 404 를 주지 않는다).
+            return httpx.Response(200, text=_read(name) if name else "<html><body>no such document</body></html>")
+        if qs.get("method") == "searchContents":
+            name = KIND_CONTENTS.get(qs.get("docNo", ""))
+            return httpx.Response(200, text=_read(name) if name else "<html><script>/* no setPath */</script></html>")
+    name = KIND_BODIES.get(url.path)
+    if name:
+        return httpx.Response(200, text=_read(name), headers={"content-type": "text/html"})
+    return httpx.Response(404, text="no such kind page")
+
+
 def route(request: httpx.Request) -> httpx.Response:
     url = urlparse(str(request.url))
     if url.netloc.endswith("opendart.fss.or.kr"):
         return dart_route(request)
     if url.netloc.endswith("gir.go.kr"):
         return gir_route(request)
+    if url.netloc.endswith("kind.krx.co.kr"):
+        return kind_route(request)
     form = {k: v[0] for k, v in parse_qs(request.content.decode("utf-8")).items()}
     qs = {k: v[0] for k, v in parse_qs(url.query).items()}
     isu = form.get("isu_cd", "")
@@ -115,7 +155,9 @@ def route(request: httpx.Request) -> httpx.Response:
     if code == codes.CODE_REPORT_LIST:
         return httpx.Response(200, json=_load("reports_005930.json") if isu == "005930" else {"result": []})
     if code == codes.CODE_GOV_DISCLOSURES:
-        return httpx.Response(200, json=_load("disclosures_005930.json") if isu == "005930" else {"result": []})
+        by_company = {"005930": "disclosures_005930.json", "105560": "disclosures_105560.json"}
+        name = by_company.get(isu)
+        return httpx.Response(200, json=_load(name) if name else {"result": []})
     if code == codes.CODE_COMPANY_LIST:
         return httpx.Response(200, json=_load("list_2025_head.json") if year == "2025" else {"result": []})
     return httpx.Response(500, text="unrouted")
@@ -151,3 +193,11 @@ def krx_client(dart_index, gir_client) -> KrxEsgClient:
     set_client(client)
     yield client
     set_client(None)
+
+
+@pytest.fixture
+def kind_client() -> KindClient:
+    client = KindClient(httpx.AsyncClient(transport=httpx.MockTransport(route)), min_interval=0.0)
+    set_kind_client(client)
+    yield client
+    set_kind_client(None)

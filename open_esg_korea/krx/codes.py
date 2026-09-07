@@ -175,3 +175,32 @@ LICENSE_NOTICE = (
     "게시한 것입니다. 비상업적 내부 용도로만 활용할 수 있으며, 복제·재배포·가공 시 해당 기관의 "
     "사전 승낙이 필요합니다. 정확한 등급·방법론은 각 기관 홈페이지를 확인하세요."
 )
+
+
+# ── KIND(kind.krx.co.kr) — 공시 원문 뷰어 ─────────────────────────────────────
+# ESG 포털이 주는 접수번호(`acpt_no`)로 원문을 여는 곳. 포털과 같은 거래소지만 호스트·프로토콜이 다르다
+# (JSON 이 아니라 HTML, POST 가 아니라 GET). 아래 값은 2026-09-07 실호출로 확인했다.
+#
+# 3단이다 — 한 번에 본문이 오지 않는다:
+#   ① method=search&acptno=…      뷰어 껍데기. <select id="mainDoc"> 에 **문서번호**(접수번호와 다르다)
+#   ② method=searchContents&docNo=… 1KB. 본문 주소를 `parent.setPath('…toc.htm','….htm',…)` 로만 알려준다
+#   ③ ②가 준 주소               실제 본문 HTML(삼성전자 2025: 5.7MB, UTF-8)
+KIND_BASE_URL = "https://kind.krx.co.kr"
+KIND_VIEWER_PATH = "/common/disclsviewer.do"
+
+#: 본문 주소 끝의 서식번호 = 문서 종류. 「연차보고서로 갈음」인지 여기서 갈린다.
+KIND_FORM_GOV_REPORT = "99667"      # 기업지배구조보고서 (세부원칙 28개 + 서식 표)
+KIND_FORM_ANNUAL_REPORT = "99669"   # 금융회사 지배구조 연차보고서 — 본문은 안내문뿐, 내용은 첨부 PDF
+
+#: KRX 공시 목록 제목의 접미사. 서식번호와 **독립된** 두 번째 신호 — 본문을 받기 전에 걸러낼 수 있다.
+KIND_ANNUAL_REPORT_MARK = "(연차보고서)"
+
+#: 사람이 보는 원문 뷰어 URL — 응답의 `source.page_url` 로 싣는다.
+KIND_VIEWER_URL = f"{KIND_BASE_URL}{KIND_VIEWER_PATH}?method=search&acptno={{acpt_no}}"
+
+#: 공시 원문의 고지. 평가기관 등급(`LICENSE_NOTICE`)과 권리자가 다르다 — 원문은 회사가 제출하고 거래소가 게시한 것이다.
+KIND_LICENSE_NOTICE = (
+    "기업지배구조보고서 원문은 해당 상장법인이 작성·제출하고 한국거래소 KIND 가 게시한 공시 문서입니다. "
+    "인용 시 회사명·보고서명·공시일(접수번호)을 함께 밝히고, 판단은 원문을 직접 확인하세요. "
+    "여기 실린 값은 원문에서 기계적으로 옮긴 것이며 요약·가공하지 않았습니다."
+)

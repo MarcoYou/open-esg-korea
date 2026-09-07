@@ -1,0 +1,614 @@
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-language" content="kr" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="copyright" content="(c)2014" />
+<meta name="description" content="대한민국 대표 기업공시채널 KIND" />
+<meta name="keywords" content="대한민국 대표 기업공시채널 KIND" />
+<title>[삼성전자] 기업지배구조 보고서 공시</title>
+<link rel="stylesheet" type="text/css" href="../css/default_new.css" media="all" />
+<link rel="stylesheet" type="text/css" href="../css/popup.css" media="all" />
+<link rel="stylesheet" type="text/css" href="../js/jquery/themes-base/jquery-ui.min.css" media="all" />
+<link rel="stylesheet" type="text/css" href="../css/viewer.css" media="all" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="../js/html5shiv.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../js/jquery/jquery.js"></script>
+<script type="text/javascript" src="../js/jquery/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/JCommon.js"></script>
+<script type="text/javascript" src="../js/common-ajax.js"></script>
+<script type="text/javascript">
+	//<![CDATA[
+	var _TRK_PI = "PDV";
+	var _TRK_PN = "20250530001005"; //해당 문건의 접수 번호입니다.
+	var btn_close_t=1;
+	//]]>
+</script>
+
+<script type="text/javascript" src="../js/viewer.js?version=20250307"></script>
+
+<script type="text/javascript">
+function executeURLLink()
+{
+	var form	= $("form[name=frm]");
+	var msg		= "삼성전자 - "+$("#tempTitle", form).val();
+	var url		= document.location.href;
+
+	var send_link = "kakaolink://sendurl?msg="+msg+"&url=["+encodeURIComponent(url)+"]&appid=kind.krx.co.kr&appver=1.0&type=link&appname=[KIND]&apiver=1.0";
+	document.location.href = send_link;
+}
+
+/*
+ * 디지털증권 관리종목,매매거래정지(상장법인관련 팝업창호출)
+ */
+function callDigitalDesc(pIsurCd){
+	var url = "/digital/digitalCorpList.do?method=digitalCorpList&listApplntIsurCd=" + pIsurCd;
+	window.open(url, "_blank", "top=100,left=200,scrollbars=yes");
+}
+</script>
+</head>
+<body class="pop">
+
+<!--
+2018.03.13 다운로드 기능 개선 
+파일 다운로드(PDF, EXCEL)에 사용되는 정보 저장
+method, acpNo, docNo, fileName 추가
+-->
+<form name="docdownloadform" id="docdownloadform" action="#">
+	<input type="hidden" name="method"		id="method"		value=""/>
+	<input type="hidden" name="acptNo"		id="acptNo"		value="20250530001005" />
+	<input type="hidden" name="docNo"		id="docNo"		value="" />
+	<input type="hidden" name="fileName"	id="fileName"	value="" />
+	<input type="hidden" name="docLocPath"	id="docLocPath"	value="" />
+	<input type="hidden" name="docpath"		id="docpath"	value="0" />
+	<input type="submit" name="goAction1"	style="display:none" />
+</form>
+<form name="docpathfrm" id="docpathfrm" target="docpathframe" action="/common/disclsviewer.do">
+	<input type="hidden" name="method"		id="method"		value="searchContents" />
+	<input type="hidden" name="docNo"		id="docNo"		value="" />
+	<input type="submit" name="goAction2"	style="display:none" />
+</form>
+<form name="frm" id="frm" action="#">
+<input type="hidden" name="sndLocTpCd"		id="sndLocTpCd"		value="" /><!-- 현재 보여줄 공시 문서의 송신처구분코드 저장 -->
+<input type="hidden" name="formUpclssCd"	id="formUpclssCd"	value="" /><!-- 현재 보여줄 공시 문서의 서식대분류코드 저장 -->
+<input type="hidden" name="acptNo"			id="acptNo"			value="20250530001005" />
+<input type="hidden" name="tempTitle"		id="tempTitle"		value="[삼성전자] 기업지배구조 보고서 공시" />
+<input type="submit" name="goAction3" 		style="display:none" />
+
+	<header class="popup type-01 viewer">
+		<h1 class="ttl type-99 fleft">삼성전자 (005930)</h1>
+		<div class="pt10 pr15 fright">
+			<span class="kakao" style="display:none;"><a href="javascript:executeURLLink();"><img src="../images/common/icn_kakao.png" class="vmiddle pointer" alt="카카오톡 연동" /></a></span>&nbsp;
+			<a href="javascript:facebook();"><img src="../images/common/icn_facebook.png" class="vmiddle pointer" alt="페이스북 연동" /></a>&nbsp;
+			<a href="javascript:twitter();"><img src="../images/common/icn_twitter.png" class="vmiddle pointer" alt="트위터 연동" /></a>&nbsp;
+		</div>
+		<div class="clear"></div>
+		<div class="pl15 pr15">
+			<table class="viewer-search" summary="">
+				<caption>조회</caption>
+				<colgroup>
+					<col width="65">
+					<col width="*">
+					<col width="*">
+				</colgroup>
+				<tbody>
+					<tr class="first">
+						<th class="first"><label for="mainDoc">본 문</label></th>
+						<td colspan="2">
+							<select id="mainDoc" name="mainDoc" title="본문" onchange="fnChangeDoc(); return false;" style="width:452px;">
+								<option value="">본문선택</option>
+								<option value='20250530001923|Y'selected="selected">기업지배구조 보고서 공시 (2025.05.30)</option>
+
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th class="first"><label for="attachedDoc">첨부서류</label></th>
+						<td>
+							<select id="attachedDoc" name="attachedDoc" onchange="fnChangeAttachDoc(); return false;" style="width:452px;">
+								<option>첨부문서선택</option>
+								<option value='20250530001922'>기타공개첨부서류 (2025.05.30)</option>
+
+							</select>
+						</td>
+						<td class="txr">
+							<a href="#viewer" onclick="pdfPrint();return false;"><img src="../images/common/btn_pdf.png" alt="PDF 로 저장" /></a>&nbsp;
+							<a href="#viewer" onclick="excelDownload();return false;"><img src="../images/common/btn_xls.png" alt="EXCEL 로 저장" /></a>&nbsp;
+							<a href="#viewer" onclick="printDocument();return false;"><img src="../images/common/btn_print2.png" alt="인쇄" /></a>&nbsp;
+							<!-- 
+							<a href="#help" onclick="openHelpWindow();return false;"><img src="../images/common/btn_help.png" alt="도움말" /></a>&nbsp;
+							-->
+							<a href="#close" onclick="fnWinClose();return false;"><img src="../images/common/btn_close.png" alt="닫기" /></a>
+						</td>
+					</tr>
+					<tr id="divOrgDiscls"  style="display:none">
+						<th class="first"><label for="orgDisclsId">기공시</label></th>
+						<td colspan="2">
+							<select id="orgDisclsId" name="orgDiscls" title="" onchange="openOrgDiscls(this);return false;">
+								<option>기공시선택</option>
+								<option value="discls"></option>
+							</select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</header>
+	</form>
+	
+	<!-- SNS연결 정보 START -->
+	<p style="display:none"><img src="../images/popup/bg_logo.png">[삼성전자] </p>
+	<!-- SNS연결 정보 END -->
+
+	<div class="viewrIssue" style="display:none;">
+		<p>본 문서는 최종문서가 아니므로, 최종 정정문서를 반드시 확인하시기 바랍니다.</p>
+	</div>
+
+	<section class="contents popup">
+		<!-- 공시목차 -->
+		<div class="openToc">
+			<section class="toc-wrapper" style="width:250px;">
+				<hgroup>
+					<h2 class="ttl">문서 목차</h2><a href="#" class="btn-close"><img src="../images/common/btn_layer_close.png" alt="닫기" /></a>
+				</hgroup>
+				<iframe name="toc" id="toc" width="99%" height="100%" frameborder="0" title="문서목차"></iframe>
+			</section>
+			<div class="layer-opener-wrapper">
+				<hgroup>
+					<a href="#" class="btn-open"><img src="../images/common/btn_layer_open.png" alt="열기" /><h2 class="ttl">문서 목차</h2></a>
+				</hgroup>
+			</div>
+		</div>
+
+		<!-- 공시본문 -->
+		<div id="doc">
+			<iframe name="docViewFrm" id="docViewFrm" title="본문" width="100%" height="100%" src="" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+		</div>
+
+		<!-- 기공시 경고문구 (2013.02.04)  -->
+		<div id="layerPopupFull" style="position:absolute; z-index:9;width:100%; height:100%; left:0px; top:0px; display:none; background-color:white; filter:alpha(opacity=60);opacity:.6;"><!-- 페이지전체영역입니다. --></div>
+		<div id="layerPopup" style="position:absolute; z-index:10; width:690px; height:90px; left:10%; top:165px;  display:none; background-color:#F2F2F2; padding:20px 20px 20px 20px; border:gray 1px solid;">
+			<br/><p align="center">본 공지사항은 공시내용 기재 불충분 등의 사유로 한국거래소  정정요구를 받은 사항입니다.</p>
+			<p align="center">동 공시에 대한 정정공시가 이루어지는 경우 공시내용의 기재내용이 달라지게 되므로 반드시 정정내용을 확인하시기 바랍니다.</p>
+			<br/><br/><p align="center"><button type="button" onclick="doLayerPopup('hide')">확인</button></p>
+		</div>
+	
+	<div id='dialog-loading' title='자료를 조회 중입니다.' class='loading' style="display: none;">
+	<span>
+		<img src='/images/loader/ajax-loader01.gif' />
+	</span>
+</div>
+	</section>
+<iframe name="docpathframe" id="docpathframe"  title="docpathframe" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+<iframe name="filedownloadframe" id="filedownloadframe" title="filedownloadframe"  frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+
+<script type="text/javascript">	
+	function dial(){
+	$( "#dialog-loading" ).dialog({
+		title : '자료를 요청 중입니다.',
+		height: 100,
+		closeOnEscape: false,
+		draggable: false,
+		resizable: false,
+		modal: true
+	});
+	$( "#dialog-loading" ).attr("title", "자료를 요청 중입니다.");
+	$(".ui-dialog-titlebar-close").hide();
+	
+	$(".ui-widget-overlay").css("background-image" , "none");
+	//$(".ui-widget-overlay").css("opacity" , 0);
+}
+	
+	$(document).ready(function(){
+		dial();
+		var userAgent = navigator.userAgent.toLowerCase();
+		if(userAgent.match(/ipad|iphone|android/) != null) {
+			$(".kakao").show();
+		}
+
+		fnTocInit();
+		btn_close_t=parseInt($('section.toc-wrapper a.btn-close').css("top"));
+		fnTocResize();
+		$(window).resize(function(){
+			fnTocResize();
+		});
+		init();
+
+		
+
+	});
+
+	function init(){
+		var docNo = "";
+
+		if($("#mainDoc option:selected").val() != ""){
+			var temps	= $("#mainDoc option:selected").val().split("|");
+			var docNo	= temps[0];
+			var lstYn	= temps[1];
+			if("N" == lstYn){
+				$(".viewrIssue").show();
+			} else {
+				$(".viewrIssue").hide();
+			}
+
+			$("#attachedDoc option:first").attr("selected", "selected");
+			if(docNo != null && docNo != ""){
+				search(docNo);
+				
+				//2018.03.13 다운로드 기능 개선
+				$("#docdownloadform").find("#docNo").val(docNo);
+				$("#docdownloadform").find("#fileName").val("[삼성전자] "+$("#mainDoc option:selected").text());
+			}
+		}
+
+		var title = $("#frm").find("#tempTitle").val();
+		fnSetCookieDiscls('20250530001005', title);
+
+		if(docNo.length  > 1){
+			search(docNo);
+			
+			//2018.03.13 다운로드 기능 개선
+			$("#docdownloadform").find("#docNo").val(docNo);
+			$("#docdownloadform").find("#fileName").val("[삼성전자] "+$("#mainDoc option:selected").text());
+		}
+		
+		//2013.02.04 수시공시 사전확인절차면제 관련 추가
+		var gubn	= '';
+		var reqTpCd = '';
+
+		//gubn값이 1이면 정정요청서로 기공시 목록 표출
+		//gubn값이 2이면 기공시문서로 요구유형값이 01(정정요구서)일때 경고문구 표출
+		if( gubn == '1' ){
+			document.getElementById("divOrgDiscls").style.display = '';
+			document.getElementById("tocTd").style.top	= '150px';
+			document.getElementById("doc").style.top	= '155px';
+		}else if( gubn == '2' ){
+			if( reqTpCd == '01' ){
+				doLayerPopup('show');
+			}
+		}
+	}
+
+	function openOrgDiscls(selectObj){
+		if(selectObj.options.value == "discls"){
+			openDisclsViewer('','');
+		}
+	}
+
+	/*=============================================================================*
+	 * 공시문서 불러오기
+	 *============================================================================*/
+	function fnMainDocSet(){
+		var len = $("#mainDoc option").size();
+		if(len > 1){
+			$("#mainDoc option:eq(1)").attr("selected", "selected");
+		}
+	}
+
+	/*=============================================================================*
+	 * 공시문서 불러오기
+	 *============================================================================*/
+	function fnChangeDoc(){
+		if($("#mainDoc option:selected").val() != ""){
+			var temps	= $("#mainDoc option:selected").val().split("|");
+			var docNo	= temps[0];
+			var lstYn	= temps[1];
+			if("N" == lstYn){
+				$(".viewrIssue").show();
+			} else {
+				$(".viewrIssue").hide();
+			}
+
+			$("#attachedDoc option:first").attr("selected", "selected");
+			if(docNo != null && docNo != ""){
+				search(docNo);
+				
+				//2018.03.13 다운로드 기능 개선
+				$("#docdownloadform").find("#docNo").val(docNo);
+				$("#docdownloadform").find("#fileName").val("[삼성전자] "+$("#mainDoc option:selected").text());
+			}
+		}
+	}
+
+	/*=============================================================================*
+	 * 첨부문서 불러오기
+	 *============================================================================*/
+	function fnChangeAttachDoc(){
+		var docNo = $("#attachedDoc option:selected").val();
+		$("#mainDoc option:first").attr("selected", "selected");
+		if(docNo != null && docNo != ""){
+			search(docNo);
+			
+			//2018.03.13 다운로드 기능 개선
+			$("#docdownloadform").find("#docNo").val(docNo);
+			$("#docdownloadform").find("#fileName").val($("#frm").find("#tempTitle").val()+" "+$("#attachedDoc option:selected").text());
+		}
+	}
+
+	/*=============================================================================*
+	 * 첨부문서 불러오기
+	 *============================================================================*/
+	function setPath(tocLocPath, docLocPath, docServerPath, formUpclssCd, sndLocTpCd){	    
+		
+		//https 접속 시 변경 2020.01.31
+		var url = window.location.href;		
+		if(url.indexOf("https://")!=-1){
+			tocLocPath = tocLocPath.replace("http://","https://");
+			docLocPath = docLocPath.replace("http://","https://");
+		}
+		
+		if(url.indexOf("/idev")!=-1){
+			tocLocPath = tocLocPath.replace("/dev","/idev");
+			docLocPath = docLocPath.replace("/dev","/idev");
+		}
+
+	    var actpno = $("#frm").find("#acptNo").val();
+	    if(actpno != null) actpno = actpno.substring(0,8);
+
+	    if(tocLocPath == ""){
+			$('section.toc-wrapper a.btn-close').click();
+			var tocPath =  "/common/noToc.htm";
+			$("#toc").attr("src", tocPath);
+		} else{
+			$("#toc").attr("src", tocLocPath);
+			$("#toc").load(function(){
+				//https://적용을위해 상대경로로 변경 2020.01.31
+				$("#toc").contents().find('link').attr('href', '/external/dart_toc.css');
+				$("#toc").contents().find("a").attr("target","docViewFrm");
+			});
+		}
+	    docViewFrm.location.href = docLocPath;
+	  //https://적용을위해 상대경로로 변경 2020.01.31
+		$("#docViewFrm").load(function(){	
+			if($("#docViewFrm").contents().find('link').length > 0){
+				if($("#docViewFrm").contents().find('link').attr('href').indexOf('/external/report_xml.css')!= -1){
+					$("#docViewFrm").contents().find('link').attr('href', '/external/report_xml.css');
+				}else if($("#docViewFrm").contents().find('link').attr('href').indexOf('/external/xforms.css')!= -1){
+					$("#docViewFrm").contents().find('link').attr('href', '/external/xforms.css');
+				}	
+			}
+		});
+	    
+	    $("#docdownloadform").find("#docLocPath").val(docLocPath);
+		$("#docdownloadform").find("#docpath").val(docServerPath);
+
+		$("#frm").find("#sndLocTpCd").val(sndLocTpCd);
+		$("#frm").find("#formUpclssCd").val(formUpclssCd);
+	}
+
+	function setPath2(tocLocPath, docLocPath, docServerPath, formUpclssCd, sndLocTpCd){
+		if(tocLocPath == ""){
+			$('section.toc-wrapper a.btn-close').click();
+			toc.location.href = "/common/noToc.htm";
+			docViewFrm.location.href =  "/common/JLDDST60200_i2.jsp?docpath="+docLocPath;
+	    }
+	    else{
+			toc.location.href = tocLocPath;
+			docViewFrm.location.href	= "/common/JLDDST60200_i2.jsp?docpath="+docLocPath;
+	    }
+		document.docdownloadform.docLocPath.value = docLocPath;
+		document.docdownloadform.docpath.value = docServerPath;
+
+		document.frm.sndLocTpCd.value = sndLocTpCd;
+		document.frm.formUpclssCd.value = formUpclssCd;
+	}
+	
+	
+	// esg 서식에 해당될 경우 기존 PDF저장 로직이 아닌 별도 URL을 통해 처리한다. by leedongjin_20240226
+	//  - 사용자가 복붙한 HTML이 들어있기 때문에 서버용 PDF Converter 로는 생성 불가
+	//  - 따라서, 브라우저의 PDF 저장 기능을 이용함
+	function pdfPrint(button){		
+		
+		var isEsgDiscls = true;
+		
+		var maindocFileNm = document.docdownloadform.docLocPath.value;
+
+		if( isEsgDiscls ){
+			
+			var flag = true;
+			
+            $("#docViewFrm").contents().find(".TABLE").each(function() {
+                if(this.width > 1350){                       
+                	isEsgDiscls = false;
+            	}     
+            });
+            
+            if(!isEsgDiscls) {
+        		fnPdfJson();
+        		return;
+        	}    
+			
+			if(!button){ //인쇄 버튼 클릭 시, 해당 메시지를 띄우지 않고 pdf버튼을 클릭시에만 띄우도록 함 
+				flag = confirm("PDF파일 저장은 인쇄팝업에서 PDF로 저장항목을 선택하고 하단의 저장 버튼을 클릭하세요.");
+			}
+
+         	const iframeWin = window.frames["docViewFrm"];
+         	const idoc = iframeWin.document;
+         	
+			if (flag){
+                // 1. 보정
+                $("#docViewFrm").contents().find("table.fact-table").each(function() {
+                        if( $(this).attr('style') == 'width:1550px;'  ) //ESG보고서 표 5-2-1 처럼 전체 width 값을 초과하는 경우 해당속성을 제거하여 인쇄물에 모든 요소가 표현될 수 있도록 조정
+                                $(this).removeAttr('style');
+                
+                        var docView = window.frames["docViewFrm"];
+
+                        var printStyle = docView.document.createElement("style");
+                        printStyle.textContent=`
+                                @page{
+                                        size: portrait;
+                                        
+                                }
+                                body{
+                                        zoom: 0.80;
+                                		box-sizing:border-box;
+                                		margin-right: 20px;
+
+                                }
+                                table{
+                                    	width: 100%;
+                                    	table-layout: fixed;
+                                    	word-wrap: break-word;
+                            	}
+
+                        `;
+                        docView.document.head.appendChild(printStyle);
+                
+                });
+                $("#docViewFrm").contents().find("div.preview_wrap").width(1040); // iframe wrapping div의 width 값을 출력에 맞도록 보정 (세로 A4 출력에 최적화)
+
+				// 2. 인쇄
+				if( maindocFileNm.indexOf("80752.htm") > -1 ){ // 80752 서식의 경우, pdf 프린트 시, default를 가로모드로 출력
+					var docView = window.frames["docViewFrm"];
+					
+					var printStyle = docView.document.createElement("style");
+					printStyle.textContent=`
+						@page{
+							size: landscape;
+							margin: 0;					
+						}
+						body{
+							zoom: 0.90;
+						}
+					`;
+					docView.document.head.appendChild(printStyle);
+	            }else{
+                    var docView = window.frames["docViewFrm"];
+
+                    var printStyle = docView.document.createElement("style");
+                    printStyle.textContent=`
+                            @page{
+                                    size: portrait;
+                                    
+                            }
+                            body{
+                                    zoom: 0.80;
+                            		box-sizing:border-box;
+                            		margin-right: 20px;
+
+                            }
+                            table{
+                                	width: 100%;
+                                	table-layout: fixed;
+                                	word-wrap: break-word;
+                        	}
+
+                    `;
+                    docView.document.head.appendChild(printStyle);
+	            	
+	            	
+	            	
+	            }                    
+
+                 	
+                    //필요 시 테이블 크기 조정
+                    $("#docViewFrm").contents().find(".nb").each(function() {
+
+	                    if( this.width > 1250){   
+                    		$(this).removeAttr('width');
+                    		this.style.maxWidth = "1250px";
+                    		this.style.minWidth = "1250px";
+                    		this.style.width= "1250px";
+                    		this.style.tableLayout = "auto";
+                    	}               	       	
+                    });
+                    $("#docViewFrm").contents().find(".TABLE").each(function() {
+
+                        if(  this.width > 1250){   
+                    		$(this).removeAttr('width');
+                    		this.style.maxWidth = "1250px";
+                    		this.style.minWidth = "1250px";
+                    		this.style.width= "1250px";
+                    		this.style.tableLayout = "auto";
+                    		
+                            $(this).find('colgroup col').each(function(){ 
+                            	$(this).removeAttr('width');
+                            });     
+                    	}   
+                    });
+               
+				window.frames["docViewFrm"].focus();
+				window.frames["docViewFrm"].print();
+			}else{
+				return;
+			}
+		
+		}else{ // 일반 공시일 경우
+			 fnPdfJson();
+			// 기존 로직은 바로 viewer.js의 공통 함수를 호출하지만, pdf파일 존재 여부 체크를 위해 막음. 2025.01.15
+		}
+	}
+	
+	function fnPdfJson(){
+		
+		// 실제 파일 다운로드를 하기 전 pdf 파일이 있는지 확인하기 위해 호출
+		$("#docdownloadform").find("#method").val("pdfDownJson");
+		$("#docdownloadform").ajaxSubmit({
+			  ajaxUrl		: '/common/pdfDownload.do'
+			, ajaxDataType	: 'json'
+			, ajaxCallBack	: fnPdfJsonCallBack
+		});
+	}
+	
+	
+	// pdf 파일 존재여부 체크 확인 결과
+	function fnPdfJsonCallBack(response, status) {
+		if(status == "success") {
+			var items = response;
+			if(items.length == 1){
+				var filestatus = items[0].filestatus;
+				// pdf 파일이 없는 상태
+				if(filestatus == "empty") {
+					var message = "PDF가 아직 변환되지 않았습니다. 처리중이오니 잠시후 다시 클릭하시기 바랍니다.";
+					alert(message);
+					return;
+				} else { // 에러 상태
+					var message = "PDF 파일 변환 중 오류가 발생하였습니다. 잠시 후 다시 시도해 주시기 바랍니다.";
+					alert(message);
+					return;
+				}
+			} 
+			else {
+				// pdf 파일이 존재하기 때문에 다운로드 호출
+				filedownload('pdf');
+			}
+		}
+	}
+	
+	
+	function excelDownload(){
+		
+		
+		var isEsgDiscls = false; //ESG공시 판단용
+		
+		var maindocFileNm = document.docdownloadform.docLocPath.value;
+		if( maindocFileNm.indexOf("99667.htm") > -1 ) isEsgDiscls = true; // 기업지배구조 보고서 공시 (본문)
+		if( maindocFileNm.indexOf("99926.htm") > -1 ) isEsgDiscls = true; // 기타공개첨부서류 (첨부)
+		
+		
+		// ESG 공시일 경우
+		if( isEsgDiscls ){			
+			alert('해당서식은 Excel 다운로드 기능을 제공하지 않습니다.');
+		}else{ // 일반 공시일 경우			
+			filedownload('excel');
+		}
+		
+	}
+		
+</script>
+</body>
+</html>

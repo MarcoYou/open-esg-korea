@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient, get_client
 from open_esg_korea.services.company import company_block, resolve_company
 from open_esg_korea.services.contracts import AnalysisStatus, ToolEnvelope, clean, source_block
@@ -12,15 +13,16 @@ from open_esg_korea.services.contracts import AnalysisStatus, ToolEnvelope, clea
 _STANDARD_RE = re.compile(r'stan-icon\s+([a-z_]+)')
 _STANDARD_LABEL = {"gri": "GRI", "sasb": "SASB", "tcfd": "TCFD", "un_sdgs": "UN SDGs"}
 
-#: 접수번호는 KIND(거래소 공시) 번호다. DART 뷰어는 거래소 접수번호도 열어 준다(OPM 실측).
-KIND_URL = "https://kind.krx.co.kr/common/disclsviewer.do?method=search&acptno={acpt_no}"
-DART_URL = "https://dart.fss.or.kr/dsaf001/main.do?rcpNo={acpt_no}"
+#: 접수번호는 **KIND(거래소) 번호**다 — DART 접수번호와 체계가 다르다.
+#: 같은 번호를 DART 뷰어(`rcpNo=`)에 넣으면 **다른 회사의 다른 공시**가 열린다
+#: (실측 2026-09-07: 삼성전자 `20250530001005` → 에이치솔루션 대규모기업집단현황공시). 그래서 DART 링크는 싣지 않는다.
+KIND_URL = codes.KIND_VIEWER_URL
 
 
 def links(acpt_no: str | None) -> dict[str, str]:
     if not acpt_no:
         return {}
-    return {"kind": KIND_URL.format(acpt_no=acpt_no), "dart": DART_URL.format(acpt_no=acpt_no)}
+    return {"kind": KIND_URL.format(acpt_no=acpt_no)}
 
 
 def parse_standards(html: str | None) -> list[str]:

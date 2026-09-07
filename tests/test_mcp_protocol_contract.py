@@ -14,7 +14,7 @@ _INIT = {"jsonrpc": "2.0", "id": 1, "method": "initialize",
                     "clientInfo": {"name": "contract", "version": "0"}}}
 _HDRS = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream"}
 EXPECTED_TOOLS = {"company", "esg_ratings", "sustainability_reports", "governance_indicators",
-                  "governance_policies", "esg_disclosures", "esg_screener", "ghg_emissions", "ghg_industry", "ghg_national_inventory"}
+                  "governance_policies", "governance_report", "esg_disclosures", "esg_screener", "ghg_emissions", "ghg_industry", "ghg_national_inventory"}
 
 
 @pytest.fixture()

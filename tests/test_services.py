@@ -40,7 +40,8 @@ async def test_reports_payload_has_links_and_verifier(krx_client):
     r = p["data"]["reports"][0]
     assert r["year"] == "2025" and r["third_party_verifier"] == "안진회계법인"
     assert set(r["standards"]) == {"GRI", "SASB", "TCFD", "UN SDGs"}
-    assert r["links"]["dart"].endswith(r["acpt_no"]) and "kind.krx.co.kr" in r["links"]["kind"]
+    # 접수번호는 KIND 번호다 — 같은 번호로 DART 를 열면 다른 회사 공시가 나온다(실측 2026-09-07). DART 링크는 싣지 않는다.
+    assert set(r["links"]) == {"kind"} and r["links"]["kind"].endswith(r["acpt_no"])
     assert p["data"]["summary"]["report_count"] == "7"
 
 
