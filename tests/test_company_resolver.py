@@ -34,8 +34,8 @@ async def test_unknown_code_is_an_error(krx_client):
 
 
 async def test_partial_match_with_one_candidate_is_inferred_and_declared(krx_client):
-    res = await resolve_company("하이닉스", krx_client)
-    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "000660"
+    res = await resolve_company("바이오로직스", krx_client)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "207940"
     assert any("추정" in w for w in res.warnings)
 
 
@@ -148,3 +148,43 @@ async def test_dart_outage_without_a_bundle_does_not_break_portal_resolution(krx
     miss = await resolve_company("에코프로비엠", krx_client, dart=down)
     assert miss.status is AnalysisStatus.ERROR
     assert any("불러오지 못해" in w for w in miss.warnings)
+
+
+# ── 별칭·음차·업종어 ───────────────────────────────────────────────────────────
+
+async def test_colloquial_alias_resolves_exactly_and_says_so(krx_client):
+    res = await resolve_company("현대차", krx_client)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "005380" and res.selected["match"] == "exact"
+    assert any("통칭" in w for w in res.warnings) and not any("추정" in w for w in res.warnings)
+    res = await resolve_company("하이닉스", krx_client)
+    assert res.selected["isu_cd"] == "000660" and any("통칭" in w for w in res.warnings)
+
+
+async def test_hangul_spelled_letters_match_latin_names(krx_client):
+    res = await resolve_company("에스케이하이닉스", krx_client)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "000660" and res.warnings == []
+    res = await resolve_company("삼성SDS", krx_client)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "018260"
+    res = await resolve_company("엘지화학", krx_client)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "051910"
+
+
+async def test_missing_industry_suffix_is_exact_not_inferred(krx_client):
+    res = await resolve_company("삼성화재", krx_client)
+    assert res.status is AnalysisStatus.EXACT and res.selected["isu_cd"] == "000810"
+    assert not any("추정" in w for w in res.warnings)
+
+
+def test_name_keys_transliterate_runs_anywhere():
+    from open_esg_korea.services.company import name_keys
+    assert "삼성sds" in name_keys("삼성에스디에스")
+    assert "kt앤g" in name_keys("케이티앤지") and "kt앤g" in name_keys("KT&G")
+    assert name_keys("이마트") == {"이마트"}                       # 1글자 run 은 건드리지 않는다
+    assert "jyp엔터테인먼트" in name_keys("제이와이피엔터테인먼트")
+
+
+def test_partial_overlap_never_compares_variant_against_variant():
+    from open_esg_korea.services.company import partial_overlap
+    assert partial_overlap("삼성화재", "삼성화재해상보험")
+    assert partial_overlap("엘지", "LG화학") and partial_overlap("sk하이", "에스케이하이닉스")
+    assert not partial_overlap("삼성화재", "에이엠에스")      # samsung화재 ⊃ ams 우연 — 실서버에서 잡힌 오답
