@@ -360,9 +360,10 @@ def manifest(target: Target) -> dict:
             "· 온실가스 배출량(GIR 명세서·배출권거래제·국가 인벤토리)\n"
             "· 기업지배구조보고서·지속가능경영보고서 **원문**\n"
             "· GICS 산업군별 조회\n\n"
-            "등급은 각 평가기관의 저작물입니다. 이 확장은 값을 저장하지 않고 조회할 때마다 실시간으로 "
-            "가져오며, 값마다 그 기관의 이용 조건과 원문 주소를 함께 보여줍니다. "
-            "**개인의 내부 용도로만** 쓸 수 있고, 대외 공개·재배포에는 각 기관의 사전 승낙이 필요합니다."
+            "이 확장의 코드는 Apache-2.0 입니다. 다만 **등급 데이터는 그 라이선스에 들어가지 않습니다** — "
+            "각 평가기관의 저작물이고 다섯 곳 모두 대외 공개를 금지합니다. 확장은 값을 저장하지 않고 "
+            "조회할 때마다 실시간으로 가져오며, 값마다 그 기관의 이용 조건과 원문 주소를 함께 보여줍니다. "
+            "등급의 대외 공개·재배포에는 각 기관의 사전 승낙이 필요합니다."
         ),
         # 설치 화면이 「개발자 정보는 Anthropic 에서 확인하지 않았습니다」라고 경고한다 — 심사받은 확장이
         # 아니라는 뜻이다. 그러니 **어디서 왔는지 스스로 밝히는 칸**을 비워두지 않는다.
@@ -371,7 +372,7 @@ def manifest(target: Target) -> dict:
         "homepage": REPO_URL,
         "documentation": f"{REPO_URL}#readme",
         "support": f"{REPO_URL}/issues",
-        "license": "LicenseRef-PolyForm-Noncommercial-1.0.0",
+        "license": "Apache-2.0",
         "keywords": ["ESG", "KRX", "한국", "상장사", "온실가스", "지배구조"],
         "server": {
             "type": "python",
@@ -425,12 +426,18 @@ def package(target: Target) -> pathlib.Path:
         "이 확장은 Anthropic 이 심사한 것이 아닙니다. 무엇이 들어 있는지는 위 저장소의",
         "scripts/build_mcpb.py 에 전부 적혀 있고, lib/ 아래 파이썬 코드는 그대로 읽을 수 있습니다.",
         "",
-        "등급은 각 평가기관의 저작물입니다 — 저장하지 않고 조회할 때마다 실시간으로 가져오며,",
-        "개인의 내부 용도로만 쓸 수 있습니다. 조건은 응답에 값마다 붙어 나옵니다.",
+        "코드      Apache License 2.0 — 상업 이용 포함해 자유롭게, 출처만 밝히면 됩니다.",
+        "          같이 들어 있는 LICENSE·NOTICE 를 보세요.",
+        "데이터    Apache-2.0 에 **들어가지 않습니다.** 등급은 각 평가기관의 저작물이고 다섯 곳 모두",
+        "          대외 공개를 금지합니다 — 저장하지 않고 조회할 때마다 실시간으로 가져오며,",
+        "          조건은 응답에 값마다 붙어 나옵니다. 자세한 것은 NOTICE.",
+        "",
+        "번들 안 runtime/ 과 lib/ 은 제3자 배포물이며 각자의 라이선스를 따릅니다.",
     ]) + "\n", encoding="utf-8")
     if ICON_SRC.is_file():
         copy_icon(ICON_SRC, work / "icon.png")
-    for name in ("README.md", "LICENSE"):        # 있으면 같이 넣는다 — 받은 사람이 조건을 볼 수 있게
+    # LICENSE·NOTICE 는 **넣는 것이 조건**이다 — Apache-2.0 이 재배포본에 둘 다 두라고 요구한다.
+    for name in ("README.md", "LICENSE", "NOTICE"):
         src = ROOT / name
         if src.is_file():
             shutil.copyfile(src, work / name)

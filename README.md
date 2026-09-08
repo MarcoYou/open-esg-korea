@@ -8,7 +8,7 @@
 
 「삼성전자 ESG 등급 어때?」 — 이렇게 물으면 됩니다.
 
-[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-lightgrey.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
@@ -19,10 +19,11 @@
 [![Windows](https://img.shields.io/badge/Windows-x64-0078D4)](#1단계--내-컴퓨터에-맞는-파일-받기)
 [![파이썬 필요 없음](https://img.shields.io/badge/설치-파이썬%20필요%20없음-success)](#무엇이-들어-있나)
 [![API 키 필요 없음](https://img.shields.io/badge/API%20키-필요%20없음-success)](#3단계--물어보기)
+[![상업 이용 가능](https://img.shields.io/badge/상업%20이용-가능%20·%20출처%20표기-success)](#라이선스)
 
 **[English](README_ENG.md)**
 
-[설치](#-5분-설치) · [이렇게 물어보세요](#-이렇게-물어보세요) · [도구 12개](#도구-12개) · [읽을 때 주의](#읽을-때-주의) · [개발자용](#개발자용) · [문서](#문서)
+[설치](#-5분-설치) · [이렇게 물어보세요](#-이렇게-물어보세요) · [도구 12개](#도구-12개) · [읽을 때 주의](#읽을-때-주의) · [라이선스](#라이선스) · [개발자용](#개발자용) · [문서](#문서)
 
 </div>
 
@@ -45,9 +46,11 @@ flowchart LR
 세 곳 다 **API 키 없이** 조회됩니다. 등급은 저장하지 않고 물을 때마다 실시간으로 가져옵니다.
 
 > [!IMPORTANT]
-> open-esg-korea 는 **개인이 자기 컴퓨터에 설치해 쓰는 MCP** 입니다. ESG 등급과 온실가스 데이터를
-> 저장하거나 재배포하지 않습니다. 등급은 각 평가기관의 저작물이고 **다섯 기관 모두 대외 공개를 금지**하고
-> 있으니, 수집·재배포 시 라이선스 위반 우려가 있습니다. 자세한 조건은 [읽을 때 주의](#읽을-때-주의)를 보세요.
+> **코드는 Apache-2.0 입니다 — 상업 이용을 포함해 자유롭게 쓰시고, 출처만 밝혀 주세요.**
+> 다만 **이 서버가 읽어오는 등급 데이터는 그 라이선스에 들어가지 않습니다.** 등급은 각 평가기관의
+> 저작물이고 **다섯 기관 모두 대외 공개를 금지**합니다. 이 서버는 값을 저장하지 않고 물을 때마다
+> 실시간으로 가져오지만, 받아본 값을 수집·재배포하는 것은 별개 문제입니다.
+> [라이선스](#라이선스) 절을 꼭 읽어 주세요.
 
 ---
 
@@ -264,6 +267,30 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
   공시 원문은 제출 회사의 문서이므로 `governance_report` 는 그 고지를 따로 싣습니다.
 
 ---
+
+## 라이선스
+
+**코드는 [Apache License 2.0](LICENSE) 입니다.** 상업적 이용을 포함해 자유롭게 쓰고, 고치고, 배포하고,
+이걸로 제품을 만들어 파셔도 됩니다. 조건은 하나 — **출처를 밝히는 것**입니다.
+
+구체적으로는 재배포본에 [`LICENSE`](LICENSE) 와 [`NOTICE`](NOTICE) 를 함께 두고, open-esg-korea 에서
+파생했음을 밝히면 됩니다. 파일을 고쳤다면 고쳤다고 적어 주세요. 그게 전부입니다.
+
+> [!WARNING]
+> **이 라이선스는 소프트웨어에 대한 것이지, 소프트웨어가 읽어오는 데이터에 대한 것이 아닙니다.**
+>
+> ESG 등급은 각 평가기관의 저작물이고 조건이 기관마다 다릅니다 — KCGS·MSCI 는 「내부 용도로만」,
+> 서스틴베스트·S&P 는 「사전 서면허가 없이 어떤 형태의 복제도 불가」, 한국ESG연구소는 「사전 서면동의
+> 없이 복제·전송·인용·배포 불가」입니다. **다섯 곳 모두 대외 공개는 안 됩니다.**
+>
+> 코드를 상업적으로 써도 된다는 것이 **등급을 수집·저장·재배포·재판매해도 된다는 뜻이 아닙니다.**
+> 공개 엔드포인트로 띄우거나 등급 자체로 상품을 만들려면 **각 기관에 먼저 문의해야 합니다.**
+
+그래서 이 서버는 등급을 실시간으로만 가져오고 DB·저장소·로그 어디에도 남기지 않으며(캐시는 메모리뿐),
+값마다 그 기관의 고지와 원문 주소를 붙여 돌려줍니다. 응답의 `license` 칸을 지우지 마세요.
+공시 원문은 제출 회사의 문서이고, 온실가스 수치는 GIR 공개정보로 각자의 조건을 따릅니다.
+
+자세한 것은 [`NOTICE`](NOTICE) 에 있습니다.
 
 ## 개발자용
 

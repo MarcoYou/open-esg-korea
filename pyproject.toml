@@ -1,6 +1,6 @@
 [project]
 name = "open-esg-korea"
-version = "0.2.0"
+version = "0.2.1"
 description = "한국 상장사 ESG 정보(KRX ESG 포털)를 MCP 프로토콜로 제공하는 서버"
 requires-python = ">=3.10"
 dependencies = [
@@ -13,8 +13,8 @@ dependencies = [
     "pdfplumber>=0.11",
 ]
 
-[project.license]
-text = "LicenseRef-PolyForm-Noncommercial-1.0.0"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 
 [project.scripts]
 open-esg-korea = "open_esg_korea.server:main"

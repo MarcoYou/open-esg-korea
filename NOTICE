@@ -1,0 +1,74 @@
+open-esg-korea
+Copyright (c) 2026 Geonho You (MarcoYou)
+
+This product includes software developed by Geonho You (MarcoYou).
+Source: https://github.com/MarcoYou/open-esg-korea
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this software except in compliance with the License. You may obtain a copy of
+the License in the LICENSE file distributed with this work, or at
+https://www.apache.org/licenses/LICENSE-2.0
+
+If you redistribute this software, in source or binary form, with or without
+modification, keep this NOTICE file with it and state that your work derives
+from open-esg-korea. That is the whole of the attribution requirement.
+
+
+==============================================================================
+IMPORTANT — THE APACHE LICENSE COVERS THIS SOFTWARE, NOT THE DATA IT RETRIEVES
+==============================================================================
+
+This software is a gateway. It stores no ESG ratings and redistributes none;
+it fetches them live from the data holders' own services on each request.
+
+The ESG ratings reachable through it are the copyrighted works of the rating
+agencies, and each agency sets its own terms. As confirmed on 2026-09-08 at
+https://esg.krx.co.kr :
+
+  KCGS, MSCI                       "for internal use only"
+  Sustinvest, S&P Global           no reproduction in any form without
+                                   prior written permission
+  Korea ESG Research Institute     no reproduction, transmission, quotation
+                                   or distribution without prior written consent
+
+None of the five permit public disclosure. Corporate filings retrieved through
+KIND belong to the companies that filed them. Greenhouse-gas figures come from
+GIR's published statement data under that agency's terms.
+
+The Apache License granted above gives you no rights whatsoever in any of that
+data. Being permitted to use, modify and sell this software commercially is not
+permission to collect, store, republish or resell the ratings it reads. If you
+intend to expose this as a public service or build a commercial product on the
+ratings themselves, ask each agency first.
+
+Every response this software returns carries the issuing agency's notice and a
+link to its original terms in a `license` field. Do not strip it.
+
+
+==============================================================================
+BUNDLED THIRD-PARTY COMPONENTS
+==============================================================================
+
+The distributable extension bundles (.mcpb) built by scripts/build_mcpb.py
+include a Python runtime and third-party libraries (mcp, httpx, pypdfium2,
+pdfplumber and their dependencies), each under its own license. They are not
+covered by this NOTICE; their licenses travel with them inside the bundle, and
+BUILD_INFO.txt in each bundle records exactly what was included and from where.
+
+
+==============================================================================
+한국어 요약
+==============================================================================
+
+이 소프트웨어는 Apache License 2.0 으로 배포됩니다. 상업적 이용을 포함해 자유롭게
+쓰고 고치고 배포할 수 있으며, 조건은 **출처를 밝히는 것**입니다 — 이 NOTICE 파일을
+함께 두고, open-esg-korea 에서 파생했음을 밝히면 됩니다.
+
+다만 **이 라이선스는 소프트웨어에 대한 것이지, 이 소프트웨어가 읽어오는 데이터에
+대한 것이 아닙니다.** ESG 등급은 각 평가기관의 저작물이고 다섯 곳 모두 대외 공개를
+금지합니다(KCGS·MSCI 는 내부 용도로만, 서스틴베스트·S&P 는 사전 서면허가 없이 어떤
+형태의 복제도 불가, 한국ESG연구소는 사전 서면동의 없이 복제·전송·인용·배포 불가).
+
+이 소프트웨어를 상업적으로 써도 된다는 것이 **등급을 수집·저장·재배포·재판매해도
+된다는 뜻은 아닙니다.** 공개 서비스로 띄우거나 등급 자체로 상품을 만들려면 각 기관에
+먼저 문의해야 합니다. 응답에 붙어 나오는 `license` 칸을 지우지 마세요.
