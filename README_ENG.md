@@ -24,8 +24,10 @@ flowchart LR
     S["open-esg-korea<br/>MCP server · 12 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · Cursor<br/>ask in plain language"]
 ```
 
-All three are reachable **without an API key**. Ratings are never stored — they are fetched live on each question
-(the cache lives in memory only).
+All three are reachable **without an API key**. Ratings are never stored — they are fetched live on each question.
+
+> *open-esg-korea is an MCP server that individuals install and run for themselves. It does not store or redistribute
+> ESG ratings or greenhouse-gas data.*
 
 ## Install — if you just want to use it (Windows)
 
