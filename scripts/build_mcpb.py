@@ -50,7 +50,7 @@ REPO_URL = "https://github.com/MarcoYou/open-esg-korea"
 #: (빈 문자열을 넣으면 스키마가 거부할 수 있고, 앱은 기본 아이콘을 쓴다).
 ICON_SRC = ROOT / "assets" / "icon.png"
 ICON_SIZE = 512          # 설치 화면·목록에서 쓰는 크기. 원본이 크면 줄여 넣는다(용량과 선명도 절충).
-ICON_FILL = 0.88         # 로고가 정사각 변의 몇 할을 차지할지. 앱이 씌우는 둥근 프레임에 잘리지 않을 만큼만 남긴다.
+ICON_FILL = 0.94         # 로고가 정사각 변의 몇 할을 차지할지. 0.88 은 설치 화면에서 작아 보였다(실측 2026-09-08).
 
 
 def project_version() -> str:

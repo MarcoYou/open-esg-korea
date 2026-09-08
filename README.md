@@ -10,7 +10,7 @@ AI 클라이언트(Claude, Cursor 등)가 자연어로 바로 물을 수 있게 
 
 **파일 하나 받아서 끌어다 놓으면 끝입니다.** 파이썬·개발도구 아무것도 설치하지 않아도 됩니다.
 
-1. [Releases](https://github.com/MarcoYou/open-esg-korea/releases/latest) 에서 **`open-esg-korea-0.1.0.mcpb`** 를 받습니다 (약 43MB)
+1. [Releases](https://github.com/MarcoYou/open-esg-korea/releases/latest) 에서 **`open-esg-korea-*.mcpb`** 를 받습니다 (약 43MB)
 2. Claude Desktop 을 엽니다 → **설정 → 확장(Extensions)**
 3. 받은 파일을 창 안으로 **끌어다 놓습니다** (또는 「확장 프로그램 설치」로 파일 선택)
 4. **설치**를 누릅니다
@@ -65,7 +65,7 @@ Claude Desktop `claude_desktop_config.json` 예:
 확장 파일을 직접 만들려면 (윈도우):
 
 ```bash
-uv run python scripts/build_mcpb.py --check   # dist/open-esg-korea-0.1.0.mcpb — --check 는 만든 뒤 실제로 실행해 봅니다
+uv run python scripts/build_mcpb.py --check   # dist/open-esg-korea-*.mcpb — --check 는 만든 뒤 실제로 실행해 봅니다
 ```
 
 ## 도구 (12개)
