@@ -69,15 +69,15 @@ account may have extension installs locked down by an admin.
 
 | Your machine | Download | Size |
 |:---|:---:|:---:|
-| **Mac** — M1 · M2 · M3 · M4 … | [![Apple Silicon](https://img.shields.io/badge/Download-Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-arm64.mcpb) | ~40MB |
-| **Mac** — Intel | [![Intel Mac](https://img.shields.io/badge/Download-Intel%20Mac-555555?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-x64.mcpb) | ~44MB |
+| **Mac** — M chip | [![Apple Silicon](https://img.shields.io/badge/Download-Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-arm64.mcpb) | ~40MB |
+| **Mac** — Intel | [![Intel Mac](https://img.shields.io/badge/Download-Intel%20Mac-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-x64.mcpb) | ~44MB |
 | **Windows** — 64-bit | [![Windows](https://img.shields.io/badge/Download-Windows%20x64-0078D4?style=for-the-badge)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-windows-x64.mcpb) | ~43MB |
 
 </div>
 
-<sub>**Not sure which Mac you have?** Apple menu (top-left) → *About This Mac* → the **Chip** row. `Apple M…` means Apple
-Silicon; `Intel…` means Intel. Macs bought since 2020 are almost all Apple Silicon. Picking the wrong one only means the
-extension will not install — nothing breaks.</sub>
+<sub>**Not sure which Mac you have?** The surest check is `uname -m` in Terminal — `arm64` means **Apple Silicon**,
+`x86_64` means **Intel**. Or use the Apple menu (top-left) → *About This Mac* and read the **Chip** row (**Processor**
+on Intel). Picking the wrong one only means the extension will not install — nothing breaks.</sub>
 
 <sub>There is no Linux bundle yet — use the [developer path](#for-developers).</sub>
 
