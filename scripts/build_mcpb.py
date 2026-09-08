@@ -50,6 +50,7 @@ REPO_URL = "https://github.com/MarcoYou/open-esg-korea"
 #: (빈 문자열을 넣으면 스키마가 거부할 수 있고, 앱은 기본 아이콘을 쓴다).
 ICON_SRC = ROOT / "assets" / "icon.png"
 ICON_SIZE = 512          # 설치 화면·목록에서 쓰는 크기. 원본이 크면 줄여 넣는다(용량과 선명도 절충).
+ICON_FILL = 0.88         # 로고가 정사각 변의 몇 할을 차지할지. 앱이 씌우는 둥근 프레임에 잘리지 않을 만큼만 남긴다.
 
 
 def project_version() -> str:
@@ -138,6 +139,13 @@ def build_lib(dest: pathlib.Path) -> None:
     subprocess.run(base + ["--no-deps", str(ROOT)], check=True)
 
 
+def trim_box(im, bg, tol: int = 12):
+    """배경색과 다른 픽셀의 경계. 원본에 붙은 여백을 걷어내려고 쓴다."""
+    from PIL import Image, ImageChops
+    diff = ImageChops.difference(im, Image.new("RGB", im.size, bg)).convert("L")
+    return diff.point(lambda v: 255 if v > tol else 0).getbbox()
+
+
 def copy_icon(src: pathlib.Path, dest: pathlib.Path) -> None:
     """정사각 PNG 로 맞춰 넣는다. Pillow 가 있으면 크기를 줄이고, 없으면 원본을 그대로 쓴다.
 
@@ -149,17 +157,24 @@ def copy_icon(src: pathlib.Path, dest: pathlib.Path) -> None:
         shutil.copyfile(src, dest)
         log(f"아이콘: 원본 그대로 넣음 ({src.name}) — Pillow 가 없어 크기를 못 맞췄습니다")
         return
-    with Image.open(src) as im:
-        im = im.convert("RGBA")
-        if im.width != im.height:
-            log(f"아이콘: 정사각이 아닙니다({im.width}x{im.height}) — 가운데를 잘라 넣습니다")
-            side = min(im.size)
-            left, top = (im.width - side) // 2, (im.height - side) // 2
-            im = im.crop((left, top, left + side, top + side))
-        if im.width > ICON_SIZE:
-            im = im.resize((ICON_SIZE, ICON_SIZE), Image.LANCZOS)
-        im.save(dest, "PNG", optimize=True)
-    log(f"아이콘: {dest.name} {im.width}x{im.height}")
+    with Image.open(src) as raw:
+        im = raw.convert("RGB")
+        bg = im.getpixel((0, 0))                 # 모서리 색을 배경으로 본다
+        box = trim_box(im, bg)
+        if box is None:
+            log("아이콘: 배경만 있어 그대로 넣습니다")
+            im.save(dest, "PNG", optimize=True)
+            return
+        im = im.crop(box)
+        # 앱이 아이콘에 **자기 둥근 프레임**을 씌운다 — 원본 여백을 그대로 두면 여백이 두 겹이 돼
+        # 로고가 작아 보인다(실측 2026-09-08: 글자가 세로 35% 밖에 안 찼다). 잘라내고 다시 채운다.
+        side = round(max(im.size) / ICON_FILL)
+        canvas = Image.new("RGB", (side, side), bg)
+        canvas.paste(im, ((side - im.width) // 2, (side - im.height) // 2))
+        canvas = canvas.resize((ICON_SIZE, ICON_SIZE), Image.LANCZOS)
+        canvas.save(dest, "PNG", optimize=True)
+    fill = max(box[2] - box[0], box[3] - box[1]) / side * 100
+    log(f"아이콘: {dest.name} {ICON_SIZE}x{ICON_SIZE} (여백 잘라내고 {fill:.0f}% 채움)")
 
 
 def tool_entries() -> list[dict[str, str]]:
