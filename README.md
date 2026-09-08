@@ -17,7 +17,7 @@ AI 클라이언트(Claude, Cursor 등)가 자연어로 바로 물을 수 있게 
 
 <sub>「이 확장 프로그램이 컴퓨터의 모든 항목에 액세스할 수 있습니다 · 개발자 정보를 Anthropic 에서 확인하지 않았습니다」라는
 빨간 경고가 뜹니다. Anthropic 이 심사한 공식 확장이 아니라는 뜻이고, 직접 만든 확장은 모두 이렇게 표시됩니다.
-안에 무엇이 들었는지는 [`scripts/build_dxt.py`](scripts/build_dxt.py) 에 전부 있습니다.</sub>
+안에 무엇이 들었는지는 [`scripts/build_mcpb.py`](scripts/build_mcpb.py) 에 전부 있습니다.</sub>
 
 설치되면 이렇게 물어보세요:
 
@@ -65,7 +65,7 @@ Claude Desktop `claude_desktop_config.json` 예:
 확장 파일을 직접 만들려면 (윈도우):
 
 ```bash
-uv run python scripts/build_dxt.py --check   # dist/*.mcpb — --check 는 만든 뒤 실제로 실행해 봅니다
+uv run python scripts/build_mcpb.py --check   # dist/open-esg-korea-0.1.0.mcpb — --check 는 만든 뒤 실제로 실행해 봅니다
 ```
 
 ## 도구 (12개)
