@@ -117,16 +117,16 @@ uv run python -m open_esg_korea          # http://localhost:8000/mcp
 codex mcp add open-esg-korea --url http://localhost:8000/mcp
 ```
 
-> [!WARNING]
-> **포트를 바꾸려면 `FASTMCP_ALLOWED_HOSTS` 도 같이 주세요.** DNS 리바인딩 보호가 켜져 있어
-> 허용 목록에 없는 host 헤더는 거부합니다 — `/health` 는 열리는데 `/mcp` 만
-> `Invalid Host header` 로 막혀 원인을 찾기 어렵습니다.
->
-> ```bash
-> FASTMCP_PORT=8123 FASTMCP_ALLOWED_HOSTS=localhost:8123,127.0.0.1:8123 uv run python -m open_esg_korea
-> ```
+포트를 바꿔도 그냥 됩니다 — 호스트 허용 목록이 바인딩한 포트를 따라갑니다.
 
-기본 포트(8000)를 쓰면 그냥 됩니다.
+```bash
+FASTMCP_PORT=8123 uv run python -m open_esg_korea
+codex mcp add open-esg-korea --url http://localhost:8123/mcp
+```
+
+<sub>서버 뒤에 리버스 프록시를 두는 등 **다른 이름으로 들어오게** 하려면 그 host 를
+`FASTMCP_ALLOWED_HOSTS=esg.example.com` 처럼 알려 주세요. DNS 리바인딩 보호가 켜져 있어
+허용 목록에 없는 host 헤더는 421 로 거부합니다.</sub>
 
 ## 떼어내기
 
