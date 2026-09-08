@@ -18,8 +18,8 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
       - run: uv sync --dev
       - name: Refresh snapshot
         env:
@@ -28,7 +28,7 @@ jobs:
       - name: Verify
         run: uv run pytest -q tests/test_dart_corp_codes.py
       - name: Open PR
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: chore/refresh-listed-companies
           title: "chore: 상장사 명부 스냅샷 갱신"
