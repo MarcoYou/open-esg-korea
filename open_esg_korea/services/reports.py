@@ -11,6 +11,7 @@ from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient, get_client
 from open_esg_korea.krx.kind import KindClient, KindClientError, get_kind_client
 from open_esg_korea.services.company import company_block, resolve_company
+from open_esg_korea.services.esg_ratings import current_year
 from open_esg_korea.services.contracts import AnalysisStatus, ToolEnvelope, clean, source_block
 from open_esg_korea.services.sustainability_notice import parse_attachments, parse_notice
 
@@ -39,6 +40,7 @@ def parse_report_row(r: dict[str, Any]) -> dict[str, Any]:
         "year": clean(r.get("yy")), "title": clean(r.get("orgn_file_nm")),
         "industry": clean(r.get("upjong")), "standards": parse_standards(r.get("bas_itm_cd_nm")),
         "third_party_verifier": clean(r.get("remk")), "acpt_no": acpt, "links": links(acpt),
+        "source": "portal",
     }
 
 
@@ -76,6 +78,59 @@ async def _fetch_notice(report: dict[str, Any], warnings: list[str],
     return detail
 
 
+async def _fill_recent_years(reports: list[dict[str, Any]], *, isu_cd: str, name: str,
+                             to_year: int | None, warnings: list[str],
+                             kind: KindClient | None) -> list[dict[str, Any]]:
+    """포털 목록이 못 따라온 최신 연도를 KIND 공시 검색으로 메운다.
+
+    포털의 지속가능경영보고서 목록은 **한 해 늦다**(2026-09-08 실측: 발행년도 선택지가 2025 까지). 그날
+    KIND 에는 2026년 자율공시가 259건 있었고 삼성전자도 그중 하나였다 — 목록만 없을 뿐 원문·첨부는
+    이미 읽힌다. 「최신 보고서가 통째로 안 보이는」 것이 이 도구에서 가장 아픈 구멍이라 메운다.
+
+    빠진 해가 없으면 **호출하지 않는다.** 있으면 기간을 한 번에 물어 **한 번**만 부른다(규칙 1).
+    KIND 행에는 포털 집계 열(업종·작성기준·검증기관)이 없다 — 없는 것을 지어내지 않고 `source` 로 밝힌다.
+    """
+    latest_portal = max((int(r["year"]) for r in reports if (r.get("year") or "").isdigit()), default=0)
+    end = to_year or current_year()
+    start = max(latest_portal + 1, 2019)
+    if start > end:
+        return reports
+
+    kind = kind or get_kind_client()
+    try:
+        rows = await kind.search(isu_cd=isu_cd, name=name,
+                                 from_date=f"{start}-01-01", to_date=f"{end}-12-31",
+                                 report_nm=codes.KIND_SEARCH_SUSTAINABILITY)
+    except (KindClientError, httpx.HTTPError, TimeoutError) as exc:
+        warnings.append(f"포털 목록은 {latest_portal}년까지입니다. 이후 공시를 KIND 에서 확인하지 못했습니다: {exc}")
+        return reports
+
+    known = {r["acpt_no"] for r in reports if r.get("acpt_no")}
+    # 한 해에 원본과 정정이 함께 나올 수 있다 — 드물지만 있다(실측: 2026년 436건 중 4건, 2025년 408건 중 1건).
+    # 포털도 기본값은 「정정 전 공시 제외」다. 우리도 **그 해의 마지막 공시 한 건**만 싣고 정정이면 밝힌다.
+    by_year: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        if row["acpt_no"] in known:
+            continue
+        year = row["disclosed_at"][:4]
+        prev = by_year.get(year)
+        if prev and prev["disclosed_at"] >= row["disclosed_at"]:
+            continue
+        by_year[year] = {
+            "year": year, "title": row["title"],
+            "industry": None, "standards": [], "third_party_verifier": None,
+            "acpt_no": row["acpt_no"], "links": links(row["acpt_no"]),
+            "disclosed_at": row["disclosed_at"], "source": "kind",
+            "amended": row["title"].startswith("[정정]"),
+        }
+    added = list(by_year.values())
+    if added:
+        years = ", ".join(sorted({a["year"] for a in added}))
+        warnings.append(f"{years}년 보고서는 포털 목록에 아직 없어 거래소 공시(KIND)에서 찾았습니다 — "
+                        "업종·작성기준·검증기관은 포털 집계 값이라 비어 있습니다(원문에는 들어 있습니다).")
+    return sorted(added + reports, key=lambda r: r.get("year") or "", reverse=True)
+
+
 async def build_sustainability_reports_payload(company: str, *, from_year: int | None = None,
                                                to_year: int | None = None, year: int | None = None,
                                                client: KrxEsgClient | None = None,
@@ -92,6 +147,8 @@ async def build_sustainability_reports_payload(company: str, *, from_year: int |
     to = f"{to_year or 2099}1231"
     rows = await client.report_list(isu, fr, to)
     reports = [parse_report_row(r) for r in rows]
+    reports = await _fill_recent_years(reports, isu_cd=isu, name=res.selected["name"],
+                                       to_year=to_year, warnings=env.warnings, kind=kind)
     summary = await client.report_summary(isu) or {}
     env.status = AnalysisStatus.EXACT if reports else AnalysisStatus.NO_DATA
     if not reports:

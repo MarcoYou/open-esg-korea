@@ -39,8 +39,14 @@ def _render(payload: dict) -> str:
         lines += ["| 연도 | 보고서 | 업종 | 작성기준 | 제3자 검증 | 원문 |", "|---|---|---|---|---|---|"]
         for r in d["reports"]:
             link = f"[원문 보기]({r['links']['kind']})" if r["links"] else "-"
-            lines.append(f"| {dash(r['year'])} | {dash(r['title'])} | {dash(r['industry'])} | "
+            # 포털 집계에 아직 없어 KIND 공시에서 찾은 행 — 빈 칸이 「없음」이 아니라 「집계 전」임을 밝힌다.
+            year = dash(r["year"]) + (" ⁽ᴷᴵᴺᴰ⁾" if r.get("source") == "kind" else "")
+            lines.append(f"| {year} | {dash(r['title'])} | {dash(r['industry'])} | "
                          f"{', '.join(r['standards']) or '-'} | {dash(r['third_party_verifier'])} | {link} |")
+        if any(r.get("source") == "kind" for r in d["reports"]):
+            lines += ["", "> ⁽ᴷᴵᴺᴰ⁾ 는 포털 집계에 아직 오르지 않아 거래소 공시에서 찾은 건이다 — "
+                          "업종·작성기준·검증기관 칸이 빈 것은 「없다」가 아니라 「포털이 아직 집계하지 않았다」는 뜻이고, "
+                          "그 값들은 아래 원문에 들어 있다."]
     lines += _detail_lines(d)
     lines += footer(payload)
     return "\n".join(lines)

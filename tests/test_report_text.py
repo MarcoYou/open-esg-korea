@@ -77,7 +77,7 @@ def test_scanned_pdf_is_detected_as_unreadable_not_empty():
 
 # ── 서비스·도구 ──────────────────────────────────────────────────────────────
 async def test_overview_gives_the_table_of_contents(krx_client, kind_client):
-    payload = await build_report_text_payload("삼성전자")
+    payload = await build_report_text_payload("삼성전자", year=2025)
     data = payload["data"]
     assert data["mode"] == "overview" and data["page_count"] == 3
     assert "Facts & Figures" in data["toc"]
@@ -85,20 +85,20 @@ async def test_overview_gives_the_table_of_contents(krx_client, kind_client):
 
 
 async def test_find_reports_pages_and_snippets(krx_client, kind_client):
-    payload = await build_report_text_payload("삼성전자", find="재생에너지")
+    payload = await build_report_text_payload("삼성전자", year=2025, find="재생에너지")
     data = payload["data"]
     assert data["match_pages"] == [3] and data["total_hits"] >= 2
     assert "재생에너지" in data["matches"][0]["snippets"][0]
 
 
 async def test_no_hit_says_not_found_rather_than_absent(krx_client, kind_client):
-    payload = await build_report_text_payload("삼성전자", find="존재하지않는표현")
+    payload = await build_report_text_payload("삼성전자", year=2025, find="존재하지않는표현")
     assert payload["data"]["match_pages"] == []
     assert any("「없다」고 단정하지 마세요" in w for w in payload["warnings"])
 
 
 async def test_page_mode_is_aligned_and_warns_about_flattened_tables(krx_client, kind_client):
-    payload = await build_report_text_payload("삼성전자", page=3)
+    payload = await build_report_text_payload("삼성전자", year=2025, page=3)
     data = payload["data"]
     assert data["aligned"] is True
     assert "사업장 에너지 사용량" in data["page_text"]
@@ -106,15 +106,15 @@ async def test_page_mode_is_aligned_and_warns_about_flattened_tables(krx_client,
 
 
 async def test_page_out_of_range_is_no_data(krx_client, kind_client):
-    payload = await build_report_text_payload("삼성전자", page=99)
+    payload = await build_report_text_payload("삼성전자", year=2025, page=99)
     assert payload["status"] == "no_data"
     assert any("99쪽은 이 보고서에 없습니다" in w for w in payload["warnings"])
 
 
 async def test_second_question_does_not_hit_the_network(krx_client, kind_client):
-    await build_report_text_payload("삼성전자", find="재생에너지")
+    await build_report_text_payload("삼성전자", year=2025, find="재생에너지")
     calls = kind_client.calls
-    await build_report_text_payload("삼성전자", find="폐기물")
+    await build_report_text_payload("삼성전자", year=2025, find="폐기물")
     assert kind_client.calls == calls                 # 페이지 텍스트가 캐시에 있다
     assert cache_stats()["documents"] == 1
 
@@ -129,7 +129,7 @@ async def test_pdf_bytes_are_not_kept_as_the_document_cache(krx_client, kind_cli
 async def test_company_without_an_attachment_is_no_data(krx_client, kind_client, monkeypatch):
     from open_esg_korea.services import report_text
     monkeypatch.setattr(report_text, "_pick_attachment", lambda atts: None)
-    payload = await build_report_text_payload("삼성전자")
+    payload = await build_report_text_payload("삼성전자", year=2025)
     assert payload["status"] == "no_data"
     assert any("회사 사이트에만 올렸을 수 있습니다" in w for w in payload["warnings"])
 
@@ -143,7 +143,7 @@ async def test_korean_attachment_wins_when_both_languages_are_filed():
 
 
 async def test_markdown_shows_snippets_and_the_source_pdf(krx_client, kind_client):
-    text = _render(await build_report_text_payload("삼성전자", find="재생에너지"))
+    text = _render(await build_report_text_payload("삼성전자", year=2025, find="재생에너지"))
     assert "### 3쪽" in text and "재생에너지" in text
     assert "원문 PDF: [삼성전자 지속가능경영보고서_2025.pdf]" in text
     assert "공시 원문" in text                          # 평가기관 고지가 아니라 공시 고지
@@ -181,16 +181,16 @@ def test_intact_values_are_never_flagged():
 
 
 async def test_grid_is_opt_in_and_comes_with_a_warning(krx_client, kind_client):
-    plain = await build_report_text_payload("삼성전자", page=3)
+    plain = await build_report_text_payload("삼성전자", year=2025, page=3)
     assert "tables" not in plain["data"]             # 기본은 격자를 만들지 않는다
 
-    payload = await build_report_text_payload("삼성전자", page=3, table=True)
+    payload = await build_report_text_payload("삼성전자", year=2025, page=3, table=True)
     data = payload["data"]
     assert data["tables"] and data["suspect_cells"] > 0
     assert any("검증되지 않은 실험 결과" in w for w in payload["warnings"])
 
 
 async def test_markdown_marks_suspect_cells(krx_client, kind_client):
-    text = _render(await build_report_text_payload("삼성전자", page=3, table=True))
+    text = _render(await build_report_text_payload("삼성전자", year=2025, page=3, table=True))
     assert "### 격자 (실험적" in text
     assert "⚠07,325" in text

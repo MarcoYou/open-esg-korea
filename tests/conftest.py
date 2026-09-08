@@ -80,19 +80,24 @@ def _read(name: str) -> str:
 KIND_VIEWERS = {"20250530001005": "kind_viewer_005930_2025.html",
                 "20260601000268": "kind_viewer_005930_2026.html",
                 "20250305001136": "kind_viewer_105560_2025.html",
-                "20250627000633": "kind_viewer_sr_005930_2025.html"}
+                "20250627000633": "kind_viewer_sr_005930_2025.html",
+                "20260626000871": "kind_viewer_sr_005930_2026.html"}
 #: 문서번호 → 경로 응답(`parent.setPath(...)`) fixture.
 KIND_CONTENTS = {"20250530001923": "kind_contents_005930_2025.html",
                  "20260601000417": "kind_contents_005930_2026.html",
                  "20250226002153": "kind_contents_105560_2025.html",
                  "20250623001134": "kind_contents_sr_005930_2025.html",
-                 "20250627000755": "kind_contents_sr_att_005930_2025.html"}
+                 "20250627000755": "kind_contents_sr_att_005930_2025.html",
+                 "20260623000638": "kind_contents_sr_005930_2026.html",
+                 "20260623000652": "kind_contents_sr_att_005930_2026.html"}
 #: 본문 주소 끝 → 본문 fixture. 삼성전자 본문은 원칙 3개만 남긴 subset(원본 5.7MB).
 KIND_BODIES = {"/external/2025/05/30/001005/20250530001923/99667.htm": "kind_gov_005930_2025_subset.html",
                "/external/2026/06/01/000268/20260601000417/99667.htm": "kind_gov_005930_2026_subset.html",
                "/external/2025/03/05/001136/20250226002153/99669.htm": "kind_gov_105560_2025.html",
                "/external/2025/06/27/000633/20250623001134/61979.htm": "kind_sr_notice_005930_2025.html",
-               "/external/2025/06/27/000633/20250627000755/99998.htm": "kind_sr_attach_005930_2025.html"}
+               "/external/2025/06/27/000633/20250627000755/99998.htm": "kind_sr_attach_005930_2025.html",
+               "/external/2026/06/26/000871/20260623000638/61979.htm": "kind_sr_notice_005930_2026.html",
+               "/external/2026/06/26/000871/20260623000652/99998.htm": "kind_sr_attach_005930_2026.html"}
 
 
 #: 첨부 PDF — 삼성전자 2025 보고서에서 3쪽(표지·서술·수치 표)만 뽑은 진짜 PDF 343KB.
@@ -105,6 +110,13 @@ def kind_route(request: httpx.Request) -> httpx.Response:
     """KIND 원문 뷰어 — ①뷰어 ②경로 ③본문 세 단을 그대로 흉내낸다."""
     url = urlparse(str(request.url))
     qs = {k: v[0] for k, v in parse_qs(url.query).items()}
+    if url.path == codes.KIND_SEARCH_PATH:
+        # 공시 검색은 POST 본문이다 — 종목코드·기간·제목으로 갈라 준다(맞는 조합에만 결과가 있다).
+        form = {k: v[0] for k, v in parse_qs(request.content.decode()).items()}
+        if (form.get("repIsuSrtCd") == "A005930" and form.get("fromDate", "").startswith("2026")
+                and codes.KIND_SEARCH_SUSTAINABILITY in form.get("reportNm", "")):
+            return httpx.Response(200, text=_read("kind_search_sr_005930_2026.html"))
+        return httpx.Response(200, text='<table><tr><td>조회된 내용이 없습니다.</td></tr></table>')
     if url.path == codes.KIND_VIEWER_PATH:
         if qs.get("method") == "search":
             name = KIND_VIEWERS.get(qs.get("acptno", ""))
