@@ -111,6 +111,10 @@ async def build_ghg_emissions_payload(company: str, year: int | None = None, *, 
         history[i]["yoy_pct"] = round((b - a) / a * 100, 1) if a and b is not None else None
 
     ets = await _ets_block(gir, name, span)
+    ets["links"] = {k: v for k, v in {
+        "인증 배출량": gcodes.PAGE_URLS["certified"] if ets["by_year"] else None,
+        "사전할당량": gcodes.PAGE_URLS["allocation"] if ets["pre_allocation"] else None,
+    }.items() if v}
 
     if exact:
         env.status = AnalysisStatus.EXACT

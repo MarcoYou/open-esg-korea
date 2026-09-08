@@ -62,6 +62,8 @@ def _render(payload: dict) -> str:
     for p in ets["pre_allocation"]:
         vals = " · ".join(f"{y} {num(v)}" for y, v in p["allocation_by_year_t"].items())
         lines += ["", f"- {p['period']}차 계획기간({p['years']}) 사전할당량(t, 유상 {dash(p['paid_allocation'])}): {vals}"]
+    if ets["links"]:
+        lines += ["- 출처: " + " · ".join(f"{name} {url}" for name, url in ets["links"].items())]
     lines += _disclosure_lines(d)
     lines += ["", "> " + " ".join(d.get("reading_notes", []))]
     lines += footer(payload)
@@ -75,7 +77,7 @@ def register_tools(mcp):
                             format: str = "md") -> str:
         """desc: 회사별 온실가스 배출량 — GIR 명세서(검증된 규제 기준 tCO₂eq·에너지 TJ·지정업종·검증기관) + 5년 추이 + 배출권거래제 할당량 대비 인증 배출량·사전할당량.
         when: "○○ 탄소배출량", "온실가스 얼마나 배출", "배출권 할당 대비 얼마나 썼나", "배출량 줄고 있나".
-        rule: 대상 업체(연 1,170개 안팎)만 있다 — 없으면 no_data 이지 0 이 아니다. 자회사가 따로 지정되면 「관련 법인」에 나온다. 지정구분 「사업장」은 그 사업장만이다. year 를 비우면 자료가 있는 최신 해. report=True 면 보고서 공시치를 **범위와 함께** 곁들인다 — GIR 은 국내 규제 대상, 보고서 표지 숫자는 대개 글로벌이라 다르다. 범위(경계·Scope 2 지역/시장기반·NF3)를 맞추면 사실상 같은 값이다(실측 오차 0.001~0.5%). 값을 지어내지 않고 발췌를 주니 basis 를 보고 고르라. Scope 3 는 GIR 에 없어 보고서가 유일한 출처다.
+        rule: 대상 업체(연 1,170개 안팎)만 있다 — 없으면 no_data 이지 0 이 아니다. 자회사가 따로 지정되면 「관련 법인」에 나온다. 지정구분 「사업장」은 그 사업장만이다. year 를 비우면 자료가 있는 최신 해. 기본은 report=False — 먼저 GIR 값만으로 답하고, 답 끝에 report=True 로 다시 불러 회사 공시치와 대조해볼지 사용자에게 물어라(느리니 먼저 물어보지 않고 자동으로 켜지 않는다). report=True 면 보고서 공시치를 **범위와 함께** 곁들인다 — GIR 은 국내 규제 대상, 보고서 표지 숫자는 대개 글로벌이라 다르다. 범위(경계·Scope 2 지역/시장기반·NF3)를 맞추면 사실상 같은 값이다(실측 오차 0.001~0.5%). 값을 지어내지 않고 발췌를 주니 basis 를 보고 고르라. Scope 3 는 GIR 에 없어 보고서가 유일한 출처다.
         params: company(회사명|6자리 종목코드), year(YYYY, 선택 — 2011~), report(보고서 공시치 대조, 느리다 — 선택), format(md|json)
         ref: ghg_industry, ghg_national_inventory, sustainability_report_text, sustainability_reports
         """
