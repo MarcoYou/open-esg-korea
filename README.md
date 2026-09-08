@@ -1,5 +1,7 @@
 # open-esg-korea
 
+[English](README_ENG.md)
+
 한국 상장사의 ESG 데이터를 더 쉽고 빠르고 AI-friendly 하게 접근하기 위한 게이트웨이 — MCP 서버.
 
 [KRX ESG 포털](https://esg.krx.co.kr)에 흩어진 기관별 ESG 등급·지속가능경영보고서·기업지배구조보고서 지표를
