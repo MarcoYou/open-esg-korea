@@ -55,9 +55,10 @@ def test_attachment_pdf_url_is_absolute_and_space_safe():
 
 
 async def test_payload_reads_the_latest_filing_by_default(krx_client, kind_client):
+    """최신은 **포털 목록의 최신이 아니라 실제 최신**이다 — 포털이 한 해 늦어 2026 은 KIND 에서 온다."""
     payload = await build_sustainability_reports_payload("삼성전자")
     detail = payload["data"]["detail"]
-    assert detail["year"] == "2025" and detail["acpt_no"] == "20250627000633"
+    assert detail["year"] == "2026" and detail["acpt_no"] == "20260626000871"
     assert detail["form_no"] == "61979"
     assert detail["attachments"][0]["name"].endswith(".pdf")
 
@@ -65,7 +66,7 @@ async def test_payload_reads_the_latest_filing_by_default(krx_client, kind_clien
 async def test_asking_for_a_year_with_no_filing_keeps_the_list(krx_client, kind_client):
     """원문을 못 고른다고 목록까지 죽이지 않는다."""
     payload = await build_sustainability_reports_payload("삼성전자", year=2018)
-    assert payload["status"] == "exact" and len(payload["data"]["reports"]) == 7
+    assert payload["status"] == "exact" and len(payload["data"]["reports"]) == 8
     assert "detail" not in payload["data"]
     assert any("2018년 보고서가 목록에 없어" in w for w in payload["warnings"])
 
@@ -76,13 +77,14 @@ async def test_kind_failure_degrades_to_the_list_with_a_warning(krx_client, kind
         raise KindClientError("KIND 가 요청을 거부했습니다")
     monkeypatch.setattr(kind_client, "document", blocked)
     payload = await build_sustainability_reports_payload("삼성전자")
-    assert payload["status"] == "exact" and len(payload["data"]["reports"]) == 7
+    assert payload["status"] == "exact" and len(payload["data"]["reports"]) == 8
     assert payload["data"]["detail"]["unread"] is True
     assert any("공시 원문(KIND)을 읽지 못해" in w for w in payload["warnings"])
 
 
 async def test_markdown_shows_period_site_and_pdf(krx_client, kind_client):
-    text = _render(await build_sustainability_reports_payload("삼성전자"))
+    """연도를 집으면 그 해 원문을 읽는다 — 2025 건은 FY2024 를 다룬다."""
+    text = _render(await build_sustainability_reports_payload("삼성전자", year=2025))
     assert "회사 공개처: https://www.samsung.com/sec/sustainability/main/" in text
     assert "첨부 원문: [삼성전자 지속가능경영보고서_2025.pdf]" in text
     assert "2024년 1월 1일부터 12월 31일까지" in text

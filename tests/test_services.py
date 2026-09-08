@@ -80,7 +80,7 @@ def test_standards_parsed_from_icon_html():
 
 async def test_reports_payload_has_links_and_verifier(krx_client):
     p = await build_sustainability_reports_payload("삼성전자", client=krx_client)
-    r = p["data"]["reports"][0]
+    r = next(x for x in p["data"]["reports"] if x["source"] == "portal")   # 최신은 KIND 보충분이다
     assert r["year"] == "2025" and r["third_party_verifier"] == "안진회계법인"
     assert set(r["standards"]) == {"GRI", "SASB", "TCFD", "UN SDGs"}
     # 접수번호는 KIND 번호다 — 같은 번호로 DART 를 열면 다른 회사 공시가 나온다(실측 2026-09-07). DART 링크는 싣지 않는다.

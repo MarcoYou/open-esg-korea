@@ -68,6 +68,32 @@ def parse_documents(viewer_html: str) -> list[dict[str, str | bool]]:
     return docs
 
 
+_ROW_RE = re.compile(r"<tr[^>]*>(.*?)</tr>", re.S)
+#: 접수번호는 링크 주소가 아니라 **onclick 인자**에 있다 — `openDisclsViewer('20260626000871','')`.
+_SEARCH_ACPT_RE = re.compile(r"openDisclsViewer\(\s*['\"](\d{14})['\"]")
+_SEARCH_TITLE_RE = re.compile(r"openDisclsViewer\([^)]*\)[^>]*>(.*?)</a>", re.S)
+_SEARCH_DATE_RE = re.compile(r"(20\d\d-\d\d-\d\d)")
+
+
+def parse_search_rows(html: str) -> list[dict[str, str]]:
+    """공시 검색 결과 → [{acpt_no, disclosed_at, title}].
+
+    접수번호가 있는 행만 센다 — 머리글·안내 문구 행은 저절로 빠진다.
+    """
+    rows: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for body in _ROW_RE.findall(html):
+        acpt = _SEARCH_ACPT_RE.search(body)
+        date = _SEARCH_DATE_RE.search(body)
+        if not acpt or not date or acpt.group(1) in seen:
+            continue
+        seen.add(acpt.group(1))
+        title = _SEARCH_TITLE_RE.search(body)
+        rows.append({"acpt_no": acpt.group(1), "disclosed_at": date.group(1),
+                     "title": _text(title.group(1)) if title else ""})
+    return rows
+
+
 def parse_body_url(contents_html: str) -> tuple[str, str]:
     """경로 응답(1KB) → (본문 URL, 목차 URL). 본문은 여기서만 알 수 있다."""
     m = _SETPATH_RE.search(contents_html)
@@ -107,6 +133,15 @@ class KindClient:
             self.calls += 1
         return await self._http.get(url)
 
+    async def _throttled_post(self, url: str, data: dict[str, str]) -> httpx.Response:
+        async with self._lock:
+            wait = self._min_interval - (time.monotonic() - self._last_call)
+            if wait > 0:
+                await asyncio.sleep(wait)
+            self._last_call = time.monotonic()
+            self.calls += 1
+        return await self._http.post(url, data=data)
+
     async def _get_text(self, url: str) -> str:
         resp = await self._throttled_get(url)
         resp.raise_for_status()
@@ -128,6 +163,38 @@ class KindClient:
         self._cache[key] = (time.monotonic() + self._ttl, value)
 
     # ── 화면별 ────────────────────────────────────────────────────────────────
+    async def search(self, *, isu_cd: str, name: str, from_date: str, to_date: str,
+                     report_nm: str = "") -> list[dict[str, str]]:
+        """회사 하나의 공시 목록. **포털 목록이 못 따라오는 최신 연도를 메우는 용도**다.
+
+        호출 모양이 까다롭다 — `codes.KIND_SEARCH_PATH` 주석에 왜인지 적어뒀다. 요약하면
+        POST 본문 · 종목코드에 `A` 접두사 · 회사명과 코드를 각각 두 칸에 · `X-Requested-With` 없이.
+        어긋나면 오류가 아니라 **안내 페이지**가 와서 「결과 0건」처럼 보인다.
+
+        `report_nm` 으로 제목을 좁히면 한 번이면 끝난다(실측: 삼성전자 2026 → 1행).
+        """
+        key = f"search/{isu_cd}/{from_date}/{to_date}/{report_nm}"
+        hit = self._cached(key)
+        if hit is not None:
+            return list(hit["rows"])
+
+        data = {
+            "method": "searchDetailsSub", "forward": "details_sub",
+            "searchCorpName": name, "oldSearchCorpName": name,
+            "repIsuSrtCd": f"A{isu_cd}", "allRepIsuSrtCd": f"A{isu_cd}",
+            "fromDate": from_date, "toDate": to_date,
+            "currentPageSize": "100", "pageIndex": "1",
+        }
+        if report_nm:
+            data["reportNm"] = report_nm
+        resp = await self._throttled_post(f"{codes.KIND_BASE_URL}{codes.KIND_SEARCH_PATH}", data)
+        resp.raise_for_status()
+        if "불편을" in resp.text:          # 호출 모양이 어긋났다 — 0건과 구분해서 말한다
+            raise KindClientError("KIND 공시 검색이 안내 페이지를 돌려줬습니다 — 호출 형식이 바뀐 것 같습니다.")
+        rows = parse_search_rows(resp.text)
+        self._store(key, {"rows": rows})
+        return rows
+
     async def documents(self, acpt_no: str) -> list[dict[str, str | bool]]:
         """①뷰어만 — 본문(5~12MB)을 받지 않고 문서 목록만 본다. 「어떤 서식인가」는 이것으로도 알 수 있다."""
         html = await self._get_text(f"{codes.KIND_BASE_URL}{codes.KIND_VIEWER_PATH}"
