@@ -28,7 +28,7 @@ Claude Desktop `claude_desktop_config.json` 예:
 | 도구 | 무엇을 답하나 |
 |---|---|
 | `company` | 회사명/종목코드 → 포털 종목코드·ISIN. 모든 도구의 입구 |
-| `esg_ratings` | KCGS·MSCI·한국ESG연구소·S&P·서스틴베스트 ESG/E/S/G 등급(연도별) + KCGS 3년 추이 |
+| `esg_ratings` | KCGS·MSCI·한국ESG연구소·S&P·서스틴베스트 ESG/E/S/G 등급(연도별) + KCGS 3년 추이 + **같은 기관 안의 분포**(이 등급 이상 몇 사·동점 몇 사) |
 | `sustainability_reports` | 지속가능경영보고서 목록 + 최신 한 건의 공시 원문 — 보고 대상 기간·목차·검증기관·회사 공개처·첨부 PDF 주소 |
 | `sustainability_report_text` | 지속가능경영보고서 **PDF 본문** — 키워드가 몇 쪽에 있는지·그 대목 발췌·쪽 전체 보기 |
 | `governance_indicators` | 기업지배구조 핵심지표 15개 O/X · 준수율 · 회사 비교 |
@@ -43,6 +43,9 @@ Claude Desktop `claude_desktop_config.json` 예:
 ## 읽을 때 주의
 
 - 기관마다 스케일이 다릅니다(KCGS S~D, MSCI AAA~CCC, S&P 0-100 점수, 서스틴베스트 AA~E). 기관 간 등급을 나란히 비교하지 마세요.
+- 「좋은 편인가」는 **같은 기관 안의 분포**로 답합니다 — 「상위 N%」는 만들지 않습니다. 등급이 6~7단계뿐이라
+  동점이 30~60%여서(한국ESG연구소는 A 등급에 61%) 백분위가 지어낸 정밀도가 됩니다. 분모는 그 기관이
+  평가한 회사 수이고, 기관마다 평가 대상이 다릅니다(2025년: KCGS 782사 · MSCI 74사).
 - `-`(null)는 **그 기관이 평가하지 않았다**는 뜻입니다.
 - 포털 검색기는 유가증권 상장사만 다룹니다. 코스닥 **회사명** 검색은 저장소에 동봉한 상장사 명부 스냅샷
   (`open_esg_korea/data/listed_companies.json`, OpenDART 고유번호 명부에서 매월 갱신)으로 종목코드를 찾습니다 — 키 없이 됩니다.

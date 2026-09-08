@@ -42,6 +42,7 @@ open_esg_korea/
   services/sustainability_notice.py      # 지속가능경영보고서 자율공시 서식(61979) 파서 — 목차·검증·첨부 PDF 주소
   services/report_text.py                # 첨부 PDF → 페이지 텍스트 캐시 → 검색·발췌 (바이트는 안 남긴다)
   services/ghg_disclosure.py             # 보고서 공시 수치를 **범위 축**(경계·Scope2 방식·NF3)과 함께 집는다
+  services/rating_context.py             # 같은 기관 안의 등급 분포 — 세기만 하고 백분위·점수로 바꾸지 않는다
   pdf/extract.py                         # PDF → 텍스트. 훑기 pypdfium2(0.3s/87쪽) · 표 정렬 pdfplumber(0.18s/쪽)
   services/company.py   # 회사 식별 — name_keys(법인격·음차·영문 브랜드·업종어 규칙) 한 곳
   services/aliases.py   # 규칙으로 못 잇는 통칭 사전(「현대차」→ 현대자동차). 값은 포털 약명
@@ -55,6 +56,9 @@ docs/mcp-draft.md  # 설계 초안·로드맵
 
 1. **비공식 엔드포인트.** 간격 0.5초, 하루 캐시, User-Agent 명시. 차단은 IP 기준이라 한 머신의 전원이 막힌다.
 2. **라이선스.** 등급은 각 평가기관 저작물(KCGS: 비상업적 내부 용도). DB 적재·재배포 금지. 모든 응답에 `license` 동봉.
+   등급을 **다른 척도로 바꾸지 않는다** — 기관 간 정규화 점수도, 「상위 N%」 백분위도 만들지 않는다.
+   「좋은 편인가」는 같은 기관 안에서 **세어서**(이 등급 이상 N사·동점 M사) 답한다. 등급이 6~7단계라
+   동점이 30~60%여서 백분위는 지어낸 정밀도다(2025년 실측: 한국ESG연구소 A 등급에 61% 동점).
 3. **필드 사전은 `krx/codes.py` 한 곳.** 라벨·슬롯을 다른 파일에 복제하지 않는다.
 4. **tool 은 얇게.** 파싱·판정은 services, tool 은 md/json 렌더링만. 도구 설명은 `desc/when/rule/params/ref` 형식.
 5. **외부 실패는 degrade, 코드버그는 crash.** `services/safety.py` 의 집합에 없는 예외는 그대로 터뜨린다.
