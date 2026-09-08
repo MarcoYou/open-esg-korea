@@ -46,6 +46,11 @@ CACHE = ROOT / "build" / "cache"
 #: 저장소 주소 한 벌 — 매니페스트의 여러 칸이 다 여기서 나온다.
 REPO_URL = "https://github.com/MarcoYou/open-esg-korea"
 
+#: 확장 아이콘. 있으면 번들에 넣고 매니페스트에 건다 — 없으면 그 칸을 아예 안 만든다
+#: (빈 문자열을 넣으면 스키마가 거부할 수 있고, 앱은 기본 아이콘을 쓴다).
+ICON_SRC = ROOT / "assets" / "icon.png"
+ICON_SIZE = 512          # 설치 화면·목록에서 쓰는 크기. 원본이 크면 줄여 넣는다(용량과 선명도 절충).
+
 
 def project_version() -> str:
     """버전은 `pyproject.toml` 이 유일한 출처다 — 매니페스트·파일이름에 손으로 적으면 어긋난다."""
@@ -133,6 +138,30 @@ def build_lib(dest: pathlib.Path) -> None:
     subprocess.run(base + ["--no-deps", str(ROOT)], check=True)
 
 
+def copy_icon(src: pathlib.Path, dest: pathlib.Path) -> None:
+    """정사각 PNG 로 맞춰 넣는다. Pillow 가 있으면 크기를 줄이고, 없으면 원본을 그대로 쓴다.
+
+    Pillow 는 pdfplumber 가 이미 끌고 오므로 대개 있다 — 없다고 빌드를 멈출 이유는 없다.
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        shutil.copyfile(src, dest)
+        log(f"아이콘: 원본 그대로 넣음 ({src.name}) — Pillow 가 없어 크기를 못 맞췄습니다")
+        return
+    with Image.open(src) as im:
+        im = im.convert("RGBA")
+        if im.width != im.height:
+            log(f"아이콘: 정사각이 아닙니다({im.width}x{im.height}) — 가운데를 잘라 넣습니다")
+            side = min(im.size)
+            left, top = (im.width - side) // 2, (im.height - side) // 2
+            im = im.crop((left, top, left + side, top + side))
+        if im.width > ICON_SIZE:
+            im = im.resize((ICON_SIZE, ICON_SIZE), Image.LANCZOS)
+        im.save(dest, "PNG", optimize=True)
+    log(f"아이콘: {dest.name} {im.width}x{im.height}")
+
+
 def tool_entries() -> list[dict[str, str]]:
     """도구 목록 — 설치 화면에 「무엇을 하는 확장인가」로 보인다. 서버에서 그대로 읽는다."""
     from open_esg_korea.server import build_mcp
@@ -181,6 +210,7 @@ def manifest() -> dict:
                 "args": ["-m", "open_esg_korea", "--transport", "stdio"],
             },
         },
+        **({"icon": "icon.png"} if ICON_SRC.is_file() else {}),
         "tools": tool_entries(),
         # 스키마가 **모르는 키를 거부한다** — 예전에 `_notice` 로 고지를 넣었다가 매니페스트가 통째로
         # 반려됐다. 고지는 `long_description` 안에 둔다.
@@ -221,6 +251,8 @@ def package() -> pathlib.Path:
         "등급은 각 평가기관의 저작물입니다 — 저장하지 않고 조회할 때마다 실시간으로 가져오며,",
         "개인의 내부 용도로만 쓸 수 있습니다. 조건은 응답에 값마다 붙어 나옵니다.",
     ]) + "\n", encoding="utf-8")
+    if ICON_SRC.is_file():
+        copy_icon(ICON_SRC, BUILD / "icon.png")
     for name in ("README.md", "LICENSE"):        # 있으면 같이 넣는다 — 받은 사람이 조건을 볼 수 있게
         src = ROOT / name
         if src.is_file():
