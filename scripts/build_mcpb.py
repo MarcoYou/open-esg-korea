@@ -27,6 +27,7 @@ Why: 「설정 파일에 경로를 적고 uv 를 깔라」는 안내는 기술�
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import pathlib
 import shutil
@@ -41,6 +42,35 @@ sys.path.insert(0, str(ROOT))
 DIST = ROOT / "dist"
 BUILD = ROOT / "build" / "mcpb"
 CACHE = ROOT / "build" / "cache"
+
+#: 저장소 주소 한 벌 — 매니페스트의 여러 칸이 다 여기서 나온다.
+REPO_URL = "https://github.com/MarcoYou/open-esg-korea"
+
+#: 확장 아이콘. 있으면 번들에 넣고 매니페스트에 건다 — 없으면 그 칸을 아예 안 만든다
+#: (빈 문자열을 넣으면 스키마가 거부할 수 있고, 앱은 기본 아이콘을 쓴다).
+ICON_SRC = ROOT / "assets" / "icon.png"
+ICON_SIZE = 512          # 설치 화면·목록에서 쓰는 크기. 원본이 크면 줄여 넣는다(용량과 선명도 절충).
+
+
+def project_version() -> str:
+    """버전은 `pyproject.toml` 이 유일한 출처다 — 매니페스트·파일이름에 손으로 적으면 어긋난다."""
+    for line in (ROOT / "pyproject.toml").read_text(encoding="utf-8").splitlines():
+        if line.startswith("version"):
+            return line.split("=", 1)[1].strip().strip('"')
+    raise SystemExit("pyproject.toml 에서 version 을 찾지 못했습니다.")
+
+
+def build_stamp() -> str:
+    """이 번들이 **어느 커밋에서 나왔는지** 남긴다 — 나중에 「이 파일 뭐지?」를 풀 수 있게."""
+    try:
+        sha = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"],
+                             capture_output=True, text=True, timeout=30).stdout.strip()
+        dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain"],
+                               capture_output=True, text=True, timeout=30).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        sha, dirty = "", ""
+    return (sha or "(git 아님)") + (" +수정본" if dirty else "")
+
 
 PY_VERSION = "3.12.8"
 PY_TAG = "312"
@@ -108,6 +138,30 @@ def build_lib(dest: pathlib.Path) -> None:
     subprocess.run(base + ["--no-deps", str(ROOT)], check=True)
 
 
+def copy_icon(src: pathlib.Path, dest: pathlib.Path) -> None:
+    """정사각 PNG 로 맞춰 넣는다. Pillow 가 있으면 크기를 줄이고, 없으면 원본을 그대로 쓴다.
+
+    Pillow 는 pdfplumber 가 이미 끌고 오므로 대개 있다 — 없다고 빌드를 멈출 이유는 없다.
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        shutil.copyfile(src, dest)
+        log(f"아이콘: 원본 그대로 넣음 ({src.name}) — Pillow 가 없어 크기를 못 맞췄습니다")
+        return
+    with Image.open(src) as im:
+        im = im.convert("RGBA")
+        if im.width != im.height:
+            log(f"아이콘: 정사각이 아닙니다({im.width}x{im.height}) — 가운데를 잘라 넣습니다")
+            side = min(im.size)
+            left, top = (im.width - side) // 2, (im.height - side) // 2
+            im = im.crop((left, top, left + side, top + side))
+        if im.width > ICON_SIZE:
+            im = im.resize((ICON_SIZE, ICON_SIZE), Image.LANCZOS)
+        im.save(dest, "PNG", optimize=True)
+    log(f"아이콘: {dest.name} {im.width}x{im.height}")
+
+
 def tool_entries() -> list[dict[str, str]]:
     """도구 목록 — 설치 화면에 「무엇을 하는 확장인가」로 보인다. 서버에서 그대로 읽는다."""
     from open_esg_korea.server import build_mcp
@@ -127,7 +181,7 @@ def manifest() -> dict:
         "manifest_version": "0.2",
         "name": "open-esg-korea",
         "display_name": "한국 상장사 ESG 정보",
-        "version": "0.1.0",
+        "version": project_version(),
         "description": "KRX ESG 포털·GIR·KIND 에서 한국 상장사의 ESG 등급·온실가스·지배구조 원문을 읽어옵니다.",
         "long_description": (
             "회사 이름만 말하면 됩니다 — 「삼성전자 ESG 등급 어때?」\n\n"
@@ -139,9 +193,13 @@ def manifest() -> dict:
             "가져오며, 값마다 그 기관의 이용 조건과 원문 주소를 함께 보여줍니다. "
             "**개인의 내부 용도로만** 쓸 수 있고, 대외 공개·재배포에는 각 기관의 사전 승낙이 필요합니다."
         ),
+        # 설치 화면이 「개발자 정보는 Anthropic 에서 확인하지 않았습니다」라고 경고한다 — 심사받은 확장이
+        # 아니라는 뜻이다. 그러니 **어디서 왔는지 스스로 밝히는 칸**을 비워두지 않는다.
         "author": {"name": "MarcoYou", "url": "https://github.com/MarcoYou"},
-        "homepage": "https://github.com/MarcoYou/open-esg-korea",
-        "documentation": "https://github.com/MarcoYou/open-esg-korea#readme",
+        "repository": {"type": "git", "url": REPO_URL},
+        "homepage": REPO_URL,
+        "documentation": f"{REPO_URL}#readme",
+        "support": f"{REPO_URL}/issues",
         "license": "LicenseRef-PolyForm-Noncommercial-1.0.0",
         "keywords": ["ESG", "KRX", "한국", "상장사", "온실가스", "지배구조"],
         "server": {
@@ -152,6 +210,7 @@ def manifest() -> dict:
                 "args": ["-m", "open_esg_korea", "--transport", "stdio"],
             },
         },
+        **({"icon": "icon.png"} if ICON_SRC.is_file() else {}),
         "tools": tool_entries(),
         # 스키마가 **모르는 키를 거부한다** — 예전에 `_notice` 로 고지를 넣었다가 매니페스트가 통째로
         # 반려됐다. 고지는 `long_description` 안에 둔다.
@@ -172,8 +231,35 @@ def package() -> pathlib.Path:
     (BUILD / "manifest.json").write_text(
         json.dumps(manifest(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
+    # 매니페스트는 **모르는 키를 거부**하므로 빌드 출처를 그 안에 넣을 수 없다(예전에 `_notice` 로
+    # 넣었다가 통째로 반려됐다). 파일로 넣는다 — zip 안의 파일은 검증 대상이 아니고, 압축을 풀면
+    # 사람이 그냥 읽을 수 있다. 「이 파일 뭐지, 어디서 났지」를 나중에 풀 수 있게 하는 것이 목적이다.
+    (BUILD / "BUILD_INFO.txt").write_text("\n".join([
+        f"open-esg-korea {project_version()}",
+        "",
+        f"소스      {REPO_URL}",
+        f"커밋      {build_stamp()}",
+        f"빌드      {dt.datetime.now().astimezone().isoformat(timespec='seconds')}",
+        f"만든 것   scripts/build_mcpb.py",
+        "",
+        f"런타임    python.org 임베드 배포판 {PY_VERSION} (win_amd64)",
+        f"의존성    {' · '.join(DEPS)}",
+        "",
+        "이 확장은 Anthropic 이 심사한 것이 아닙니다. 무엇이 들어 있는지는 위 저장소의",
+        "scripts/build_mcpb.py 에 전부 적혀 있고, lib/ 아래 파이썬 코드는 그대로 읽을 수 있습니다.",
+        "",
+        "등급은 각 평가기관의 저작물입니다 — 저장하지 않고 조회할 때마다 실시간으로 가져오며,",
+        "개인의 내부 용도로만 쓸 수 있습니다. 조건은 응답에 값마다 붙어 나옵니다.",
+    ]) + "\n", encoding="utf-8")
+    if ICON_SRC.is_file():
+        copy_icon(ICON_SRC, BUILD / "icon.png")
+    for name in ("README.md", "LICENSE"):        # 있으면 같이 넣는다 — 받은 사람이 조건을 볼 수 있게
+        src = ROOT / name
+        if src.is_file():
+            shutil.copyfile(src, BUILD / name)
+
     DIST.mkdir(exist_ok=True)
-    out = DIST / "open-esg-korea-0.1.0.mcpb"
+    out = DIST / f"open-esg-korea-{project_version()}.mcpb"
     log("압축하는 중 …")
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for path in sorted(BUILD.rglob("*")):
