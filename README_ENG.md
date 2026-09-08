@@ -8,7 +8,7 @@
 
 "What is Samsung Electronics' ESG rating?" — that is the whole interface.
 
-[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-lightgrey.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
@@ -19,10 +19,11 @@
 [![Windows](https://img.shields.io/badge/Windows-x64-0078D4)](#step-1--pick-the-file-for-your-machine)
 [![No Python needed](https://img.shields.io/badge/install-no%20Python%20needed-success)](#what-is-inside)
 [![No API key](https://img.shields.io/badge/API%20key-not%20required-success)](#step-3--ask)
+[![Commercial use OK](https://img.shields.io/badge/commercial%20use-OK%20·%20attribution-success)](#license)
 
 **[한국어](README.md)**
 
-[Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [Tools (12)](#tools-12) · [Reading the output](#reading-the-output) · [For developers](#for-developers) · [Documentation](#documentation)
+[Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [Tools (12)](#tools-12) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers) · [Documentation](#documentation)
 
 </div>
 
@@ -46,10 +47,10 @@ flowchart LR
 All three are reachable **without an API key**. Ratings are never stored — they are fetched live on each question.
 
 > [!IMPORTANT]
-> open-esg-korea is an MCP server that **individuals install and run on their own machine**. It does not store or
-> redistribute ESG ratings or greenhouse-gas data. Ratings are each agency's copyrighted work and **none of the five
-> permit public disclosure**, so collecting or redistributing this data may breach their licences. See
-> [Reading the output](#reading-the-output) for the exact terms.
+> **The code is Apache-2.0 — use it commercially if you like; just credit the source.**
+> But **the rating data this server reads is not covered by that licence.** Ratings are each agency's copyrighted work
+> and **none of the five permit public disclosure**. The server stores nothing and fetches live on every question, but
+> what you do with the values you receive is a separate matter. Please read the [License](#license) section.
 
 ---
 
@@ -187,12 +188,25 @@ keyword is on and quote around it. Search ignores whitespace, so letter-spaced t
 <details>
 <summary><b>🔍 Screening many companies at once</b></summary>
 
+**Narrowing down**
+
 > - KCGS A+ or better, semiconductors & semiconductor equipment only
 > - Which KOSPI companies published a sustainability report?
 > - Chemicals companies that have an MSCI rating
 
+**Comparing industries against each other**
+
+> - Semiconductors & equipment vs. automobiles & components — which industry group has the better KCGS spread?
+> - Put every bank's ESG rating in one table
+> - Take the top-rated materials companies and show their emissions alongside
+
 Filters the whole KOSPI universe (795 companies in 2025) by **minimum grade per agency, portal industry, GICS industry
-group, and whether a report exists**, and shows how the matches cluster by industry.
+group, and whether a report exists**, and shows how the matches cluster by industry. Industry comparisons are still
+counted **within one agency** — different agencies use different scales, so they never share a row.
+
+<sub>Industry-group names follow the 25 GICS groups (Capital Goods · Materials · Technology Hardware & Equipment ·
+Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks …), which is a
+[different scheme](#reading-the-output) from the portal's 21 industries and GIR's designated industries.</sub>
 
 </details>
 
@@ -202,6 +216,18 @@ group, and whether a report exists**, and shows how the matches cluster by indus
 - **`-` means "not rated"** — not a zero, not a bad grade. Missing data is reported as missing.
 - **KOSDAQ gets ratings only** — the portal carries KOSPI on the report and governance screens.
 - **Every value carries source, year and licence terms.** Do not strip the `license` field from responses.
+
+---
+
+<div align="center">
+
+**Has this project been useful to you?**
+
+Sponsoring it goes a long way toward keeping it maintained.
+
+[![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-%E2%9D%A4-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
+
+</div>
 
 ---
 
@@ -285,6 +311,33 @@ group, and whether a report exists**, and shows how the matches cluster by indus
 
 ---
 
+## License
+
+**The code is under the [Apache License 2.0](LICENSE).** Use it, modify it, redistribute it, build a commercial product
+on it — all fine. There is one condition: **credit the source.**
+
+Concretely: keep [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE) with your redistribution and state that your work derives
+from open-esg-korea. If you changed files, say that you changed them. That is the whole of it.
+
+> [!WARNING]
+> **This licence covers the software, not the data the software retrieves.**
+>
+> ESG ratings are each agency's copyrighted work and the terms differ by agency — KCGS and MSCI say "internal use
+> only", Sustinvest and S&P say "no reproduction in any form without prior written permission", and Korea ESG Research
+> Institute says "no reproduction, transmission, quotation or distribution without prior written consent".
+> **None of the five permit public disclosure.**
+>
+> Being allowed to use this software commercially is **not** permission to collect, store, republish or resell the
+> ratings. If you intend to expose this as a public endpoint or build a product on the ratings themselves,
+> **ask each agency first.**
+
+That is why this server fetches ratings live only and keeps them nowhere — no database, no repository, no logs (the
+cache is in memory alone) — and attaches each agency's notice and a link to its original terms to every value. Do not
+strip the `license` field from responses. Filing texts belong to the companies that filed them, and greenhouse-gas
+figures come from GIR's published data under that agency's terms.
+
+The full statement is in [`NOTICE`](NOTICE).
+
 ## For developers
 
 ```bash
@@ -345,12 +398,3 @@ python scripts/probe_krx.py 005930 2025   # has the portal response schema chang
 uv run python scripts/smoke_kind.py       # do KIND filing texts (governance, sustainability) still read?
 ```
 
----
-
-<div align="center">
-<sub>
-
-If this is useful to you — [![Sponsor](https://img.shields.io/badge/%E2%9D%A4%20Sponsor-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
-
-</sub>
-</div>
