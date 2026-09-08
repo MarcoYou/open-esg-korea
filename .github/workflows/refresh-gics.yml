@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.0.1   # setup-uv 는 v7 이후 부동 메이저 태그(@v10)를 만들지 않는다
       - run: uv sync --dev
       - name: Refresh snapshot
         run: |
