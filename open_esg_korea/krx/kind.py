@@ -19,6 +19,8 @@ import time
 
 import httpx
 
+from open_esg_korea.tls import ssl_context
+
 from open_esg_korea.krx import codes
 
 USER_AGENT = "open-esg-korea/0.1 (+https://github.com/MarcoYou/open-esg-korea)"
@@ -85,7 +87,8 @@ def form_no(body_url: str) -> str:
 class KindClient:
     def __init__(self, http: httpx.AsyncClient | None = None, *,
                  min_interval: float = 0.5, cache_ttl: int = DEFAULT_TTL) -> None:
-        self._http = http or httpx.AsyncClient(headers=_HEADERS, timeout=_TIMEOUT, follow_redirects=True)
+        self._http = http or httpx.AsyncClient(headers=_HEADERS, timeout=_TIMEOUT, follow_redirects=True,
+                                               verify=ssl_context())
         self._min_interval = min_interval
         self._ttl = cache_ttl
         self._lock = asyncio.Lock()

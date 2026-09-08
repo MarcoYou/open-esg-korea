@@ -17,6 +17,8 @@ from typing import Any
 
 import httpx
 
+from open_esg_korea.tls import ssl_context
+
 from open_esg_korea.gir import codes
 
 USER_AGENT = "open-esg-korea/0.1 (+https://github.com/MarcoYou/open-esg-korea)"
@@ -86,7 +88,7 @@ class GirClient:
     def __init__(self, http: httpx.AsyncClient | None = None, *,
                  min_interval: float = 0.5, cache_ttl: int = DEFAULT_TTL) -> None:
         self._http = http or httpx.AsyncClient(headers={"User-Agent": USER_AGENT}, timeout=httpx.Timeout(60.0),
-                                               follow_redirects=True)
+                                               follow_redirects=True, verify=ssl_context())
         self._min_interval = min_interval
         self._ttl = cache_ttl
         self._lock = asyncio.Lock()

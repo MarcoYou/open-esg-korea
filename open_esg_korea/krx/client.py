@@ -16,6 +16,8 @@ from typing import Any
 
 import httpx
 
+from open_esg_korea.tls import ssl_context
+
 from open_esg_korea.krx import codes
 
 USER_AGENT = "open-esg-korea/0.1 (+https://github.com/MarcoYou/open-esg-korea)"
@@ -37,7 +39,7 @@ class KrxEsgClient:
     def __init__(self, http: httpx.AsyncClient | None = None, *,
                  min_interval: float = 0.5, cache_ttl: int = DEFAULT_TTL) -> None:
         self._http = http or httpx.AsyncClient(base_url=codes.BASE_URL, headers=_HEADERS,
-                                               timeout=httpx.Timeout(30.0))
+                                               timeout=httpx.Timeout(30.0), verify=ssl_context())
         self._min_interval = min_interval
         self._ttl = cache_ttl
         self._lock = asyncio.Lock()

@@ -34,6 +34,8 @@ from typing import Any
 
 import httpx
 
+from open_esg_korea.tls import ssl_context
+
 OPENDART_BASE_URL = "https://opendart.fss.or.kr/api"
 CORP_CODE_PATH = "/corpCode.xml"
 DEFAULT_TTL = 7 * 24 * 3600
@@ -111,7 +113,7 @@ class DartCorpIndex:
     def __init__(self, http: httpx.AsyncClient | None = None, *, api_key: str | None = None,
                  ttl: int = DEFAULT_TTL, bundle_path: pathlib.Path | None = BUNDLE_PATH) -> None:
         self._http = http or httpx.AsyncClient(base_url=OPENDART_BASE_URL, headers={"User-Agent": USER_AGENT},
-                                               timeout=httpx.Timeout(180.0))
+                                               timeout=httpx.Timeout(180.0), verify=ssl_context())
         self._api_key = api_key_from_env() if api_key is None else api_key
         self._ttl = ttl
         self._lock = asyncio.Lock()
