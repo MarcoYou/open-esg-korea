@@ -63,20 +63,27 @@ def build_mcp() -> MCPServer:
     return mcp
 
 
-def allowed_hosts() -> list[str]:
-    hosts = ["localhost:8000", "127.0.0.1:8000", "0.0.0.0:8000"]
-    extra = os.environ.get("FASTMCP_ALLOWED_HOSTS", "").strip()
-    if extra:
-        hosts.extend(h.strip() for h in extra.split(",") if h.strip())
-    return hosts
-
-
 def bind_host() -> str:
     return os.environ.get("FASTMCP_HOST", "0.0.0.0")
 
 
 def bind_port() -> int:
     return int(os.environ.get("FASTMCP_PORT", "8000"))
+
+
+def allowed_hosts() -> list[str]:
+    """호스트 허용 목록. 포트는 **`bind_port()` 에서 온다** — 박아 두면 안 된다.
+
+    8000 을 적어 두었더니 `FASTMCP_PORT` 를 바꾼 순간 `/mcp` 만 조용히 막혔다(실측 2026-09-09:
+    `/health` 는 200 인데 `/mcp` 는 「Invalid Host header」). 뜨기는 떠서 포트 문제로 보이지 않고,
+    막는 쪽이 `transport_security()` 라는 것도 응답에 안 나온다 — 원인을 찾는 데 오래 걸린다.
+    """
+    port = bind_port()
+    hosts = [f"localhost:{port}", f"127.0.0.1:{port}", f"0.0.0.0:{port}"]
+    extra = os.environ.get("FASTMCP_ALLOWED_HOSTS", "").strip()
+    if extra:
+        hosts.extend(h.strip() for h in extra.split(",") if h.strip())
+    return hosts
 
 
 def transport_security() -> TransportSecuritySettings:
