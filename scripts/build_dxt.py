@@ -115,10 +115,11 @@ def tool_entries() -> list[dict[str, str]]:
 
 
 def manifest() -> dict:
-    from open_esg_korea.krx import codes
     return {
-        # 구형 리더는 `dxt_version`, 신형은 `manifest_version` 을 본다 — 둘 다 적어 어느 쪽에서도 열리게 한다.
-        "dxt_version": "0.1",
+        # Claude Desktop 은 `dxt_version` 을 읽고 **"0.2" 만** 받는다(실측 2026-09-08: "0.1" 이면
+        # 「Invalid literal value, expected "0.2"」로 미리보기부터 막힌다). 신형 리더용 `manifest_version`
+        # 도 같이 둔다 — 검증기가 이 키는 문제 삼지 않았다.
+        "dxt_version": "0.2",
         "manifest_version": "0.2",
         "name": "open-esg-korea",
         "display_name": "한국 상장사 ESG 정보",
@@ -148,8 +149,13 @@ def manifest() -> dict:
             },
         },
         "tools": tool_entries(),
-        "compatibility": {"platforms": ["win32"], "runtimes": {"python": f">={PY_VERSION}"}},
-        "_notice": codes.LICENSE_NOTICE,
+        # 스키마가 **모르는 키를 거부한다** — 예전에 `_notice` 로 고지를 넣었다가 매니페스트가 통째로
+        # 반려됐다. 고지는 `long_description` 안에 둔다.
+        #
+        # `runtimes.python` 을 적지 않는다. 파이썬은 `runtime/` 에 넣어 보내므로 **시스템 파이썬이
+        # 필요 없는데**, 이걸 적으면 설치 화면이 「Python >=3.12.8 ⚠」를 요구사항으로 띄운다.
+        # 파이썬 없는 PC 에서 쓰라고 11MB 를 넣어놓고 「파이썬 까세요」라고 겁주는 꼴이었다(실측 2026-09-08).
+        "compatibility": {"platforms": ["win32"]},
     }
 
 

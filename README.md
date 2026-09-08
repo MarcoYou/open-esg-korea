@@ -6,7 +6,48 @@
 AI 클라이언트(Claude, Cursor 등)가 자연어로 바로 물을 수 있게 합니다.
 형제 프로젝트 [open-proxy-mcp](https://github.com/MarcoYou/open-proxy-mcp)(DART 공시 분석)와 같은 구조입니다.
 
-## 빠른 시작
+## 설치 — 그냥 쓰실 분 (윈도우)
+
+**파일 하나 받아서 끌어다 놓으면 끝입니다.** 파이썬·개발도구 아무것도 설치하지 않아도 됩니다.
+
+1. [Releases](https://github.com/MarcoYou/open-esg-korea/releases/latest) 에서 **`open-esg-korea-0.1.0.mcpb`** 를 받습니다 (약 43MB)
+2. Claude Desktop 을 엽니다 → **설정 → 확장(Extensions)**
+3. 받은 파일을 창 안으로 **끌어다 놓습니다** (또는 「확장 프로그램 설치」로 파일 선택)
+4. **설치**를 누릅니다
+
+<sub>「이 확장 프로그램이 컴퓨터의 모든 항목에 액세스할 수 있습니다 · 개발자 정보를 Anthropic 에서 확인하지 않았습니다」라는
+빨간 경고가 뜹니다. Anthropic 이 심사한 공식 확장이 아니라는 뜻이고, 직접 만든 확장은 모두 이렇게 표시됩니다.
+안에 무엇이 들었는지는 [`scripts/build_dxt.py`](scripts/build_dxt.py) 에 전부 있습니다.</sub>
+
+설치되면 이렇게 물어보세요:
+
+> 삼성전자 ESG 등급 알려줘
+
+5개 기관 등급표가 출처·연도와 함께 나오면 된 것입니다.
+
+<details>
+<summary><b>설치가 안 될 때</b></summary>
+
+| 증상 | 원인 |
+|---|---|
+| **설치 버튼이 회색이고 안 눌림** | 「요구 사항」 중 ⚠ 가 하나라도 있으면 잠깁니다. `Python` 요구가 보이면 **옛날 파일**입니다 — 최신 릴리스를 받으세요(파이썬은 안에 들어 있어 필요 없습니다) |
+| **「확장 프로그램을 미리 볼 수 없습니다」** | 매니페스트를 못 읽은 것입니다. 최신 릴리스를 받으세요 |
+| **설치는 됐는데 도구가 안 보임** | Claude Desktop 을 **완전히 종료**했다 켜세요 (창 닫기 ✕ 말고 트레이 아이콘 → 종료) |
+| **회사 이름을 물으면 오류가 남** | 사내망이 KRX 접속을 막고 있을 수 있습니다. 브라우저로 [esg.krx.co.kr](https://esg.krx.co.kr) 이 열리는지 먼저 확인하세요 |
+
+</details>
+
+### 무엇이 들어 있나
+
+| | |
+|---|---|
+| `runtime/` | python.org 공식 임베드 파이썬 3.12 (11MB) — **PC 에 파이썬이 없어도 됩니다** |
+| `lib/` | 의존성(mcp·httpx·pypdfium2·pdfplumber) + 서버 본체 |
+| `manifest.json` | 확장 정보와 도구 12개 목록 |
+
+macOS·리눅스용 번들은 아직 없습니다 — 아래 「개발자용」으로 연결하세요.
+
+## 설치 — 개발자용
 
 ```bash
 uv sync
@@ -21,7 +62,11 @@ Claude Desktop `claude_desktop_config.json` 예:
   "python", "-m", "open_esg_korea", "--transport", "stdio"]}}}
 ```
 
-첫 질문: `삼성전자 ESG 등급 알려줘` → 5개 기관 등급표와 3년 추이가 출처·연도와 함께 나오면 연결된 것입니다.
+확장 파일을 직접 만들려면 (윈도우):
+
+```bash
+uv run python scripts/build_dxt.py --check   # dist/*.mcpb — --check 는 만든 뒤 실제로 실행해 봅니다
+```
 
 ## 도구 (12개)
 
