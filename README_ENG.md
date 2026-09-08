@@ -1,20 +1,38 @@
+<div align="center">
+
+<img src="assets/icon.png" alt="open-esg-korea" width="120">
+
 # open-esg-korea
 
+**Ask an AI about Korean listed companies' ESG data, in plain language**
+
+"What is Samsung Electronics' ESG rating?" — that is the whole interface.
+
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-lightgrey.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0/)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
 [![Tools](https://img.shields.io/badge/tools-12-orange.svg)](#tools-12)
-[![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
-[한국어](README.md)
+[![macOS](https://img.shields.io/badge/macOS-Apple%20Silicon%20%C2%B7%20Intel-000000?logo=apple&logoColor=white)](#step-1--pick-the-file-for-your-machine)
+[![Windows](https://img.shields.io/badge/Windows-x64-0078D4)](#step-1--pick-the-file-for-your-machine)
+[![No Python needed](https://img.shields.io/badge/install-no%20Python%20needed-success)](#what-is-inside)
+[![No API key](https://img.shields.io/badge/API%20key-not%20required-success)](#step-3--ask)
 
-[Install](#install--if-you-just-want-to-use-it-windows) · [Tools (12)](#tools-12) · [Reading the output](#reading-the-output) · [Documentation](#documentation)
+**[한국어](README.md)**
+
+[Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [Tools (12)](#tools-12) · [Reading the output](#reading-the-output) · [For developers](#for-developers) · [Documentation](#documentation)
+
+</div>
+
+---
 
 A gateway that makes ESG data on Korean listed companies easier, faster, and AI-friendly to reach — an MCP server.
 
-It takes the agency ESG ratings, sustainability reports, and corporate-governance report indicators scattered across the
-[KRX ESG Portal](https://esg.krx.co.kr) and lets AI clients (Claude, Cursor, and others) ask about them in plain language.
+It takes the **agency ESG ratings, greenhouse-gas emissions, governance indicators and report full text** scattered across
+the [KRX ESG Portal](https://esg.krx.co.kr), [GIR](https://www.gir.go.kr) and [KIND filings](https://kind.krx.co.kr), and
+lets AI clients (Claude Desktop, Cursor, and others) ask about them in plain language.
 Same shape as its sibling project [open-proxy-mcp](https://github.com/MarcoYou/open-proxy-mcp) (DART filings analysis).
 
 ```mermaid
@@ -27,40 +45,73 @@ flowchart LR
 
 All three are reachable **without an API key**. Ratings are never stored — they are fetched live on each question.
 
-> *open-esg-korea is an MCP server that individuals install and run for themselves. It does not store or redistribute
-> ESG ratings or greenhouse-gas data. Collecting or redistributing this data may breach the issuing agencies' licences —
-> please take care.*
+> [!IMPORTANT]
+> open-esg-korea is an MCP server that **individuals install and run on their own machine**. It does not store or
+> redistribute ESG ratings or greenhouse-gas data. Ratings are each agency's copyrighted work and **none of the five
+> permit public disclosure**, so collecting or redistributing this data may breach their licences. See
+> [Reading the output](#reading-the-output) for the exact terms.
 
-## Install — if you just want to use it (Windows)
+---
 
-**Download one file and drop it in.** No Python, no developer tools.
+## 🚀 Install in 5 minutes
 
-1. Get **`open-esg-korea-*.mcpb`** from [Releases](https://github.com/MarcoYou/open-esg-korea/releases/latest) (~43MB)
-2. Open Claude Desktop → **Settings → Extensions**
-3. **Drag the file** into the window (or use "Install extension" and pick it)
+**Download one file and drop it in.** No Python, no developer tools, no API key.
+
+### Step 1 — pick the file for your machine
+
+<div align="center">
+
+| Your machine | Download | Size |
+|:---|:---:|:---:|
+| **Mac** — M1 · M2 · M3 · M4 … | [![Apple Silicon](https://img.shields.io/badge/Download-Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-arm64.mcpb) | ~40MB |
+| **Mac** — Intel | [![Intel Mac](https://img.shields.io/badge/Download-Intel%20Mac-555555?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-x64.mcpb) | ~44MB |
+| **Windows** — 64-bit | [![Windows](https://img.shields.io/badge/Download-Windows%20x64-0078D4?style=for-the-badge)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-windows-x64.mcpb) | ~43MB |
+
+</div>
+
+<sub>**Not sure which Mac you have?** Apple menu (top-left) → *About This Mac* → the **Chip** row. `Apple M…` means Apple
+Silicon; `Intel…` means Intel. Macs bought since 2020 are almost all Apple Silicon. Picking the wrong one only means the
+extension will not install — nothing breaks.</sub>
+
+<sub>There is no Linux bundle yet — use the [developer path](#for-developers).</sub>
+
+### Step 2 — drop it into Claude Desktop
+
+1. Open **Claude Desktop**
+2. Go to **Settings → Extensions**
+3. **Drag the `.mcpb` file** into the window (or use "Install extension" and pick it)
 4. Click **Install**
 
-<sub>You will see a red warning: "This extension will have access to everything on your computer · The developer
-information shown has not been verified by Anthropic." That means it is not an Anthropic-reviewed extension — every
-self-built extension is marked this way. Everything that goes into the bundle is in
-[`scripts/build_mcpb.py`](scripts/build_mcpb.py), and the bundle carries a `BUILD_INFO.txt` naming the commit it was
-built from.</sub>
+> [!NOTE]
+> You will see a red warning: "This extension will have access to everything on your computer · The developer information
+> shown has not been verified by Anthropic." That means **it is not an Anthropic-reviewed extension** — every self-built
+> extension is marked this way. Everything that goes into the bundle is spelled out in
+> [`scripts/build_mcpb.py`](scripts/build_mcpb.py), the Python under `lib/` is readable as-is once unzipped, and each
+> bundle carries a `BUILD_INFO.txt` naming the commit it was built from.
 
-Once installed, try:
+### Step 3 — ask
 
-> What is Samsung Electronics' ESG rating?
+Just talk to Claude.
 
-If a five-agency rating table comes back with sources and years attached, you are connected.
+> **What is Samsung Electronics' ESG rating?**
+
+If a five-agency rating table comes back **with sources, years and licence terms attached**, you are connected.
+There is no API key step.
 
 <details>
-<summary><b>When installation fails</b></summary>
+<summary><b>🛠️ When installation fails</b></summary>
 
-| Symptom | Cause |
+<br>
+
+| Symptom | Why / what to do |
 |---|---|
-| **Install button is greyed out** | It locks if any "Requirements" row shows ⚠. If you see a `Python` requirement you have an **old file** — get the latest release (Python is bundled, so it is not needed) |
+| **Install button is greyed out** | It locks if any "Requirements" row shows ⚠. If you see a `Python` requirement you have an **old file** — get the latest release (Python is bundled) |
 | **"Cannot preview this extension"** | The manifest could not be read. Get the latest release |
-| **Installed, but no tools appear** | **Fully quit** Claude Desktop and reopen (not the window ✕ — the tray icon → Quit) |
+| **Installed, but no tools appear** | **Fully quit** Claude Desktop and reopen — `⌘Q` on macOS; on Windows the tray icon → Quit, not the window ✕ |
+| **(Mac) "incompatible architecture"** | Wrong file for your chip — take the other Mac row above |
+| **(Mac) it seems to be blocked from running** | The download may carry a quarantine flag. In Terminal run<br>`xattr -dr com.apple.quarantine ~/Library/Application\ Support/Claude/Claude\ Extensions/local.mcpb.MarcoYou.open-esg-korea`<br>then restart Claude Desktop |
 | **Company lookups error out** | Your corporate network may be blocking KRX. Check that [esg.krx.co.kr](https://esg.krx.co.kr) opens in a browser first |
+| **Still stuck** | [Open an issue](https://github.com/MarcoYou/open-esg-korea/issues) — pasting the extension folder's `BUILD_INFO.txt` makes it much faster |
 
 </details>
 
@@ -68,32 +119,91 @@ If a five-agency rating table comes back with sources and years attached, you ar
 
 | | |
 |---|---|
-| `runtime/` | Official python.org embeddable Python 3.12 (11MB) — **you do not need Python on the machine** |
+| `runtime/` | A Python 3.12 distribution — **you do not need Python on the machine**<br><sub>Windows: python.org embeddable build · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
 | `lib/` | Dependencies (mcp · httpx · pypdfium2 · pdfplumber) plus the server itself |
 | `manifest.json` | Extension metadata and the list of 12 tools |
+| `BUILD_INFO.txt` | Which commit, when, and by what it was built |
 
-There is no macOS or Linux bundle yet — use the developer path below.
+---
 
-## Install — for developers
+## 💬 What to ask
 
-```bash
-uv sync
-uv run python -m open_esg_korea                     # http://localhost:8000/mcp
-uv run python -m open_esg_korea --transport stdio   # local Claude Desktop connection
-```
+You never need the tool names. Say what you want; Claude picks the tool.
+These all work:
 
-Example `claude_desktop_config.json`:
+<details open>
+<summary><b>📊 Ratings</b></summary>
 
-```json
-{"mcpServers": {"open-esg-korea": {"command": "uv", "args": ["run", "--directory", "/path/to/open-esg-korea",
-  "python", "-m", "open_esg_korea", "--transport", "stdio"]}}}
-```
+> - What is Samsung Electronics' ESG rating?
+> - Compare Hyundai Motor and Kia on ESG
+> - Show LG Chem's 3-year KCGS trend
+> - Where does SK hynix sit within that same agency?
 
-To build the extension file yourself (Windows):
+ESG/E/S/G grades **by year** from five agencies (KCGS · MSCI · Korea ESG Research Institute · S&P · Sustinvest).
+"Is this good?" is answered by **counting inside one agency** (how many at or above, how many tied) — never across
+agencies, because the scales differ. [Why](#reading-the-output)
 
-```bash
-uv run python scripts/build_mcpb.py --check   # dist/open-esg-korea-*.mcpb — --check actually runs what it built
-```
+</details>
+
+<details>
+<summary><b>🏭 Greenhouse gas</b></summary>
+
+> - SK hynix emissions for the last five years
+> - POSCO Holdings: ETS allocation vs. verified emissions
+> - Compare Samsung Electronics' GIR statement figures with what its report discloses
+> - Rank the steel industry by emissions
+> - How has Korea's road-transport sector changed since 1990?
+
+Covers GIR statements (per company), ETS allocation vs. verified emissions, designated-industry rankings, and the
+national inventory (1990 onward). When cross-checking a company's own report, it does not assert a value — it returns the
+**scope axes** (boundary · Scope 2 method · whether NF₃ is included) alongside.
+
+</details>
+
+<details>
+<summary><b>🏛️ Governance</b></summary>
+
+> - How does Naver score on the 15 core governance indicators?
+> - What did Kakao mark as non-compliant, and what reason did it give?
+> - Compare Celltrion and Samsung Biologics on governance
+
+Answered in **two layers** — the O/X indicators (15) and policy-adoption items (74) that KRX aggregates, and the
+**report the company itself wrote** (28 detailed principles, stated reasons). The *why* exists only in the latter.
+
+</details>
+
+<details>
+<summary><b>📄 Report full text</b></summary>
+
+> - Show the table of contents of Samsung Electronics' sustainability report
+> - Find where "renewable energy" appears in it
+> - Show me page 42
+
+Gives the report list, assurance provider and attached PDF address, then **reads the PDF body** to say which pages a
+keyword is on and quote around it. Search ignores whitespace, so letter-spaced typesetting still matches.
+
+</details>
+
+<details>
+<summary><b>🔍 Screening many companies at once</b></summary>
+
+> - KCGS A+ or better, semiconductors & semiconductor equipment only
+> - Which KOSPI companies published a sustainability report?
+> - Chemicals companies that have an MSCI rating
+
+Filters the whole KOSPI universe (795 companies in 2025) by **minimum grade per agency, portal industry, GICS industry
+group, and whether a report exists**, and shows how the matches cluster by industry.
+
+</details>
+
+### Worth knowing
+
+- **Short names work** — 현대차, 에스케이하이닉스, 삼성SDS, 케이티앤지 all resolve. When an alias is used, the response says so.
+- **`-` means "not rated"** — not a zero, not a bad grade. Missing data is reported as missing.
+- **KOSDAQ gets ratings only** — the portal carries KOSPI on the report and governance screens.
+- **Every value carries source, year and licence terms.** Do not strip the `license` field from responses.
+
+---
 
 ## Tools (12)
 
@@ -172,18 +282,75 @@ uv run python scripts/build_mcpb.py --check   # dist/open-esg-korea-*.mcpb — -
   first** — an individual querying for their own reading (local stdio, or a private deployment only they can reach) is
   internal use. Filing texts belong to the submitting company, so `governance_report` carries its own separate notice.
 
-## Documentation
 
-- Refresh the national inventory snapshot (once a year): `python3 scripts/refresh_ghg_inventory.py --url '<data.go.kr 15049589 download URL>'`
-- Refresh the GICS classification snapshot: `uv run python scripts/refresh_krx_gics.py` (the monthly `refresh-krx-gics` workflow does the same on the 1st and opens a PR — **no key needed**)
-- Refresh the listed-company snapshot by hand: `OPENDART_API_KEY=... uv run python scripts/refresh_listed_companies.py` (the monthly `refresh-listed-companies` workflow does the same and opens a PR — needs the repository secret `OPENDART_API_KEY`)
-- [MCP draft and roadmap](docs/mcp-draft.md) — data-source map, what was confirmed about each endpoint, the reasoning per phase
-- [Field notes](docs/anecdotes.md) — things only learned by knocking on the door (a DART link opens a different company, letter-spacing is baked into the PDF, the benchmark-leading parser misses our numeric tables …)
-- `python scripts/probe_krx.py 005930 2025` — check the portal response schema
-- `uv run python scripts/smoke_kind.py` — check that KIND filing texts (governance, sustainability) still read (live)
+---
 
-## Development
+## For developers
+
+```bash
+uv sync
+uv run python -m open_esg_korea                     # http://localhost:8000/mcp
+uv run python -m open_esg_korea --transport stdio   # local Claude Desktop connection
+```
+
+Example `claude_desktop_config.json`:
+
+```json
+{"mcpServers": {"open-esg-korea": {"command": "uv", "args": ["run", "--directory", "/path/to/open-esg-korea",
+  "python", "-m", "open_esg_korea", "--transport", "stdio"]}}}
+```
+
+### Building the extension yourself
+
+```bash
+uv run python scripts/build_mcpb.py                        # one bundle for this machine
+uv run python scripts/build_mcpb.py --target macos-arm64   # a specific one
+uv run python scripts/build_mcpb.py --target all --check   # all three, each actually launched afterwards
+```
+
+| `--target` | Runtime | `--check` runs on |
+|---|---|---|
+| `macos-arm64` | python-build-standalone (aarch64) | Apple Silicon |
+| `macos-x64` | python-build-standalone (x86_64) | Intel Macs, or **Apple Silicon with Rosetta 2** |
+| `windows-x64` | python.org embeddable build | Windows |
+
+`--check` unpacks what it built, launches it **with the exact command in the manifest**, and confirms 12 tools answer a
+stdio handshake — that is what stops "it built fine but will not open". Targets this machine cannot run are skipped.
+
+### Tests
 
 ```bash
 uv sync --dev && uv run pytest -q     # network 0
 ```
+
+---
+
+## Documentation
+
+- [MCP draft and roadmap](docs/mcp-draft.md) — data-source map, what was confirmed about each endpoint, the reasoning per phase
+- [Field notes](docs/anecdotes.md) — things only learned by knocking on the door (a DART link opens a different company, letter-spacing is baked into the PDF, the benchmark-leading parser misses our numeric tables …)
+
+### Refreshing snapshots
+
+| What | Command | Automation |
+|---|---|---|
+| GICS classification | `uv run python scripts/refresh_krx_gics.py` | `refresh-krx-gics` workflow (1st of each month, **no key needed**) |
+| Listed-company registry | `OPENDART_API_KEY=... uv run python scripts/refresh_listed_companies.py` | `refresh-listed-companies` workflow (needs repo secret `OPENDART_API_KEY`) |
+| National inventory | `python3 scripts/refresh_ghg_inventory.py --url '<data.go.kr 15049589 download URL>'` | none (once a year, after the December publication) |
+
+### Live checks
+
+```bash
+python scripts/probe_krx.py 005930 2025   # has the portal response schema changed?
+uv run python scripts/smoke_kind.py       # do KIND filing texts (governance, sustainability) still read?
+```
+
+---
+
+<div align="center">
+<sub>
+
+If this is useful to you — [![Sponsor](https://img.shields.io/badge/%E2%9D%A4%20Sponsor-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
+
+</sub>
+</div>
