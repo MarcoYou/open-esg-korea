@@ -69,8 +69,8 @@ flowchart LR
 
 | 내 컴퓨터 | 받기 | 크기 |
 |:---|:---:|:---:|
-| **Mac** — M1·M2·M3·M4 등 | [![Apple Silicon 다운로드](https://img.shields.io/badge/다운로드-Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-arm64.mcpb) | 약 40MB |
-| **Mac** — 인텔 | [![Intel Mac 다운로드](https://img.shields.io/badge/다운로드-Intel%20Mac-555555?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-x64.mcpb) | 약 44MB |
+| **Mac** — M Chip | [![Apple Silicon 다운로드](https://img.shields.io/badge/다운로드-Apple%20Silicon-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-arm64.mcpb) | 약 40MB |
+| **Mac** — 인텔 | [![Intel Mac 다운로드](https://img.shields.io/badge/다운로드-Intel%20Mac-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-macos-x64.mcpb) | 약 44MB |
 | **Windows** — 64비트 | [![Windows 다운로드](https://img.shields.io/badge/다운로드-Windows%20x64-0078D4?style=for-the-badge)](https://github.com/MarcoYou/open-esg-korea/releases/latest/download/open-esg-korea-windows-x64.mcpb) | 약 43MB |
 
 </div>
