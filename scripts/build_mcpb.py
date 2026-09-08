@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Claude Desktop 확장(.dxt/.mcpb) 빌드 — 더블클릭 한 번으로 설치되게 만든다.
+"""Claude Desktop 확장(.mcpb) 빌드 — 더블클릭 한 번으로 설치되게 만든다.
 
 Why: 「설정 파일에 경로를 적고 uv 를 깔라」는 안내는 기술을 아는 사람만 통과한다. 확장은 파일을 끌어다
 놓으면 끝이고, 켜고 끄는 것도 UI 에서 한다. 그래서 **받는 쪽에 아무것도 없어도 되게** 세 가지를 다 넣는다:
@@ -14,8 +14,12 @@ Why: 「설정 파일에 경로를 적고 uv 를 깔라」는 안내는 기술�
 의존성은 **호스트 파이썬 버전이 아니라 번들 런타임 버전에 맞춰** 받는다(`--python-version`).
 이걸 빼먹으면 cp314 휠이 3.12 런타임에 들어가 `ModuleNotFoundError` 로 조용히 죽는다.
 
-사용:  uv run python scripts/build_dxt.py            # dist/open-esg-korea-0.1.0.dxt (+ .mcpb 같은 파일)
-       uv run python scripts/build_dxt.py --check    # 만든 뒤 풀어서 실제로 stdio 핸드셰이크까지 해본다
+사용:  uv run python scripts/build_mcpb.py            # dist/open-esg-korea-0.1.0.mcpb
+       uv run python scripts/build_mcpb.py --check    # 만든 뒤 풀어서 실제로 stdio 핸드셰이크까지 해본다
+
+확장자는 **.mcpb 하나만** 낸다. 한때 어느 쪽을 받는지 몰라 .dxt 도 같이 냈는데, 설치해 보니 앱이
+`Claude Extensions/local.mcpb.<author>.<name>/` 로 풀었다 — MCPB 가 이 클라이언트의 형식이다.
+다만 매니페스트 **안의** 키 이름은 여전히 `dxt_version` 이고 값은 "0.2" 라야 한다(이름과 형식이 따로 논다).
 
 윈도우(win_amd64) 전용이다 — 임베드 배포판과 이진 휠이 플랫폼별이다. macOS 용은 런타임만 갈아끼우면 된다.
 """
@@ -35,7 +39,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 DIST = ROOT / "dist"
-BUILD = ROOT / "build" / "dxt"
+BUILD = ROOT / "build" / "mcpb"
 CACHE = ROOT / "build" / "cache"
 
 PY_VERSION = "3.12.8"
@@ -169,17 +173,13 @@ def package() -> pathlib.Path:
         json.dumps(manifest(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     DIST.mkdir(exist_ok=True)
-    out = DIST / "open-esg-korea-0.1.0.dxt"
+    out = DIST / "open-esg-korea-0.1.0.mcpb"
     log("압축하는 중 …")
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for path in sorted(BUILD.rglob("*")):
             if path.is_file() and "__pycache__" not in path.parts:
                 z.write(path, path.relative_to(BUILD).as_posix())
-    # 최신 클라이언트는 .mcpb 를 쓴다 — 내용은 같은 zip 이라 확장자만 바꿔 같이 낸다.
-    twin = out.with_suffix(".mcpb")
-    shutil.copyfile(out, twin)
     log(f"\n{out.name}  {out.stat().st_size / 1_048_576:.1f} MB")
-    log(f"{twin.name}  (같은 파일 — 클라이언트가 받는 확장자로 쓰세요)")
     return out
 
 
@@ -216,13 +216,15 @@ def check(bundle: pathlib.Path) -> int:
     if tools:
         log(f"OK — 번들 런타임으로 도구 {tools}개 응답")
         return 0
-    log("FAIL — 응답이 없습니다. stderr:")
-    log(proc.stderr[-2000:])
+    # 실패 이유를 안 보여주는 검사는 없느니만 못하다 — 종료코드·stdout·stderr 를 다 내놓는다.
+    log(f"FAIL — 도구 목록 응답이 없습니다 (종료코드 {proc.returncode})")
+    log(f"  stdout {len(proc.stdout)}자: {proc.stdout[:600]!r}")
+    log(f"  stderr {len(proc.stderr)}자: {proc.stderr[-1500:]!r}")
     return 1
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Claude Desktop 확장(.dxt/.mcpb)을 만듭니다.")
+    ap = argparse.ArgumentParser(description="Claude Desktop 확장(.mcpb)을 만듭니다.")
     ap.add_argument("--check", action="store_true", help="만든 뒤 풀어서 실제로 실행해 본다")
     args = ap.parse_args()
     bundle = package()
