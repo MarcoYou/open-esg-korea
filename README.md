@@ -20,7 +20,7 @@ AI 클라이언트(Claude, Cursor 등)가 자연어로 바로 물을 수 있게 
 ```mermaid
 flowchart LR
     A["KRX ESG 포털<br/>5개 기관 등급 · 지배구조 핵심지표"] --> S
-    B["KIND 공시<br/>지배구조보고서 · 지속가능경영 PDF 데이터 추출"] --> S
+    B["KIND 공시<br/>지배구조보고서 · 지속가능경영보고서 PDF 데이터 추출"] --> S
     C["GIR<br/>온실가스 명세서 · 배출권거래제"] --> S
     S["open-esg-korea<br/>MCP 서버 · 도구 12개<br/>값마다 출처 · 연도 · 이용조건"] --> D["Claude Desktop · Cursor<br/>「삼성전자 ESG 등급 어때?」"]
 ```
