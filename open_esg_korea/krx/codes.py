@@ -208,3 +208,33 @@ KIND_LICENSE_NOTICE = (
     "인용 시 회사명·보고서명·공시일(접수번호)을 함께 밝히고, 판단은 원문을 직접 확인하세요. "
     "여기 실린 값은 원문에서 기계적으로 옮긴 것이며 요약·가공하지 않았습니다."
 )
+
+
+# ── KRX 지수 포털(index.krx.co.kr) — GICS 산업분류 ────────────────────────────
+# ESG 포털·KIND 와 또 다른 호스트다. OTP 토큰을 먼저 받아야 데이터가 나온다
+# (`GenerateOTP.jspx` 로 code 를 받아 `IDX99000001.jspx` 에 실어 보낸다). 쿠키도 필요하다.
+# 이 주소는 **갱신 스크립트만** 쓴다 — 서버는 동봉 스냅샷(`data/krx_gics.json`)을 읽는다.
+GICS_BASE_URL = "https://index.krx.co.kr"
+GICS_OTP_PATH = "/contents/COM/GenerateOTP.jspx"
+GICS_DATA_PATH = "/contents/IDX/99/IDX99000001.jspx"
+GICS_STOCK_PAGE = f"{GICS_BASE_URL}/contents/MKD/03/0303/03030204/MKD03030204.jsp"   # 산업별 종목현황
+GICS_SECTOR_PAGE = f"{GICS_BASE_URL}/contents/MKD/03/0303/03030203/MKD03030203.jsp"  # 산업별 현황
+GICS_OPTION_BLD = "/IDX/03/0303/03030204/mkd03030204_01"   # 산업군 선택 목록
+GICS_STOCK_BLD = "/IDX/03/0303/03030204/mkd03030204_03"    # 산업군 안 종목
+GICS_SECTOR_BLD = "/IDX/03/0303/03030203/mkd03030203"      # 산업군별 종목수·시가총액
+
+#: 시장 코드 → 이름.
+GICS_MARKETS = {"STK": "KOSPI", "KSQ": "KOSDAQ"}
+
+#: GICS 경제섹터 11개 — 코드 두 자리. 산업군(네 자리)은 데이터에서 그대로 읽는다(25개, 개편될 수 있다).
+GICS_SECTORS = {
+    "10": "에너지", "15": "소재", "20": "산업재", "25": "자유소비재", "30": "필수소비재",
+    "35": "헬스케어", "40": "금융", "45": "정보기술", "50": "커뮤니케이션서비스",
+    "55": "유틸리티", "60": "부동산",
+}
+
+#: GICS 는 KRX·S&P/MSCI 의 분류다. 포털 업종(`UPJONG_CODES`, 21개)·GIR 지정업종과 **서로 다른 체계**다.
+GICS_NOTICE = (
+    "GICS 산업분류는 한국거래소가 S&P·MSCI 의 GICS 기준으로 부여한 것입니다. "
+    "KRX ESG 포털의 업종 구분(21개)이나 GIR 지정업종과는 다른 체계이므로 한 표에 섞지 마세요."
+)

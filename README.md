@@ -28,21 +28,28 @@ Claude Desktop `claude_desktop_config.json` 예:
 | 도구 | 무엇을 답하나 |
 |---|---|
 | `company` | 회사명/종목코드 → 포털 종목코드·ISIN. 모든 도구의 입구 |
-| `esg_ratings` | KCGS·MSCI·한국ESG연구소·S&P·서스틴베스트 ESG/E/S/G 등급(연도별) + KCGS 3년 추이 |
+| `esg_ratings` | KCGS·MSCI·한국ESG연구소·S&P·서스틴베스트 ESG/E/S/G 등급(연도별) + KCGS 3년 추이 + **같은 기관 안의 분포**(이 등급 이상 몇 사·동점 몇 사) |
 | `sustainability_reports` | 지속가능경영보고서 목록 + 최신 한 건의 공시 원문 — 보고 대상 기간·목차·검증기관·회사 공개처·첨부 PDF 주소 |
 | `sustainability_report_text` | 지속가능경영보고서 **PDF 본문** — 키워드가 몇 쪽에 있는지·그 대목 발췌·쪽 전체 보기 |
 | `governance_indicators` | 기업지배구조 핵심지표 15개 O/X · 준수율 · 회사 비교 |
 | `governance_policies` | 지배구조 정책 채택 여부 74개 항목 |
 | `governance_report` | 기업지배구조보고서 **원문** — 세부원칙 28개 답변·서식 표·미준수 사유(왜 미준수인지) |
 | `esg_disclosures` | 기업지배구조보고서 공시 이력(정정 포함) |
-| `esg_screener` | 유가증권 전체(2025: 795사) 등급 스크리너 — 기관별 최소 등급·업종·보고서 유무 |
-| `ghg_emissions` | 회사별 온실가스 배출량(GIR 명세서, tCO₂eq·에너지 TJ·검증기관) + 5년 추이 + 배출권거래제 할당 대비 인증 배출량 |
+| `esg_screener` | 유가증권 전체(2025: 795사) 등급 스크리너 — 기관별 최소 등급·업종·**GICS 산업군**·보고서 유무 + 결과의 산업군 분포 |
+| `ghg_emissions` | 회사별 온실가스 배출량(GIR 명세서, tCO₂eq·에너지 TJ·검증기관) + 5년 추이 + 배출권거래제 할당 대비 인증 배출량 · `report=True` 면 보고서 공시치를 **범위와 함께** 대조 |
 | `ghg_industry` | 지정업종별 배출량 순위 · 업종 안 법인 순위와 비중 (명세서 합산) |
 | `ghg_national_inventory` | 국가 온실가스 인벤토리 — 총량·5개 분야·세부 부문(철강·시멘트·도로수송…) 1990~ 시계열 |
 
 ## 읽을 때 주의
 
 - 기관마다 스케일이 다릅니다(KCGS S~D, MSCI AAA~CCC, S&P 0-100 점수, 서스틴베스트 AA~E). 기관 간 등급을 나란히 비교하지 마세요.
+- **GICS 산업군**(경제섹터 11 · 산업군 25)이 모든 응답의 회사 정보에 붙습니다. 동봉 스냅샷
+  (`open_esg_korea/data/krx_gics.json`, KOSPI+KOSDAQ 2,534종목)이라 키·네트워크 없이 됩니다.
+  포털 업종(21개)·GIR 지정업종과는 **다른 체계**입니다 — 삼성전자는 각각 하드웨어및IT장비 / 전기·전자 /
+  반도체 제조업입니다. 한 표에 섞지 마세요.
+- 「좋은 편인가」는 **같은 기관 안의 분포**로 답합니다 — 「상위 N%」는 만들지 않습니다. 등급이 6~7단계뿐이라
+  동점이 30~60%여서(한국ESG연구소는 A 등급에 61%) 백분위가 지어낸 정밀도가 됩니다. 분모는 그 기관이
+  평가한 회사 수이고, 기관마다 평가 대상이 다릅니다(2025년: KCGS 782사 · MSCI 74사).
 - `-`(null)는 **그 기관이 평가하지 않았다**는 뜻입니다.
 - 포털 검색기는 유가증권 상장사만 다룹니다. 코스닥 **회사명** 검색은 저장소에 동봉한 상장사 명부 스냅샷
   (`open_esg_korea/data/listed_companies.json`, OpenDART 고유번호 명부에서 매월 갱신)으로 종목코드를 찾습니다 — 키 없이 됩니다.
@@ -64,14 +71,21 @@ Claude Desktop `claude_desktop_config.json` 예:
   `table=True` 로 격자를 받을 수도 있지만 **실험적**입니다: 값 보존이 97.4%(정렬 텍스트는 100%)이고,
   쪼개진 것으로 보이는 칸은 `⚠` 로 표시해 돌려줍니다. 의심 칸이 0이 아니면 정렬 텍스트와 대조하세요.
 - 공시 목록의 접수번호는 **KIND(거래소) 번호**입니다. DART 접수번호와 체계가 달라, 같은 번호로 DART 뷰어를 열면 다른 회사 공시가 나옵니다.
+- **GIR 값과 보고서 공시치는 범위만 맞추면 사실상 같습니다** — 회사가 GIR 에 낸 명세서를 보고서에도 싣기 때문입니다
+  (실측 2024년: 포스코홀딩스 1톤·현대차 10톤·SK하이닉스 0.10%·LG화학 0.50% 차이). 벌어지는 건 보고서 표지 숫자가
+  대개 **글로벌**이라서입니다(삼성전자 9%). `ghg_emissions(report=True)` 는 값을 단정하지 않고 **원문 발췌와
+  범위 축**(경계 · Scope 2 지역/시장기반 · NF3 포함 여부)을 함께 줍니다 — 한 보고서 안에 값이 여럿일 수 있습니다
+  (SK하이닉스 2024년은 셋). Scope 3 는 GIR 에 없어 보고서가 유일한 출처입니다.
 - 평가정보는 각 기관의 저작물입니다(KCGS: 비상업적 내부 용도). 응답의 `license` 를 유지하세요. 공시 원문은 제출 회사의 문서이므로
   `governance_report` 는 그 고지를 따로 싣습니다.
 
 ## 문서
 
 - 국가 인벤토리 스냅샷 갱신(연 1회): `python3 scripts/refresh_ghg_inventory.py --url '<공공데이터포털 15049589 다운로드 URL>'`
+- GICS 산업분류 스냅샷 갱신(분기): `uv run python scripts/refresh_krx_gics.py --date YYYYMMDD`
 - 스냅샷 수동 갱신: `OPENDART_API_KEY=... uv run python scripts/refresh_listed_companies.py` (월간 워크플로 `refresh-listed-companies` 가 같은 일을 하고 PR 을 엽니다 — 저장소 secret `OPENDART_API_KEY` 필요).
-- [MCP 초안·로드맵](docs/mcp-draft.md) — 데이터 소스 지도, 엔드포인트 확인 내용, Phase 2·3
+- [MCP 초안·로드맵](docs/mcp-draft.md) — 데이터 소스 지도, 엔드포인트 확인 내용, Phase 별 근거
+- [실측 노트](docs/anecdotes.md) — 두드려 보고 나서야 알게 된 것들(DART 링크가 다른 회사를 연다, 자간 공백이 PDF 에 박혀 있다, 벤치마크 1위 파서가 우리 수치표를 못 잡는다…)
 - `python scripts/probe_krx.py 005930 2025` — 포털 응답 스키마 점검
 - `uv run python scripts/smoke_kind.py` — KIND 공시 원문(지배구조·지속가능)이 아직 읽히는지 점검(실서버)
 

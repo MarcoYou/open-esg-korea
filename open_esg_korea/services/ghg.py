@@ -52,7 +52,31 @@ def latest_year_with(rows_by_year: dict[int, list[dict]], name: str) -> int | No
 
 
 # ── 회사별 ────────────────────────────────────────────────────────────────────
+async def _report_disclosure(company: str, warnings: list[str]) -> dict[str, Any] | None:
+    """보고서가 공시한 수치를 **범위와 함께** 가져온다. GIR 조회를 죽이지 않는다 — 실패하면 경고만."""
+    from open_esg_korea.services import ghg_disclosure
+    from open_esg_korea.services.report_text import load_pages
+    from open_esg_korea.services.reports import build_sustainability_reports_payload
+    try:
+        base = await build_sustainability_reports_payload(company)
+        detail = (base.get("data") or {}).get("detail") or {}
+        attachments = detail.get("attachments") or []
+        if not attachments:
+            warnings.append("지속가능경영보고서 첨부가 없어 회사 공시치는 비교하지 못했습니다.")
+            return None
+        pages = await load_pages(attachments[0]["url"])
+        mentions = ghg_disclosure.collect_scope_mentions(pages)
+        return {"report": {"year": detail.get("year"), "title": detail.get("report_title"),
+                           "pdf": attachments[0]["url"], "page_count": len(pages)},
+                "mentions": mentions, "basis_axes": ghg_disclosure.basis_summary(mentions),
+                "reading_notes": ghg_disclosure.READING_NOTES}
+    except Exception as exc:                      # noqa: BLE001 — 보조 정보다. GIR 답변을 막지 않는다.
+        warnings.append(f"회사 공시치(보고서)를 읽지 못해 GIR 값만 보여줍니다: {type(exc).__name__}: {exc}")
+        return None
+
+
 async def build_ghg_emissions_payload(company: str, year: int | None = None, *, history_years: int = HISTORY_YEARS,
+                                      report: bool = False,
                                       client: KrxEsgClient | None = None, gir: GirClient | None = None) -> dict[str, Any]:
     client = client or get_client()
     gir = gir or get_gir_client()
@@ -110,9 +134,14 @@ async def build_ghg_emissions_payload(company: str, year: int | None = None, *, 
             "ETS 인증 배출량 − 할당량 > 0 이면 배출권을 사거나 이월분을 써야 했던 해다.",
         ],
     }
+    if report:
+        disclosure = await _report_disclosure(company, env.warnings)
+        if disclosure:
+            env.data["disclosure"] = disclosure
     env.next_actions = [f"ghg_industry(industry=\"{exact[0]['industry']}\", year={used}) — 같은 업종 안 순위" if exact else
                         f"sustainability_reports(company=\"{name}\") — 자발적 공시 원문",
-                        f"esg_ratings(company=\"{name}\")"]
+                        f"ghg_emissions(company=\"{name}\", report=True) — 회사 공시치와 범위 대조" if not report else
+                        f"sustainability_report_text(company=\"{name}\", find=\"Scope 3\") — 보고서 원문에서 읽기"]
     return env.to_dict()
 
 

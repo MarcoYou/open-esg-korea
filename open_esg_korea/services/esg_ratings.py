@@ -7,8 +7,10 @@ from typing import Any
 
 from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient, get_client
+from open_esg_korea.services.safety import EXTERNAL_ERRORS
 from open_esg_korea.services.company import company_block, resolve_company
 from open_esg_korea.services.contracts import AnalysisStatus, ToolEnvelope, clean, source_block
+from open_esg_korea.services.rating_context import READING_NOTES as CONTEXT_NOTES, build_context
 
 _KST = timezone(timedelta(hours=9))
 
@@ -87,6 +89,16 @@ async def build_esg_ratings_payload(company: str, year: int | None = None, *,
             "연도는 평가 발표 연도(포털 표기)다.",
         ],
     }
+    if covered:
+        # 「이 등급이 좋은 편인가」 — 같은 기관 안에서 세어 준다. 전체 목록은 24시간 캐시라 대개 공짜다.
+        try:
+            all_rows = await client.company_list(used_year)
+        except EXTERNAL_ERRORS as exc:
+            env.warnings.append(f"등급 분포를 계산하지 못해 회사 등급만 보여줍니다: {type(exc).__name__}")
+        else:
+            if all_rows:
+                env.data["distribution"] = {**build_context(all_rows, ratings, universe=len(all_rows), isu_cd=isu),
+                                            "year": used_year, "reading_notes": CONTEXT_NOTES}
     env.next_actions = [f"governance_indicators(company=\"{res.selected['name']}\") — 핵심지표 15개 준수 여부",
                         f"sustainability_reports(company=\"{res.selected['name']}\") — 보고서 작성기준·검증기관"]
     return env.to_dict()
