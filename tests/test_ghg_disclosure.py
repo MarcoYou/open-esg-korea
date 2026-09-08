@@ -76,3 +76,24 @@ async def test_reading_notes_explain_the_range_not_the_gap(krx_client, kind_clie
     joined = " ".join(READING_NOTES)
     assert "같은 값을 다르게 센 것이 아니라" in joined
     assert "Scope 3 는 GIR 에 없다" in joined
+
+
+# 현대차 2025 보고서 p115 — 합계와 개별이 한 표에 있고, 범위는 **표 아래 각주**에 적혀 있다.
+HYUNDAI_115 = ("구분 단위 2022 2023 2024 비고 Scope 1+2 합계 tCO2-eq 2,404,069 2,275,751 2,097,809 "
+               "Scope 1 tCO2-eq 719,949 696,590 679,822 Scope 2 tCO2-eq 1,684,120 1,579,161 1,417,987 "
+               "시장 기반 기준 Scope 1+2 집약도 tCO2-eq/대 0.601 0.531 0.506 "
+               "Scope 3 tCO2-eq 137,935,453 148,126,153 147,253,154 "
+               "1) 환경 데이터의 보고 범위는 국내 전 사업장 및 해외 12개 생산법인이며, 모든 대당 집약도는 생산대수 기준")
+
+
+def test_masking_the_total_does_not_hide_the_individual_rows():
+    """「Scope 1+2」를 막되 같은 표의 별도 「Scope 1」·「Scope 2」 행은 살아 있어야 한다."""
+    kinds = {m["kind"] for m in collect_scope_mentions([HYUNDAI_115])}
+    assert kinds == {"scope12", "scope1", "scope2", "scope3"}
+
+
+def test_basis_can_come_from_a_footnote_outside_the_snippet():
+    """범위는 표 아래 각주에 적히는 일이 많다 — 보여줄 발췌보다 넓은 문맥에서 찾아야 한다."""
+    m = next(m for m in collect_scope_mentions([HYUNDAI_115]) if m["kind"] == "scope12")
+    assert {"글로벌", "국내", "시장기반"} <= set(m["basis"])
+    assert "생산법인" not in m["snippet"]           # 각주는 발췌에 안 들어간다
