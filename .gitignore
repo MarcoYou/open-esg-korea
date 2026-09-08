@@ -14,3 +14,7 @@ venv/
 .DS_Store
 .mcp.json
 cache/
+
+# DXT 빌드 산출물 — 런타임·의존성 43MB 는 저장소에 넣지 않는다
+build/
+dist/
