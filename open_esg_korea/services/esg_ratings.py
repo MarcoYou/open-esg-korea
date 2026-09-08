@@ -97,7 +97,7 @@ async def build_esg_ratings_payload(company: str, year: int | None = None, *,
             env.warnings.append(f"등급 분포를 계산하지 못해 회사 등급만 보여줍니다: {type(exc).__name__}")
         else:
             if all_rows:
-                env.data["distribution"] = {**build_context(all_rows, ratings, universe=len(all_rows)),
+                env.data["distribution"] = {**build_context(all_rows, ratings, universe=len(all_rows), isu_cd=isu),
                                             "year": used_year, "reading_notes": CONTEXT_NOTES}
     env.next_actions = [f"governance_indicators(company=\"{res.selected['name']}\") — 핵심지표 15개 준수 여부",
                         f"sustainability_reports(company=\"{res.selected['name']}\") — 보고서 작성기준·검증기관"]

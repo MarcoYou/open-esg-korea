@@ -19,6 +19,7 @@ uv run python -m open_esg_korea                    # streamable-http :8000 → /
 uv run python -m open_esg_korea --transport stdio  # Claude Desktop 로컬 연결용
 python3 scripts/probe_krx.py 005930 2025           # 포털 응답 스키마가 바뀌었는지 (network)
 uv run python scripts/smoke_kind.py                # KIND 원문(지배구조·지속가능)이 아직 읽히는지 (network)
+uv run python scripts/refresh_krx_gics.py          # GICS 산업분류 스냅샷 갱신 (분기 1회, network)
 OPENDART_API_KEY=… uv run python scripts/refresh_listed_companies.py   # 상장사 명부 스냅샷 갱신 (월간 워크플로가 대신 함)
 python3 scripts/refresh_ghg_inventory.py --url '<포털 15049589 다운로드 URL>'  # 국가 인벤토리 스냅샷 (연 1회, 12월 공표 후)
 ```
@@ -36,6 +37,8 @@ open_esg_korea/
   dart/corp_codes.py # 상장사 명부 3겹: 실시간(키, 7일 메모리 캐시) → data/listed_companies.json 스냅샷 → 없음
   data/listed_companies.json  # OpenDART corpCode.xml 상장사 ~3,900행 스냅샷. scripts/refresh_listed_companies.py 로만 갱신
   data/ghg_inventory.json     # 국가 온실가스 인벤토리 1990~ (162 분야). scripts/refresh_ghg_inventory.py 로만 갱신
+  data/krx_gics.json          # GICS 산업분류 KOSPI+KOSDAQ 2,534종목. scripts/refresh_krx_gics.py 로만 갱신
+  services/gics.py            # 종목코드 → 경제섹터·산업군 조회, 산업군 필터·집계
   services/        # payload(ToolEnvelope) 를 만드는 도메인 로직
   services/governance_report.py          # 지배구조보고서 원문 파서(세부원칙·서식 표·미준수 사유) — 정규식, lxml 없음
   services/governance_report_payload.py  # 접수번호 고르기 → 원문 → 파서 → scope/find
@@ -80,6 +83,10 @@ docs/anecdotes.md  # 실측 노트 — 가정이 틀렸던 지점들. 새 소스
    검색은 반드시 공백을 지우고 한다: 원문 자간 때문에 그냥 찾으면 「온실가스배출량」이 0쪽으로 나온다(실제 16쪽).
    표 격자(`table=True`)는 **기본값이 아니다.** 값 보존이 97.4%(정렬 텍스트는 100%)이고 좌우 2단 쪽에서
    숫자가 갈린다 — 격자 칸이 평문 토큰에 없으면 의심 칸으로 표시해 돌려준다. 조용히 틀린 값을 주지 않는다.
+12. **업종 체계가 셋이고 섞지 않는다.** GICS 산업군 25개(`services/gics.py`, 동봉 스냅샷) · 포털 업종 21개
+   (`codes.UPJONG_CODES`) · GIR 지정업종은 서로 다른 분류다 — 삼성전자는 각각 「하드웨어및IT장비」·「전기·전자」·
+   「반도체 제조업」이다. GICS 는 지수 포털(index.krx.co.kr)에서 OTP·쿠키로 받아야 해서 스냅샷으로 동봉하고
+   `scripts/refresh_krx_gics.py` 로만 갱신한다. 스냅샷에 없는 종목은 「분류 없음」이지 「상장 아님」이 아니다.
 
 ## Out of Scope (현재)
 

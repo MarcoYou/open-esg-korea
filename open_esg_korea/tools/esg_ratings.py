@@ -12,15 +12,25 @@ def _distribution_lines(d: dict) -> list[str]:
     dist = d.get("distribution")
     if not dist or not dist.get("by_agency"):
         return []
-    lines = ["", f"## 같은 기관 안에서의 위치 ({dist.get('year')}년 · 유가증권 {dist.get('universe')}사)",
-             "| 기관 | 이 회사 | 평가 대상 | 이 등급 이상 | 같은 등급 동점 |", "|---|---|---|---|---|"]
+    group = dist.get("gics_group")
+    title = f"## 같은 기관 안에서의 위치 ({dist.get('year')}년 · 유가증권 {dist.get('universe')}사)"
+    lines = ["", title,
+             "| 기관 | 이 회사 | 평가 대상 | 이 등급 이상 | 동점 | 산업군 안 |", "|---|---|---|---|---|---|"]
     for ctx in dist["by_agency"].values():
         mine = ctx["score"] if ctx["kind"] == "score" else ctx["grade"]
         cover = f"{ctx['rated']}사" + (f" ({ctx['coverage_pct']}%)" if ctx.get("coverage_pct") else "")
         above = f"{ctx['at_or_above']}사"
         if ctx.get("at_or_above_pct") is not None:
             above += f" ({ctx['at_or_above_pct']}%)"
-        lines.append(f"| {ctx['agency']} | **{mine}** | {cover} | {above} | {ctx['same_grade']}사 |")
+        peer = ctx.get("peer_group")
+        peer_cell = (f"{peer['at_or_above']}/{peer['rated']}사"
+                     + (f" ({peer['at_or_above_pct']}%)" if peer.get("at_or_above_pct") is not None else "")
+                     ) if peer else "-"
+        lines.append(f"| {ctx['agency']} | **{mine}** | {cover} | {above} | {ctx['same_grade']}사 | {peer_cell} |")
+    if group:
+        lines.append("")
+        lines.append(f"- 산업군(GICS): **{group['group']}** ({group['group_code']}) · {group['sector']} 섹터 "
+                     f"· 상장 {group['listed']}사 — 「산업군 안」 열은 이 안에서 센 것이다")
     for ctx in dist["by_agency"].values():
         if ctx.get("counts"):
             spread = " · ".join(f"{g} {n}" for g, n in ctx["counts"].items())

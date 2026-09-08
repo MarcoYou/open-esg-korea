@@ -9,6 +9,7 @@ from typing import Any
 
 from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient, get_client
+from open_esg_korea.services import gics
 from open_esg_korea.services.contracts import AnalysisStatus, ToolEnvelope, clean, source_block
 from open_esg_korea.services.esg_ratings import current_year
 
@@ -54,9 +55,28 @@ def resolve_upjong(value: str) -> str:
     return ""
 
 
+def _gics_breakdown(companies: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """걸러진 회사들이 어느 산업군에 몰려 있나 — 「산업군별로 보기」의 핵심."""
+    counts: dict[tuple[str, str, str], int] = {}
+    unknown = 0
+    for c in companies:
+        g = c.get("gics")
+        if not g:
+            unknown += 1
+            continue
+        key = (g["sector"], g["group_code"], g["group"])
+        counts[key] = counts.get(key, 0) + 1
+    out = [{"sector": s, "group_code": gc, "group": gn, "count": n}
+           for (s, gc, gn), n in sorted(counts.items(), key=lambda kv: -kv[1])]
+    if unknown:
+        out.append({"sector": None, "group_code": None, "group": "분류 없음(스냅샷 미수록)", "count": unknown})
+    return out
+
+
 async def build_screener_payload(*, year: int | None = None, min_kcgs: str = "", min_msci: str = "",
                                  min_kesg: str = "", min_sustinvest: str = "", min_sp_score: int | None = None,
-                                 industry: str = "", require_sustainability_report: bool = False,
+                                 industry: str = "", gics_group: str = "",
+                                 require_sustainability_report: bool = False,
                                  limit: int = 50, client: KrxEsgClient | None = None) -> dict[str, Any]:
     client = client or get_client()
     used_year = year or current_year()
@@ -74,6 +94,15 @@ async def build_screener_payload(*, year: int | None = None, min_kcgs: str = "",
             env.subject = str(used_year)
             env.warnings.append(f"{used_year + 1}년 목록이 아직 없어 {used_year}년 목록을 사용했습니다.")
     universe = [parse_list_row(r) for r in rows]
+    for c in universe:                                   # 결과에 산업군을 실어 준다(스냅샷, 네트워크 0)
+        hit = gics.classify(c["isu_cd"] or "")
+        c["gics"] = {"sector": hit["sector"], "group_code": hit["group_code"], "group": hit["group"]} if hit else None
+
+    matched_groups = gics.resolve_group(gics_group) if gics_group else []
+    if gics_group and not matched_groups:
+        env.warnings.append(f"GICS 산업군 「{gics_group}」을 찾지 못해 산업군 필터 없이 조회했습니다. "
+                            f"가능한 값: {', '.join(sorted({g['group'] for g in gics.groups()}))}")
+    wanted_groups = {g["group_code"] for g in matched_groups}
 
     def keep(c: dict[str, Any]) -> bool:
         rt = c["ratings"]
@@ -91,6 +120,8 @@ async def build_screener_payload(*, year: int | None = None, min_kcgs: str = "",
                 return False
         if require_sustainability_report and not c["has_sustainability_report"]:
             return False
+        if wanted_groups and (c["gics"] or {}).get("group_code") not in wanted_groups:
+            return False
         return True
 
     matched = [c for c in universe if keep(c)]
@@ -100,10 +131,13 @@ async def build_screener_payload(*, year: int | None = None, min_kcgs: str = "",
         "filters": {"min_kcgs": min_kcgs or None, "min_msci": min_msci or None, "min_kesg": min_kesg or None,
                     "min_sustinvest": min_sustinvest or None, "min_sp_score": min_sp_score,
                     "industry": codes.UPJONG_CODES.get(upjong) if upjong else None,
+                    "gics_group": [g["group"] for g in matched_groups] or None,
                     "require_sustainability_report": require_sustainability_report},
         "universe_count": len(universe), "matched_count": len(matched),
         "companies": matched[:max(1, limit)], "truncated": len(matched) > limit,
+        "gics_breakdown": _gics_breakdown(matched),
         "reading_notes": ["목록은 포털이 게시한 유가증권 상장사 범위다(코스닥 없음).",
-                          "「이상」 비교는 기관별 서열표 안에서만 한다 — 기관 간 등급은 비교하지 않는다."],
+                          "「이상」 비교는 기관별 서열표 안에서만 한다 — 기관 간 등급은 비교하지 않는다.",
+                          codes.GICS_NOTICE],
     }
     return env.to_dict()

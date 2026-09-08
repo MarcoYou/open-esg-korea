@@ -24,6 +24,7 @@ import httpx
 from open_esg_korea.dart.corp_codes import STALE_AFTER_DAYS, DartClientError, DartCorpIndex, get_index
 from open_esg_korea.krx.client import KrxEsgClient, get_client
 from open_esg_korea.services.aliases import COMPANY_ALIASES, INDUSTRY_SUFFIXES
+from open_esg_korea.services import gics
 from open_esg_korea.services.contracts import AnalysisStatus
 
 _CODE_RE = re.compile(r"^\(?(\d{6})\)?")
@@ -306,6 +307,11 @@ async def resolve_company(query: str, client: KrxEsgClient | None = None,
 
 def company_block(res: CompanyResolution) -> dict[str, Any]:
     sel = res.selected or {}
-    return {"isu_cd": sel.get("isu_cd", ""), "name": sel.get("name", ""),
-            "match": sel.get("match", ""), "in_portal_index": sel.get("in_index", False),
-            "corp_code": sel.get("corp_code")}
+    block = {"isu_cd": sel.get("isu_cd", ""), "name": sel.get("name", ""),
+             "match": sel.get("match", ""), "in_portal_index": sel.get("in_index", False),
+             "corp_code": sel.get("corp_code")}
+    # GICS 산업분류(동봉 스냅샷) — 모든 도구가 「이 회사가 어느 산업군인가」를 함께 말하게 한다.
+    hit = gics.classify(block["isu_cd"]) if block["isu_cd"] else None
+    block["gics"] = ({"sector_code": hit["sector_code"], "sector": hit["sector"],
+                      "group_code": hit["group_code"], "group": hit["group"]} if hit else None)
+    return block
