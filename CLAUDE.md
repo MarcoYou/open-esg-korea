@@ -50,6 +50,7 @@ open_esg_korea/
   resources.py     # oek://tools_guide
 tests/fixtures/    # 2026-09-07 실호출 응답 스냅샷
 docs/mcp-draft.md  # 설계 초안·로드맵
+docs/anecdotes.md  # 실측 노트 — 가정이 틀렸던 지점들. 새 소스를 붙이기 전에 읽는다
 ```
 
 ## Rules
