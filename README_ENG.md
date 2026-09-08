@@ -19,7 +19,7 @@ Same shape as its sibling project [open-proxy-mcp](https://github.com/MarcoYou/o
 ```mermaid
 flowchart LR
     A["KRX ESG Portal<br/>5 agency ratings · governance indicators"] --> S
-    B["KIND filings<br/>report full text · attached PDFs"] --> S
+    B["KIND filings<br/>report full text · data extracted from attached PDFs"] --> S
     C["GIR<br/>GHG statements · emissions trading"] --> S
     S["open-esg-korea<br/>MCP server · 12 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · Cursor<br/>ask in plain language"]
 ```
@@ -27,7 +27,8 @@ flowchart LR
 All three are reachable **without an API key**. Ratings are never stored — they are fetched live on each question.
 
 > *open-esg-korea is an MCP server that individuals install and run for themselves. It does not store or redistribute
-> ESG ratings or greenhouse-gas data.*
+> ESG ratings or greenhouse-gas data. Collecting or redistributing this data may breach the issuing agencies' licences —
+> please take care.*
 
 ## Install — if you just want to use it (Windows)
 
