@@ -185,12 +185,24 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 <details>
 <summary><b>🔍 여러 회사를 한 번에 훑고 싶을 때</b></summary>
 
-> - KCGS A+ 이상인 회사 중에 반도체·반도체장비 산업군만 뽑아줘
+**추리기**
+
+> - KCGS A+ 이상인 회사 중에 「반도체및반도체 장비」 산업군만 뽑아줘
 > - 지속가능경영보고서 낸 유가증권 상장사 목록 보여줘
 > - 화학 업종에서 MSCI 등급 있는 회사만
 
+**업종·산업군끼리 비교하기**
+
+> - 「반도체및반도체 장비」랑 「자동차및부품」, 어느 산업군의 KCGS 등급 분포가 더 좋아?
+> - 「은행」 산업군 회사들 ESG 등급 한 표로 비교해줘
+> - 「소재」 산업군에서 등급 상위권만 추려서 온실가스 배출량이랑 같이 보여줘
+
 유가증권 전체(2025년 795사)를 대상으로 **기관별 최소 등급 · 업종 · GICS 산업군 · 보고서 유무**로 거르고,
-결과가 어느 산업군에 몰려 있는지도 같이 보여 줍니다.
+결과가 어느 산업군에 몰려 있는지도 같이 보여 줍니다. 산업군끼리 견줄 때도 **같은 기관 안에서** 셉니다 —
+기관이 다르면 스케일이 달라 한 줄에 놓지 않습니다.
+
+<sub>산업군 이름은 GICS 25개 분류를 그대로 씁니다(자본재 · 소재 · 하드웨어및IT장비 · 반도체및반도체 장비 ·
+자동차및부품 · 은행 …). 포털 업종(21개)·GIR 지정업종과는 [다른 체계](#읽을-때-주의)입니다.</sub>
 
 </details>
 
@@ -200,6 +212,18 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 - **`-` 는 「미평가」입니다** — 0 점도, 나쁜 등급도 아닙니다. 자료가 없으면 그렇다고 말합니다.
 - **코스닥은 등급표까지만** 나옵니다 — 포털이 보고서·지배구조 화면에는 유가증권만 싣습니다.
 - **모든 값에 출처·연도·이용조건이 붙습니다.** 응답의 `license` 를 지우지 마세요.
+
+---
+
+<div align="center">
+
+**이 프로젝트가 도움이 되셨나요?**
+
+후원을 해주신다면 유지·보수에 큰 힘이 됩니다.
+
+[![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-%E2%9D%A4-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
+
+</div>
 
 ---
 
@@ -353,12 +377,3 @@ python scripts/probe_krx.py 005930 2025   # 포털 응답 스키마가 바뀌었
 uv run python scripts/smoke_kind.py       # KIND 공시 원문(지배구조·지속가능)이 아직 읽히는지
 ```
 
----
-
-<div align="center">
-<sub>
-
-이 프로젝트가 쓸 만하다면 [![Sponsor](https://img.shields.io/badge/%E2%9D%A4%20Sponsor-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
-
-</sub>
-</div>

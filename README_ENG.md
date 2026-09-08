@@ -188,12 +188,25 @@ keyword is on and quote around it. Search ignores whitespace, so letter-spaced t
 <details>
 <summary><b>🔍 Screening many companies at once</b></summary>
 
+**Narrowing down**
+
 > - KCGS A+ or better, semiconductors & semiconductor equipment only
 > - Which KOSPI companies published a sustainability report?
 > - Chemicals companies that have an MSCI rating
 
+**Comparing industries against each other**
+
+> - Semiconductors & equipment vs. automobiles & components — which industry group has the better KCGS spread?
+> - Put every bank's ESG rating in one table
+> - Take the top-rated materials companies and show their emissions alongside
+
 Filters the whole KOSPI universe (795 companies in 2025) by **minimum grade per agency, portal industry, GICS industry
-group, and whether a report exists**, and shows how the matches cluster by industry.
+group, and whether a report exists**, and shows how the matches cluster by industry. Industry comparisons are still
+counted **within one agency** — different agencies use different scales, so they never share a row.
+
+<sub>Industry-group names follow the 25 GICS groups (Capital Goods · Materials · Technology Hardware & Equipment ·
+Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks …), which is a
+[different scheme](#reading-the-output) from the portal's 21 industries and GIR's designated industries.</sub>
 
 </details>
 
@@ -203,6 +216,18 @@ group, and whether a report exists**, and shows how the matches cluster by indus
 - **`-` means "not rated"** — not a zero, not a bad grade. Missing data is reported as missing.
 - **KOSDAQ gets ratings only** — the portal carries KOSPI on the report and governance screens.
 - **Every value carries source, year and licence terms.** Do not strip the `license` field from responses.
+
+---
+
+<div align="center">
+
+**Has this project been useful to you?**
+
+Sponsoring it goes a long way toward keeping it maintained.
+
+[![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-%E2%9D%A4-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
+
+</div>
 
 ---
 
@@ -373,12 +398,3 @@ python scripts/probe_krx.py 005930 2025   # has the portal response schema chang
 uv run python scripts/smoke_kind.py       # do KIND filing texts (governance, sustainability) still read?
 ```
 
----
-
-<div align="center">
-<sub>
-
-If this is useful to you — [![Sponsor](https://img.shields.io/badge/%E2%9D%A4%20Sponsor-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
-
-</sub>
-</div>
