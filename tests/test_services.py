@@ -15,7 +15,50 @@ async def test_ratings_payload_carries_source_license_and_history(krx_client):
     assert p["status"] == "exact" and p["data"]["year"] == 2025
     assert p["source"]["provider"] == "KRX ESG 포털" and "esg.krx.co.kr" in p["source"]["page_url"]
     assert "저작물" in p["license"]
-    assert [h["kcgs_esg"] for h in p["data"]["kcgs_history"]] == ["A", "B+", "A"]
+    assert [h["kcgs_esg"] for h in p["data"]["kcgs_history"]] == ["B", "B+", "B"]   # fixture 합성값
+
+
+async def test_each_grade_carries_its_own_agencys_terms(krx_client):
+    """기관마다 조건이 다르다 — 한 문장으로 뭉치면 어느 쪽으로든 틀린다."""
+    p = await build_esg_ratings_payload("삼성전자", 2025, client=krx_client)
+    terms = {r["agency_id"]: r["license"] for r in p["data"]["ratings"]}
+    assert "대외 공개" in terms["kcgs"]                       # KCGS: 「비상업적 내부 용도·대외 공개 금지」
+    assert "지수 산출" in terms["msci"]                       # MSCI: 용도 제한이 따로 붙는다
+    assert "서면동의" in terms["sustinvest"] and "서면 허가" in terms["sp"]
+    assert len(set(terms.values())) == 5                     # 한 기관 조항을 다섯 곳에 붙여쓰지 않는다
+    assert all(terms.values())
+
+
+async def test_every_agency_restricts_use_to_internal(krx_client):
+    """다섯 곳 다 내부 용도다 — MSCI 도 예외가 아니다(영문 원문 「for internal use only」, 2026-09-08 확인).
+    화면의 한글 요약만 보고 「MSCI 는 복제 제한이 없다」고 읽었던 것을 바로잡은 자리다."""
+    p = await build_esg_ratings_payload("삼성전자", 2025, client=krx_client)
+    terms = {r["agency_id"]: r["license"] for r in p["data"]["ratings"]}
+    assert "내부 용도" in terms["kcgs"] and "내부 용도" in terms["msci"]
+    for r in p["data"]["ratings"]:                            # 줄인 문장이라 원문 주소를 함께 준다
+        assert r["license_url"].startswith("https://esg.krx.co.kr/templets/mobile/notice-box.jsp?type=")
+
+
+async def test_blanket_notice_does_not_claim_one_agencys_clause_for_all(krx_client):
+    """「비상업적 내부 용도」는 KCGS 조항이다 — 총괄 고지에 넣으면 MSCI 에 과하게 적용된다."""
+    p = await build_esg_ratings_payload("삼성전자", 2025, client=krx_client)
+    assert "저작물" in p["license"] and "사전승낙" in p["license"]
+    assert "비상업적 내부 용도" not in p["license"]
+
+
+async def test_source_points_at_this_companys_screen(krx_client):
+    """값이 아니라 원본을 보고 싶을 때 바로 열려야 한다."""
+    p = await build_esg_ratings_payload("삼성전자", 2025, client=krx_client)
+    assert p["source"]["page_url"].endswith("?isu_cd=005930")
+
+
+def test_rating_fixtures_do_not_carry_real_grades():
+    """등급을 저장소에 두면 그 자체가 복제다 — fixture 는 스키마만 지킨다(규칙 6)."""
+    import json, pathlib
+    fix = pathlib.Path(__file__).parent / "fixtures"
+    for name in ("ratings_005930_2025.json", "history_005930.json", "list_2025_head.json"):
+        body = json.loads((fix / name).read_text(encoding="utf-8"))
+        assert "합성값" in body.get("_note", ""), f"{name} 에 합성값 표시가 없다"
 
 
 async def test_ratings_ambiguous_returns_candidates_not_grades(krx_client):

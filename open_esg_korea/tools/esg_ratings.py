@@ -54,6 +54,11 @@ def _render(payload: dict) -> str:
             lines.append(f"| {dash(h['year'])} | {dash(h['kcgs_esg'])} | {dash(h['sales_100m_krw'])} | "
                          f"{dash(h['operating_income_100m_krw'])} |")
     lines += _distribution_lines(d)
+    # 기관별 이용 조건 — 평가한 기관 것만 싣는다. 한 문장으로 뭉치면 어느 쪽으로든 틀린다.
+    covered = [r for r in d["ratings"] if r.get("coverage") and r.get("license")]
+    if covered:
+        lines += ["", "## 기관별 이용 조건"]
+        lines += [f"- **{r['agency']}**: {r['license']} ([원문]({r['license_url']}))" for r in covered]
     lines += ["", "> " + " ".join(d.get("reading_notes", []))]
     lines += footer(payload)
     return "\n".join(lines)
