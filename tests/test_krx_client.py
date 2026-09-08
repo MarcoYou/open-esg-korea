@@ -33,9 +33,10 @@ async def test_ratings_row_parses_five_agencies_and_sp_as_int(krx_client):
     rows = await krx_client.ratings("005930", 2025)
     parsed = {r["agency_id"]: r for r in parse_ratings_row(rows[0])}
     assert set(parsed) == {"kcgs", "msci", "kesg", "sp", "sustinvest"}
-    assert parsed["kcgs"]["esg"] == "A" and parsed["kcgs"]["e"] == "B+"
-    assert parsed["msci"]["esg"] == "AA" and parsed["msci"]["e"] is None
-    assert parsed["sp"]["esg"] == 43 and isinstance(parsed["sp"]["esg"], int)
+    # 등급 문자는 fixture 의 합성값이다 — 여기서 보는 것은 슬롯 매핑·`-` 처리·S&P 숫자화다.
+    assert parsed["kcgs"]["esg"] == "B" and parsed["kcgs"]["e"] == "C"
+    assert parsed["msci"]["esg"] == "BBB" and parsed["msci"]["e"] is None
+    assert parsed["sp"]["esg"] == 55 and isinstance(parsed["sp"]["esg"], int)
     assert parsed["kcgs"]["attachment"].endswith(".pdf")
 
 

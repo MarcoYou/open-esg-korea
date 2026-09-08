@@ -26,6 +26,9 @@ def parse_ratings_row(row: dict[str, Any]) -> list[dict[str, Any]]:
         esg = clean(row.get(f"esg_grd{slot}"))
         item = {
             "agency": meta["name"], "agency_id": meta["id"], "scale": meta["scale"],
+            "license": codes.AGENCY_LICENSE.get(meta["id"], ""),
+            "license_url": codes.AGENCY_NOTICE_URL.format(
+                type=codes.AGENCY_NOTICE_TYPE[meta["id"]]),
             "year": clean(row.get(f"yy{slot}")),
             "esg": esg,
             "e": clean(row.get(f"envron_grd{slot}")),
@@ -64,6 +67,8 @@ async def build_esg_ratings_payload(company: str, year: int | None = None, *,
         return env.to_dict()
 
     isu = res.selected["isu_cd"]
+    # 출처는 이 회사 화면을 가리킨다 — 값이 아니라 원본을 보고 싶을 때 바로 열리게.
+    env.source = source_block("ratings", page_url=codes.RATINGS_COMPANY_URL.format(isu_cd=isu))
     want = year or current_year()
     rows = await client.ratings(isu, want)
     ratings = parse_ratings_row(rows[0]) if rows else []
@@ -87,6 +92,7 @@ async def build_esg_ratings_payload(company: str, year: int | None = None, *,
             "기관마다 스케일이 다르다 — 서로 다른 기관의 등급을 같은 줄에 놓고 비교하지 않는다.",
             "S&P 는 등급이 아니라 0-100 점수다.",
             "연도는 평가 발표 연도(포털 표기)다.",
+            "이용 조건은 기관마다 다르다 — 값마다 붙은 `license` 를 그 값에만 적용한다.",
         ],
     }
     if covered:
