@@ -23,7 +23,7 @@
 
 **[한국어](README.md)**
 
-[Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [Tools (12)](#tools-12) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers) · [Documentation](#documentation)
+[Install](#-install-in-5-minutes) · [ChatGPT](docs/connect-chatgpt.md) · [What to ask](#-what-to-ask) · [Tools (12)](#tools-12) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers)
 
 </div>
 
@@ -58,6 +58,11 @@ All three are reachable **without an API key**. Ratings are never stored — the
 
 **Download one file and drop it in.** No Python, no developer tools, no API key.
 
+<sub>**What you need** — [Claude Desktop](https://claude.com/download) (free download) and a Claude account.
+**The free plan is enough to start**, though its message allowance is tight for sustained use, and a work
+account may have extension installs locked down by an admin.
+**On ChatGPT instead? → [Connecting to ChatGPT](docs/connect-chatgpt.md)**</sub>
+
 ### Step 1 — pick the file for your machine
 
 <div align="center">
@@ -78,7 +83,7 @@ extension will not install — nothing breaks.</sub>
 
 ### Step 2 — drop it into Claude Desktop
 
-1. Open **Claude Desktop**
+1. Open **Claude Desktop** — get it at [claude.com/download](https://claude.com/download) if you do not have it (free)
 2. Go to **Settings → Extensions**
 3. **Drag the `.mcpb` file** into the window (or use "Install extension" and pick it)
 4. Click **Install**
@@ -98,6 +103,13 @@ Just talk to Claude.
 
 If a five-agency rating table comes back **with sources, years and licence terms attached**, you are connected.
 There is no API key step.
+
+### On ChatGPT instead?
+
+`.mcpb` is a Claude Desktop format. On the ChatGPT side you attach the server to **Codex** (CLI, IDE extension,
+or the Codex app) — also one command. Codex is included **even on the ChatGPT free plan**.
+
+**→ [Connecting to ChatGPT](docs/connect-chatgpt.md)**
 
 <details>
 <summary><b>🛠️ When installation fails</b></summary>
@@ -250,64 +262,39 @@ Sponsoring it goes a long way toward keeping it maintained.
 
 ## Reading the output
 
-- **Scales differ by agency** (KCGS S~D, MSCI AAA~CCC, S&P 0-100 score, Sustinvest AA~E). Do not line grades up across agencies.
-- A **GICS industry group** (11 economic sectors · 25 industry groups) is attached to the company block of every response.
-  It comes from a bundled snapshot (`open_esg_korea/data/krx_gics.json`, 2,534 KOSPI+KOSDAQ tickers), so it works with no
-  key and no network. It is a **different scheme** from the portal's 21 industries and from GIR's designated industries —
-  Samsung Electronics is *Hardware & IT Equipment* / *Electrical & Electronics* / *Semiconductor Manufacturing*
-  respectively. Do not mix them in one table.
-- "Is this good?" is answered with **the distribution inside that one agency** — never a "top N%". With only six or seven
-  grades, 30–60% of companies tie (61% sit at A for Korea ESG Research Institute), so a percentile would be invented
-  precision. The denominator is the number of companies that agency rated, and coverage differs a lot (2025: KCGS 782,
-  MSCI 74).
-- `-` (null) means **that agency did not rate the company** — not a bad grade.
-- The portal's company finder covers KOSPI only. **Company-name** lookups for KOSDAQ go through a bundled listed-company
-  snapshot (`open_esg_korea/data/listed_companies.json`, refreshed monthly from the OpenDART corp-code registry) — no key
-  needed. Supplying `OPENDART_API_KEY` (free, [opendart.fss.or.kr](https://opendart.fss.or.kr)) uses the live registry
-  instead, which also catches companies listed or renamed since the snapshot. Either way, KOSDAQ names usually resolve to
-  ratings only — the report and governance screens can be empty, because the portal carries KOSPI there.
-- Company names are understood through common short forms, transliterations and English brandings
-  (현대차, 에스케이하이닉스, 삼성SDS, 케이티앤지). When an alias is used, the response says so.
-- The `corp_code` (DART corporation number) in a `company` response can be passed straight to the sibling server
-  open-proxy-mcp.
-- Emissions come from the public statement data of the
-  [Greenhouse Gas Inventory and Research Center (GIR)](https://www.gir.go.kr/home/index.do?menuId=37) — only entities under
-  the emissions-trading or target-management schemes (roughly 1,170 a year). A company that is absent is `no_data`, not
-  zero. These are verified regulatory figures (direct + indirect), so they can differ from Scope 1/2/3 in a company's own
-  report. Where a subsidiary is designated separately (Samsung Display, POSCO Future M), it is shown as a "related entity".
-  No key required.
-- **Governance comes in two layers.** `governance_indicators` (15 O/X) and `governance_policies` (74 Y/N) are **values KRX
-  aggregated**; `governance_report` is **what the company wrote** (KIND) — the *reason* for non-compliance exists only in
-  the latter. If nothing can be parsed from the filing, the answer is "could not read it", never "complied with zero".
-  Financial companies file a "governance annual report" instead and therefore have no detailed principles — which is not
-  non-filing and not non-compliance.
-- Sustainability report PDFs are read with `sustainability_report_text`. **Search ignores whitespace** — the source is
-  typeset with letter-spacing, so "온실가스 배출량" appears spaced out and a literal search returns zero hits for text that
-  is plainly there. A miss means "not found under this spelling", not "not present". Image-only PDFs cannot be read
-  (there is no OCR).
-- **Figures are not mechanically extracted from reports.** Tables come back flattened as laid out, and which year or
-  segment a value belongs to has to be confirmed against the source PDF — two tables were observed bleeding together on a
-  two-column page. `table=True` returns a grid, but it is **experimental**: value preservation is 97.4% (aligned text is
-  100%), and cells that look split are flagged with `⚠`. If the suspect count is not zero, check against the aligned text.
-- Acceptance numbers in filing lists are **KIND (exchange) numbers**. They follow a different scheme from DART acceptance
-  numbers — opening the same number in the DART viewer brings up a different company's filing.
-- **GIR figures and the numbers disclosed in reports are effectively the same once the scope is aligned** — a company
-  files the same statement with GIR that it prints in its report (measured for 2024: POSCO Holdings 1 tonne, Hyundai Motor
-  10 tonnes, SK hynix 0.10%, LG Chem 0.50% apart). Where they diverge, it is usually because the headline number in the
-  report is **global** (Samsung Electronics, 9%). `ghg_emissions(report=True)` does not assert a value; it returns the
-  **source excerpt together with the scope axes** (boundary · Scope 2 location/market-based · whether NF3 is included) —
-  one report can carry several figures (SK hynix had three for 2024). Scope 3 is absent from GIR, so the report is the
-  only source.
-- **Rating data is each agency's copyrighted work, and the terms differ by agency** — KCGS and MSCI say "internal use
-  only", Sustinvest and S&P say "no reproduction in any form without prior written permission", and Korea ESG Research
-  Institute says "no reproduction, transmission, quotation or distribution without prior written consent".
-  **None of the five permit public disclosure.** So this server fetches ratings **live only** and keeps them nowhere —
-  no database, no repository, no logs (the cache is in memory alone) — and attaches each agency's notice and a
-  [link to the original terms](https://esg.krx.co.kr/templets/mobile/notice-box.jsp?type=kcgs) to every value.
-  Do not strip the `license` field from responses. **Exposing this as a public endpoint requires asking each agency
-  first** — an individual querying for their own reading (local stdio, or a private deployment only they can reach) is
-  internal use. Filing texts belong to the submitting company, so `governance_report` carries its own separate notice.
+| What | Why |
+|---|---|
+| **Never line grades up across agencies** | The scales differ — KCGS S~D · MSCI AAA~CCC · S&P 0-100 score · Sustinvest AA~E |
+| **`-` means "not rated"** | Not a zero, not a bad grade. Missing data is reported as `no_data` |
+| **There is no "top N%"** | With only six or seven grades, 30–60% of companies tie (61% sit at A for Korea ESG Research Institute). "Is this good?" is answered by **counting inside one agency** |
+| **Three industry schemes — do not mix them** | GICS industry groups (25) · portal industries (21) · GIR designated industries. Samsung Electronics is *Hardware & IT Equipment* / *Electrical & Electronics* / *Semiconductor Manufacturing* respectively |
+| **KOSDAQ gets ratings only** | The portal carries KOSPI on the report and governance screens |
+| **Governance comes in two layers** | KRX aggregates (15 O/X · 74 policy items); the company writes the report. The *reason* for non-compliance exists only in the latter, and an unparseable filing is "could not read it", never "complied with zero" |
+| **For emissions, scope comes before the number** | Statements, verified ETS emissions and the national inventory use different bases. Where a report diverges, the answer is **"the scope differs"**, not "the value differs" (boundary · Scope 2 method · whether NF₃ is included) |
+| **Absent from GIR is `no_data`, not zero** | Only entities under the ETS or target-management schemes (~1,170 a year) are there |
+| **Report figures are not mechanically extracted** | Two tables were observed bleeding together on a two-column page. `table=True` is experimental (97.4% value preservation; suspect cells flagged `⚠`) |
+| **PDF search ignores whitespace** | The source is typeset with letter-spacing. A miss means "not found under this spelling", not "not present". Image-only PDFs cannot be read (no OCR) |
+| **Acceptance numbers are KIND numbers** | Opening the same number in the DART viewer brings up a different company's filing |
 
+<details>
+<summary><b>In detail — the numbers behind these</b></summary>
+
+<br>
+
+- **The denominator** of any distribution is the number of companies that agency rated, and coverage differs a lot (2025: KCGS 782, MSCI 74).
+- **GICS groups** come from a bundled snapshot (`open_esg_korea/data/krx_gics.json`, 2,534 KOSPI+KOSDAQ tickers), so no key and no network. A ticker missing from it is "unclassified", not "unlisted".
+- **KOSDAQ company-name lookups** go through a bundled listed-company snapshot (`data/listed_companies.json`, refreshed monthly from the OpenDART corp-code registry) — no key needed.
+  Supplying `OPENDART_API_KEY` (free, [opendart.fss.or.kr](https://opendart.fss.or.kr)) uses the live registry instead, catching companies listed or renamed since.
+- **Company names** resolve through short forms, transliterations and English brandings (현대차, 에스케이하이닉스, 삼성SDS, 케이티앤지). When an alias is used, the response says so.
+- The **`corp_code`** (DART corporation number) in a `company` response can be passed straight to the sibling server open-proxy-mcp.
+- **Financial companies** file a "governance annual report" instead, so they have no detailed principles — which is neither non-filing nor non-compliance.
+- **Emissions** come from [GIR](https://www.gir.go.kr/home/index.do?menuId=37) public statement data — verified regulatory figures (direct + indirect), so they can differ from Scope 1/2/3 in a company's own report.
+  Separately designated subsidiaries (Samsung Display, POSCO Future M) are shown as "related entities". Scope 3 is absent from GIR, so the report is the only source.
+- **GIR figures and reported numbers are effectively the same once scope is aligned** — a company files the same statement it prints in its report (measured for 2024: POSCO Holdings 1 tonne, Hyundai Motor 10 tonnes, SK hynix 0.10%, LG Chem 0.50% apart).
+  Divergence usually means the report's headline number is **global** (Samsung Electronics, 9%). One report can carry several figures (SK hynix had three for 2024).
+- **The portal's list runs a year behind.** Missing years are filled from KIND filings, marked `source="kind"`, with the portal's aggregate columns (industry, framework, assurer) **left empty and the reason stated** — an empty cell means "not yet aggregated", not "none".
+
+</details>
 
 ---
 
@@ -380,6 +367,7 @@ uv sync --dev && uv run pytest -q     # network 0
 
 ## Documentation
 
+- [**Connecting to ChatGPT**](docs/connect-chatgpt.md) — attaching the server to Codex (CLI, IDE, app)
 - [MCP draft and roadmap](docs/mcp-draft.md) — data-source map, what was confirmed about each endpoint, the reasoning per phase
 - [Field notes](docs/anecdotes.md) — things only learned by knocking on the door (a DART link opens a different company, letter-spacing is baked into the PDF, the benchmark-leading parser misses our numeric tables …)
 
