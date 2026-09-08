@@ -14,7 +14,7 @@ Why: 「설정 파일에 경로를 적고 uv 를 깔라」는 안내는 기술�
 의존성은 **호스트 파이썬 버전이 아니라 번들 런타임 버전에 맞춰** 받는다(`--python-version`).
 이걸 빼먹으면 cp314 휠이 3.12 런타임에 들어가 `ModuleNotFoundError` 로 조용히 죽는다.
 
-사용:  uv run python scripts/build_mcpb.py            # dist/open-esg-korea-0.1.0.mcpb
+사용:  uv run python scripts/build_mcpb.py            # dist/open-esg-korea-<pyproject 버전>.mcpb
        uv run python scripts/build_mcpb.py --check    # 만든 뒤 풀어서 실제로 stdio 핸드셰이크까지 해본다
 
 확장자는 **.mcpb 하나만** 낸다. 한때 어느 쪽을 받는지 몰라 .dxt 도 같이 냈는데, 설치해 보니 앱이
@@ -33,6 +33,7 @@ import pathlib
 import shutil
 import subprocess
 import sys
+import time
 import urllib.request
 import zipfile
 
@@ -303,24 +304,46 @@ def check(bundle: pathlib.Path) -> int:
         {"jsonrpc": "2.0", "method": "notifications/initialized"},
         {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
     ]) + "\n"
+    # 세 요청을 쓰고 **stdin 을 닫으면 안 된다** — 서버가 initialize 만 답하고 EOF 를 보고 내려가는
+    # 경쟁이 생긴다(실측: 같은 번들이 어떤 때는 도구 12개, 어떤 때는 id=2 응답 없이 종료코드 0).
+    # 답을 받을 때까지 stdin 을 열어 두고 읽는다.
     # 인코딩을 명시하지 않으면 윈도우에서 cp949 로 읽다가 한글 도구 설명에서 터진다.
-    proc = subprocess.run(cmd, input=requests, capture_output=True, timeout=180,
-                          text=True, encoding="utf-8", errors="replace")
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, text=True, encoding="utf-8", errors="replace")
+    lines: list[str] = []
     tools = 0
-    for line in proc.stdout.splitlines():
+    try:
+        proc.stdin.write(requests)
+        proc.stdin.flush()
+        deadline = time.monotonic() + 180
+        while time.monotonic() < deadline:
+            line = proc.stdout.readline()
+            if not line:                       # 서버가 먼저 내려갔다
+                break
+            lines.append(line)
+            try:
+                body = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if body.get("id") == 2:
+                tools = len(body.get("result", {}).get("tools", []))
+                break
+    finally:
+        proc.stdin.close()
+        proc.terminate()
         try:
-            body = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        if body.get("id") == 2:
-            tools = len(body.get("result", {}).get("tools", []))
+            proc.wait(timeout=30)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+
     if tools:
         log(f"OK — 번들 런타임으로 도구 {tools}개 응답")
         return 0
     # 실패 이유를 안 보여주는 검사는 없느니만 못하다 — 종료코드·stdout·stderr 를 다 내놓는다.
+    err = proc.stderr.read() if proc.stderr else ""
     log(f"FAIL — 도구 목록 응답이 없습니다 (종료코드 {proc.returncode})")
-    log(f"  stdout {len(proc.stdout)}자: {proc.stdout[:600]!r}")
-    log(f"  stderr {len(proc.stderr)}자: {proc.stderr[-1500:]!r}")
+    log(f"  받은 줄 {len(lines)}개: {''.join(lines)[:600]!r}")
+    log(f"  stderr: {err[-1500:]!r}")
     return 1
 
 
