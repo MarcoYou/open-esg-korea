@@ -82,7 +82,7 @@ Claude Desktop `claude_desktop_config.json` 예:
 ## 문서
 
 - 국가 인벤토리 스냅샷 갱신(연 1회): `python3 scripts/refresh_ghg_inventory.py --url '<공공데이터포털 15049589 다운로드 URL>'`
-- GICS 산업분류 스냅샷 갱신(분기): `uv run python scripts/refresh_krx_gics.py --date YYYYMMDD`
+- GICS 산업분류 스냅샷 갱신: `uv run python scripts/refresh_krx_gics.py` (월간 워크플로 `refresh-krx-gics` 가 매월 1일 같은 일을 하고 PR 을 엽니다 — **키 불필요**)
 - 스냅샷 수동 갱신: `OPENDART_API_KEY=... uv run python scripts/refresh_listed_companies.py` (월간 워크플로 `refresh-listed-companies` 가 같은 일을 하고 PR 을 엽니다 — 저장소 secret `OPENDART_API_KEY` 필요).
 - [MCP 초안·로드맵](docs/mcp-draft.md) — 데이터 소스 지도, 엔드포인트 확인 내용, Phase 별 근거
 - [실측 노트](docs/anecdotes.md) — 두드려 보고 나서야 알게 된 것들(DART 링크가 다른 회사를 연다, 자간 공백이 PDF 에 박혀 있다, 벤치마크 1위 파서가 우리 수치표를 못 잡는다…)

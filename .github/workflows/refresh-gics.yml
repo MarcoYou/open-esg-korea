@@ -1,0 +1,48 @@
+# GICS 산업분류 스냅샷 월간 갱신 — KRX 지수 포털 → open_esg_korea/data/krx_gics.json
+#
+# Why: 「산업군별로 보기」에 쓰는 사전을 저장소에 동봉해 서버가 키·네트워크 없이 돌게 한다. 신규 상장·상장폐지·
+# 분류 개편이 한 달에 십여 건이라 월 1회면 충분하다(2026-08→09 실측: 추가 7 · 삭제 6 · 산업군 이동 0).
+# **키가 필요 없다** — 지수 포털은 OTP 토큰만 받으면 열린다(secret 설정 불필요).
+# 변경이 있으면 PR 을 연다 — 사람이 diff(어느 종목이 어느 산업군으로 갔나)를 보고 머지한다.
+#
+# 알아둘 것: 1일이 주말·공휴일이면 빈 응답이 온다 → 스크립트가 최대 7일까지 거슬러 올라간다.
+# 그리고 이 러너는 해외 IP 다 — 거래소가 막으면 이 워크플로만 실패한다(서버 동작과는 무관하고,
+# 로컬에서 `uv run python scripts/refresh_krx_gics.py` 로 갱신하면 된다).
+name: refresh-krx-gics
+
+on:
+  schedule:
+    - cron: "0 21 1 * *"        # 매월 1일 06:00 KST
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "조회일자 YYYYMMDD (비우면 오늘)"
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --dev
+      - name: Refresh snapshot
+        run: |
+          uv run python scripts/refresh_krx_gics.py \
+            ${{ inputs.date && format('--date {0}', inputs.date) || '' }} \
+            --fallback-days 7 | tee refresh.log
+      - name: Verify
+        run: uv run pytest -q tests/test_gics.py
+      - name: Open PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/refresh-krx-gics
+          title: "chore: GICS 산업분류 스냅샷 갱신"
+          commit-message: "chore: GICS 산업분류 스냅샷 갱신 (KRX 지수 포털)"
+          body-path: refresh.log
+          add-paths: open_esg_korea/data/krx_gics.json
+          delete-branch: true
