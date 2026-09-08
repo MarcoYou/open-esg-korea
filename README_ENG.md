@@ -37,8 +37,8 @@ Same shape as its sibling project [open-proxy-mcp](https://github.com/MarcoYou/o
 
 ```mermaid
 flowchart LR
-    A["KRX ESG Portal<br/>5 agency ratings · governance indicators"] --> S
-    B["KIND filings<br/>report full text · data extracted from attached PDFs"] --> S
+    A["KRX ESG Portal<br/>5 agency ratings · governance core indicators"] --> S
+    B["KIND filings<br/>governance reports · sustainability report PDF extraction"] --> S
     C["GIR<br/>GHG statements · emissions trading"] --> S
     S["open-esg-korea<br/>MCP server · 12 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · Cursor<br/>ask in plain language"]
 ```
