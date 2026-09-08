@@ -1,12 +1,30 @@
 # open-esg-korea
 
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-lightgrey.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
+[![Tools](https://img.shields.io/badge/tools-12-orange.svg)](#도구-12개)
+[![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
+
 [English](README_ENG.md)
+
+[설치](#설치--그냥-쓰실-분-윈도우) · [도구 12개](#도구-12개) · [읽을 때 주의](#읽을-때-주의) · [문서](#문서)
 
 한국 상장사의 ESG 데이터를 더 쉽고 빠르고 AI-friendly 하게 접근하기 위한 게이트웨이 — MCP 서버.
 
 [KRX ESG 포털](https://esg.krx.co.kr)에 흩어진 기관별 ESG 등급·지속가능경영보고서·기업지배구조보고서 지표를
 AI 클라이언트(Claude, Cursor 등)가 자연어로 바로 물을 수 있게 합니다.
 형제 프로젝트 [open-proxy-mcp](https://github.com/MarcoYou/open-proxy-mcp)(DART 공시 분석)와 같은 구조입니다.
+
+```mermaid
+flowchart LR
+    A["KRX ESG 포털<br/>5개 기관 등급 · 지배구조 지표"] --> S
+    B["KIND 공시<br/>보고서 원문 · 첨부 PDF"] --> S
+    C["GIR<br/>온실가스 명세서 · 배출권거래제"] --> S
+    S["open-esg-korea<br/>MCP 서버 · 도구 12개<br/>값마다 출처 · 연도 · 이용조건"] --> D["Claude Desktop · Cursor<br/>「삼성전자 ESG 등급 어때?」"]
+```
+
+셋 다 **키 없이** 조회됩니다. 등급은 저장하지 않고 물을 때마다 실시간으로 가져옵니다(캐시는 메모리뿐).
 
 ## 설치 — 그냥 쓰실 분 (윈도우)
 

@@ -1,12 +1,31 @@
 # open-esg-korea
 
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-lightgrey.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
+[![Tools](https://img.shields.io/badge/tools-12-orange.svg)](#tools-12)
+[![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
+
 [한국어](README.md)
+
+[Install](#install--if-you-just-want-to-use-it-windows) · [Tools (12)](#tools-12) · [Reading the output](#reading-the-output) · [Documentation](#documentation)
 
 A gateway that makes ESG data on Korean listed companies easier, faster, and AI-friendly to reach — an MCP server.
 
 It takes the agency ESG ratings, sustainability reports, and corporate-governance report indicators scattered across the
 [KRX ESG Portal](https://esg.krx.co.kr) and lets AI clients (Claude, Cursor, and others) ask about them in plain language.
 Same shape as its sibling project [open-proxy-mcp](https://github.com/MarcoYou/open-proxy-mcp) (DART filings analysis).
+
+```mermaid
+flowchart LR
+    A["KRX ESG Portal<br/>5 agency ratings · governance indicators"] --> S
+    B["KIND filings<br/>report full text · attached PDFs"] --> S
+    C["GIR<br/>GHG statements · emissions trading"] --> S
+    S["open-esg-korea<br/>MCP server · 12 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · Cursor<br/>ask in plain language"]
+```
+
+All three are reachable **without an API key**. Ratings are never stored — they are fetched live on each question
+(the cache lives in memory only).
 
 ## Install — if you just want to use it (Windows)
 
