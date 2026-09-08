@@ -19,7 +19,7 @@ uv run python -m open_esg_korea                    # streamable-http :8000 → /
 uv run python -m open_esg_korea --transport stdio  # Claude Desktop 로컬 연결용
 python3 scripts/probe_krx.py 005930 2025           # 포털 응답 스키마가 바뀌었는지 (network)
 uv run python scripts/smoke_kind.py                # KIND 원문(지배구조·지속가능)이 아직 읽히는지 (network)
-uv run python scripts/refresh_krx_gics.py          # GICS 산업분류 스냅샷 갱신 (분기 1회, network)
+uv run python scripts/refresh_krx_gics.py          # GICS 산업분류 스냅샷 갱신 (월간 워크플로가 대신 함, 키 불필요)
 OPENDART_API_KEY=… uv run python scripts/refresh_listed_companies.py   # 상장사 명부 스냅샷 갱신 (월간 워크플로가 대신 함)
 python3 scripts/refresh_ghg_inventory.py --url '<포털 15049589 다운로드 URL>'  # 국가 인벤토리 스냅샷 (연 1회, 12월 공표 후)
 ```
@@ -86,7 +86,7 @@ docs/anecdotes.md  # 실측 노트 — 가정이 틀렸던 지점들. 새 소스
 12. **업종 체계가 셋이고 섞지 않는다.** GICS 산업군 25개(`services/gics.py`, 동봉 스냅샷) · 포털 업종 21개
    (`codes.UPJONG_CODES`) · GIR 지정업종은 서로 다른 분류다 — 삼성전자는 각각 「하드웨어및IT장비」·「전기·전자」·
    「반도체 제조업」이다. GICS 는 지수 포털(index.krx.co.kr)에서 OTP·쿠키로 받아야 해서 스냅샷으로 동봉하고
-   `scripts/refresh_krx_gics.py` 로만 갱신한다. 스냅샷에 없는 종목은 「분류 없음」이지 「상장 아님」이 아니다.
+   `scripts/refresh_krx_gics.py` 로만 갱신한다(월간 워크플로 `refresh-krx-gics`, 휴장일이면 최대 7일 거슬러 올라간다). 스냅샷에 없는 종목은 「분류 없음」이지 「상장 아님」이 아니다.
 
 ## Out of Scope (현재)
 

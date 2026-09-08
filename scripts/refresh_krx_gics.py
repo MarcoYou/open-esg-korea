@@ -8,6 +8,9 @@ OTP·쿠키가 필요하다).
 사용:  python3 scripts/refresh_krx_gics.py [--date 20260804] [--markets STK,KSQ]
 출력:  바뀐 종목 수(추가·삭제·이동)를 요약한다. 변경이 없으면 파일을 건드리지 않는다.
 
+휴장일에는 빈 응답이 온다 — `--fallback-days` 만큼 하루씩 거슬러 올라가며 자료가 있는 날을 찾는다
+(월간 워크플로가 1일에 도는데 그날이 주말·공휴일일 수 있다). 실제로 쓴 날짜는 출력과 메타에 남는다.
+
 원본: 유건호 리서치의 `collect_krx_gics.py`(2026-08, low_pbr_screen). 엔드포인트·OTP 흐름은 그대로 쓰고,
       저장소 스냅샷 형식과 KOSDAQ 수집·TLS 처리를 더했다.
 """
@@ -111,6 +114,8 @@ def main() -> int:
     ap.add_argument("--date", default=dt.date.today().strftime("%Y%m%d"), help="조회일자 YYYYMMDD (기본: 오늘)")
     ap.add_argument("--markets", default="STK,KSQ", help="STK=KOSPI, KSQ=KOSDAQ (기본: 둘 다)")
     ap.add_argument("--delay", type=float, default=0.3, help="요청 간격(초)")
+    ap.add_argument("--fallback-days", type=int, default=5,
+                    help="그 날짜에 자료가 없으면 며칠까지 거슬러 올라갈지 (기본 5 — 연휴 대비)")
     args = ap.parse_args()
 
     markets = [m.strip().upper() for m in args.markets.split(",") if m.strip()]
@@ -120,9 +125,19 @@ def main() -> int:
 
     client = GicsClient(delay=args.delay)
     client.start()
-    rows = collect(client, args.date, markets)
+    asked = dt.datetime.strptime(args.date, "%Y%m%d").date()
+    rows: list[list[str]] = []
+    used = args.date
+    for back in range(max(0, args.fallback_days) + 1):
+        used = (asked - dt.timedelta(days=back)).strftime("%Y%m%d")
+        rows = collect(client, used, markets)
+        if rows:
+            if back:
+                print(f"{args.date} 에 자료가 없어 {used} 로 물러섰습니다(휴장일).")
+            break
     if not rows:
-        raise SystemExit("한 종목도 받지 못했습니다 — 날짜가 휴장일이거나 화면이 바뀌었습니다.")
+        raise SystemExit(f"{args.date} 부터 {args.fallback_days}일을 거슬러도 한 종목도 받지 못했습니다 — "
+                         "긴 연휴이거나 화면이 바뀌었거나 이 IP 가 막혔습니다.")
 
     old = json.loads(SNAPSHOT_PATH.read_text(encoding="utf-8")) if SNAPSHOT_PATH.exists() else {"rows": []}
     before = {r[0]: r[5] for r in old.get("rows", [])}
@@ -135,7 +150,7 @@ def main() -> int:
         return 0
 
     SNAPSHOT_PATH.write_text(json.dumps({
-        "meta": {"source": codes.GICS_STOCK_PAGE, "as_of": args.date,
+        "meta": {"source": codes.GICS_STOCK_PAGE, "as_of": used,
                  "fetched_at": dt.date.today().isoformat(), "rows": len(rows),
                  "markets": [codes.GICS_MARKETS[m] for m in markets],
                  "note": codes.GICS_NOTICE, "fields": FIELDS},
