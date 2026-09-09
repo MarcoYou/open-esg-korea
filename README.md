@@ -16,12 +16,6 @@
 [![Tools](https://img.shields.io/badge/tools-12-orange.svg)](#도구-12개)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
-[![macOS](https://img.shields.io/badge/macOS-Apple%20Silicon%20%C2%B7%20Intel-000000?logo=apple&logoColor=white)](#1단계--내-컴퓨터에-맞는-파일-받기)
-[![Windows](https://img.shields.io/badge/Windows-x64-0078D4)](#1단계--내-컴퓨터에-맞는-파일-받기)
-[![파이썬 필요 없음](https://img.shields.io/badge/설치-파이썬%20필요%20없음-success)](#무엇이-들어-있나)
-[![API 키 필요 없음](https://img.shields.io/badge/API%20키-필요%20없음-success)](#3단계--물어보기)
-[![상업 이용 가능](https://img.shields.io/badge/상업%20이용-가능%20·%20출처%20표기-success)](#라이선스)
-
 **[English](README_ENG.md)**
 
 [설치](#-5분-설치) · [ChatGPT 연결](docs/connect-chatgpt.md) · [이렇게 물어보세요](#-이렇게-물어보세요) · [도구 12개](#도구-12개) · [읽을 때 주의](#읽을-때-주의) · [라이선스](#라이선스) · [개발자용](#개발자용)
