@@ -235,8 +235,8 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 
 **이 프로젝트가 도움이 되셨나요?**
 
-⭐ **별표 하나**와 후원은 유지·보수에 큰 힘이 됩니다.
-<sub>(이 문서 상단의 star 배지는 링크일 뿐 눌러도 별표가 매겨지지 않습니다 — 이 페이지 우측 상단의 **⭐ Star** 버튼을 눌러주세요)</sub>
+⭐ 별표 하나와 후원은 유지·보수에 큰 힘이 됩니다. <br>
+<sub>(페이지 우측 상단의 **⭐ Star** 버튼을 눌러 업데이트 소식을 팔로우하세요.)</sub>
 
 [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-%E2%9D%A4-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
