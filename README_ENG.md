@@ -8,6 +8,7 @@
 
 "What is Samsung Electronics' ESG rating?" — that is the whole interface.
 
+[![Stars](https://img.shields.io/github/stars/MarcoYou/open-esg-korea?label=stars&color=f5c518&logo=github&logoColor=white)](https://github.com/MarcoYou/open-esg-korea)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
@@ -235,8 +236,9 @@ Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks �
 
 **Has this project been useful to you?**
 
-Sponsoring it goes a long way toward keeping it maintained.
+⭐ **A star** and your sponsorship go a long way toward keeping it maintained.
 
+[![Star this repo](https://img.shields.io/github/stars/MarcoYou/open-esg-korea?style=for-the-badge&logo=github&label=Star&labelColor=24292e&color=f5c518)](https://github.com/MarcoYou/open-esg-korea)
 [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-%E2%9D%A4-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
 </div>

@@ -8,6 +8,7 @@
 
 「삼성전자 ESG 등급 어때?」 — 이렇게 물으면 됩니다.
 
+[![Stars](https://img.shields.io/github/stars/MarcoYou/open-esg-korea?label=stars&color=f5c518&logo=github&logoColor=white)](https://github.com/MarcoYou/open-esg-korea)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
@@ -232,8 +233,9 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 
 **이 프로젝트가 도움이 되셨나요?**
 
-후원을 해주신다면 유지·보수에 큰 힘이 됩니다.
+⭐ **별표 하나**와 후원은 유지·보수에 큰 힘이 됩니다.
 
+[![Star this repo](https://img.shields.io/github/stars/MarcoYou/open-esg-korea?style=for-the-badge&logo=github&label=Star&labelColor=24292e&color=f5c518)](https://github.com/MarcoYou/open-esg-korea)
 [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-%E2%9D%A4-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
 </div>
