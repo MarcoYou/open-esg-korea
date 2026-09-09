@@ -6,7 +6,7 @@
 
 **한국 상장사 ESG 데이터를 AI 에게 바로 물어볼 수 있게 하는 MCP 서버**
 
-「삼성전자 ESG 등급 어때?」 — 이렇게 물으면 됩니다.
+「삼성전자 ESG 등급 어때? 온실가스 배출량 얼마야? SR보고서 목차좀 줄래?」 — 이렇게 물으면 됩니다.
 
 [![Stars](https://img.shields.io/github/stars/MarcoYou/open-esg-korea?label=stars&color=f5c518&logo=github&logoColor=white)](https://github.com/MarcoYou/open-esg-korea)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
