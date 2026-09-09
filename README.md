@@ -11,6 +11,7 @@
 「현대자동차 온실가스 배출량 얼마야?」<br>
 「KB금융 SR보고서 목차랑 금융배출량 알려줄래?」<br>
 <br>
+
 [![Stars](https://img.shields.io/github/stars/MarcoYou/open-esg-korea?label=stars&color=f5c518&logo=github&logoColor=white)](https://github.com/MarcoYou/open-esg-korea)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
