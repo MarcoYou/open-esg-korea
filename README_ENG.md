@@ -237,8 +237,8 @@ Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks �
 **Has this project been useful to you?**
 
 ⭐ **A star** and your sponsorship go a long way toward keeping it maintained.
+<sub>(The star badge above this document is just a link — clicking it does not star the repo. Use the **⭐ Star** button in the top right of this page instead.)</sub>
 
-[![Star this repo](https://img.shields.io/github/stars/MarcoYou/open-esg-korea?style=for-the-badge&logo=github&label=Star&labelColor=24292e&color=f5c518)](https://github.com/MarcoYou/open-esg-korea)
 [![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-%E2%9D%A4-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
 </div>
