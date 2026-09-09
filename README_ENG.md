@@ -24,7 +24,7 @@
 
 **[한국어](README.md)**
 
-[Install](#-install-in-5-minutes) · [ChatGPT](docs/connect-chatgpt.md) · [What to ask](#-what-to-ask) · [Tools (12)](#tools-12) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers)
+[Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [12 Features](#tools-12) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers)
 
 </div>
 
