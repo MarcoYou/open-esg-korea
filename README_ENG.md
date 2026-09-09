@@ -96,6 +96,10 @@ on Intel). Picking the wrong one only means the extension will not install — n
 > [`scripts/build_mcpb.py`](scripts/build_mcpb.py), the Python under `lib/` is readable as-is once unzipped, and each
 > bundle carries a `BUILD_INFO.txt` naming the commit it was built from.
 
+> [!TIP]
+> If you'd rather not approve every tool call, open **Settings → Extensions → 한국 상장사 ESG 정보 (open-esg-korea) →
+> Configure** and turn on **Always Allow**. After that, answers come back without an approval prompt.
+
 ### Step 3 — ask
 
 Just talk to Claude.
