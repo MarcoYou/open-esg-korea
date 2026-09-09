@@ -35,7 +35,7 @@ flowchart LR
     A["KRX ESG 포털<br/>5개 기관 등급 · 지배구조 핵심지표"] --> S
     B["KIND 공시<br/>지배구조보고서 · 지속가능경영보고서 PDF 데이터 추출"] --> S
     C["GIR<br/>온실가스 명세서 · 배출권거래제"] --> S
-    S["open-esg-korea<br/>MCP 서버 · 도구 12개<br/>값마다 출처 · 연도 · 이용조건"] --> D["Claude Desktop · ChatGPT Codex<br/>「삼성전자 ESG 등급 어때?」"]
+    S["open-esg-korea<br/>MCP 서버 · 도구 12개<br/>값마다 출처 · 연도 · 이용조건"] --> D["Claude Desktop · Cursor<br/>「삼성전자 ESG 등급 어때?」"]
 ```
 
 세 곳 다 **API 키 없이** 조회됩니다. 등급은 저장하지 않고 물을 때마다 실시간으로 가져옵니다.

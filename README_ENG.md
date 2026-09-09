@@ -16,12 +16,6 @@
 [![Tools](https://img.shields.io/badge/tools-12-orange.svg)](#tools-12)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
-[![macOS](https://img.shields.io/badge/macOS-Apple%20Silicon%20%C2%B7%20Intel-000000?logo=apple&logoColor=white)](#step-1--pick-the-file-for-your-machine)
-[![Windows](https://img.shields.io/badge/Windows-x64-0078D4)](#step-1--pick-the-file-for-your-machine)
-[![No Python needed](https://img.shields.io/badge/install-no%20Python%20needed-success)](#what-is-inside)
-[![No API key](https://img.shields.io/badge/API%20key-not%20required-success)](#step-3--ask)
-[![Commercial use OK](https://img.shields.io/badge/commercial%20use-OK%20·%20attribution-success)](#license)
-
 **[한국어](README.md)**
 
 [Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [12 Features](#tools-12) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers)
