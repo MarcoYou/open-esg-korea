@@ -326,6 +326,17 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 
 ## 개발자용
 
+**준비물**: [uv](https://docs.astral.sh/uv/) — `curl -LsSf https://astral.sh/uv/install.sh | sh`(macOS·리눅스) 또는
+`powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`(Windows). `uv run` 계열 명령은
+uv 가 파이썬까지 알아서 받아 오므로 **따로 파이썬을 깔 필요가 없습니다.**
+
+다만 아래 「스냅샷 갱신」·「실서버 점검」의 `scripts/probe_krx.py`·`scripts/refresh_ghg_inventory.py` 두 개는
+표준 라이브러리만 써서 `uv` 없이 시스템 파이썬으로 바로 돌리게 만들었습니다 — 이 둘을 실행하려면
+[python.org/downloads](https://www.python.org/downloads/)에서 3.10 이상을 받아 설치하세요. **Windows는 설치 화면
+맨 아래 "Add python.exe to PATH" 체크박스를 꼭 켜야** 터미널에서 `python` 명령이 인식됩니다(안 켜면 설치해도
+"파이썬을 찾을 수 없다"는 오류가 그대로 남습니다). 설치 후 `python3 --version`(Windows는 `python --version`)으로
+버전이 뜨는지 확인하면 됩니다.
+
 ```bash
 uv sync
 uv run python -m open_esg_korea                     # http://localhost:8000/mcp
