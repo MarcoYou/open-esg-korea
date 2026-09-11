@@ -36,7 +36,7 @@ flowchart LR
     A["KRX ESG Portal<br/>5 agency ratings · governance core indicators"] --> S
     B["KIND filings<br/>governance reports · sustainability report PDF extraction"] --> S
     C["GIR<br/>GHG statements · emissions trading"] --> S
-    S["open-esg-korea<br/>MCP server · 12 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · Cursor<br/>ask in plain language"]
+    S["open-esg-korea<br/>MCP server · 12 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · ChatGPT<br/>'How is Samsung Electronics rated?'"]
 ```
 
 All three are reachable **without an API key**. Ratings are never stored — they are fetched live on each question.
@@ -265,7 +265,7 @@ Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks �
 |---|---|
 | `company` | Company name / ticker → portal ticker and ISIN. The entry point for every other tool |
 | `esg_ratings` | ESG/E/S/G grades by year from KCGS, MSCI, Korea ESG Research Institute, S&P and Sustinvest, plus a 3-year KCGS trend and **the distribution within that same agency** (how many companies at or above this grade, how many tied) |
-| `sustainability_reports` | List of sustainability reports plus the filing text of one — reporting period, table of contents, assurance provider, the company's own publication page, and the attached PDF address |
+| `sustainability_reports` | List of sustainability reports plus the filing text of the most recent one — reporting period, table of contents, assurance provider, the company's own publication page, and the attached PDF address |
 | `sustainability_report_text` | **PDF body** of a sustainability report — which pages a keyword appears on, excerpts around it, or a whole page |
 | `governance_indicators` | The 15 core corporate-governance indicators (O/X), compliance rate, and comparison against another company |
 | `governance_policies` | 74 governance policy-adoption items |
