@@ -57,34 +57,25 @@ flowchart LR
 
 **파이썬을 깔고, 파일 하나 받아서 끌어다 놓으면 끝입니다.** 명령어를 외울 일도, 개발도구도, API 키도 없습니다.
 
-<sub>**필요한 것** — [Claude Desktop](https://claude.com/download)(무료 다운로드)과 Claude 계정.
-**무료 플랜으로도 시작할 수 있습니다.** 다만 무료는 대화량이 빠듯해서 계속 쓰려면 유료 플랜이 편하고,
-회사 계정이라면 관리자가 확장 설치를 막아 뒀을 수 있습니다.
-**ChatGPT 를 쓰신다면 → [ChatGPT에 연결하기](docs/connect-chatgpt.md)**</sub>
+<sub>**필요한 것** — [Claude Desktop](https://claude.com/download)(무료)과 Claude 계정. 무료 플랜으로도 되지만
+대화량이 빠듯합니다. 회사 계정은 관리자가 확장 설치를 막아 뒀을 수 있습니다.
+**ChatGPT 는 → [ChatGPT에 연결하기](docs/connect-chatgpt.md)**</sub>
 
 ### 1단계 — 파이썬 설치하기
 
-[**python.org/downloads**](https://www.python.org/downloads/) 에서 **Python 3.10 이상**을 받아 설치합니다.
-접속하면 내 운영체제에 맞는 최신 버전을 알아서 안내해 줍니다. **이미 깔려 있다면 건너뛰세요.**
+[**python.org/downloads**](https://www.python.org/downloads/) 에서 받아 설치합니다. 이미 있으면 건너뛰세요.
 
 > [!IMPORTANT]
-> **Windows 는 설치 첫 화면 맨 아래의 「Add python.exe to PATH」 체크박스를 반드시 켜세요.**
-> 이걸 놓치면 설치를 해도 컴퓨터가 파이썬을 찾지 못합니다.
-> 이미 안 켜고 설치했다면, 받은 설치 파일을 다시 실행해 **Modify** 로 고칠 수 있습니다.
+> **Windows 는 설치 화면 맨 아래 「Add python.exe to PATH」를 꼭 켜세요.** 안 켜면 설치해도 못 찾습니다.
+> 놓쳤다면 설치 파일을 다시 실행해 **Modify** 로 고칩니다.
 
-Mac 은 받은 `.pkg` 파일을 두 번 눌러 그대로 진행하면 됩니다.
-
-**제대로 됐는지 확인** — 터미널(Windows 는 **명령 프롬프트**)을 **새로 열고**:
+터미널(Windows 는 **명령 프롬프트**)을 **새로 열어** 확인합니다.
 
 ```bash
 python3 --version     # Windows 는  python --version
 ```
 
-`Python 3.12.x` 처럼 버전 번호가 나오면 성공입니다.
-
-<sub>확장 파일 안에도 파이썬이 들어 있어서 원래 설계는 「없어도 도는」 쪽입니다. 다만 환경에 따라
-설치 화면이 파이썬을 요구하거나 설치 후 서버가 안 뜨는 경우가 있어, **미리 깔아두는 편이 확실합니다.**
-용량도 얼마 안 되고 다른 프로그램에 영향을 주지 않습니다.</sub>
+<sub>확장 안에도 파이썬이 들어 있지만, 환경에 따라 어긋나는 일이 있어 미리 깔아두는 쪽이 확실합니다.</sub>
 
 ### 2단계 — 내 컴퓨터에 맞는 파일 받기
 
@@ -98,10 +89,8 @@ python3 --version     # Windows 는  python --version
 
 </div>
 
-<sub>**내 Mac 이 어느 쪽인지 모르겠다면** — 터미널에 `uname -m` 을 치는 것이 가장 확실합니다.
-`arm64` 면 **Apple 실리콘**, `x86_64` 면 **인텔**입니다.
-화면으로 보려면 왼쪽 위 애플 메뉴 → 「이 Mac에 관하여」의 **칩**(인텔은 **프로세서**) 항목을 보세요.
-잘못 받아도 설치만 안 될 뿐 아무 일도 생기지 않습니다.</sub>
+<sub>**내 Mac 이 어느 쪽인지 모르겠다면** 터미널에 `uname -m` — `arm64` 면 **Apple 실리콘**, `x86_64` 면 **인텔**입니다
+(애플 메뉴 → 「이 Mac에 관하여」의 **칩** 항목으로도 볼 수 있습니다). 잘못 받아도 확장이 어느 파일을 받아야 하는지 알려 줍니다.</sub>
 
 <sub>리눅스용 번들은 아직 없습니다 — [개발자용](#개발자용)으로 연결하세요.</sub>
 
@@ -144,10 +133,10 @@ MCP 서버로 붙이며, 역시 명령 한 줄입니다. Codex 는 **ChatGPT 무
 
 | 증상 | 왜 그런가 / 어떻게 하나 |
 |---|---|
-| **설치 버튼이 회색이고 안 눌림** | 「요구 사항」에 ⚠ 가 하나라도 있으면 잠깁니다. `Python` 요구가 보이면 [**1단계**](#1단계--파이썬-설치하기)로 파이썬을 깔고 Claude Desktop 을 완전히 종료했다 다시 켜세요. 그래도 ⚠ 가 남으면 **옛날 파일**이니 최신 릴리스를 받으세요 |
+| **설치 버튼이 회색이고 안 눌림** | 「요구 사항」에 ⚠ 가 있으면 잠깁니다. `Python` ⚠ 이면 [1단계](#1단계--파이썬-설치하기)로 깔고 Claude Desktop 을 완전히 껐다 켜세요. 그래도 남으면 **옛날 파일**이니 최신 릴리스를 받으세요 |
 | **「확장 프로그램을 미리 볼 수 없습니다」** | 매니페스트를 못 읽은 것입니다. 최신 릴리스를 받으세요 |
 | **설치는 됐는데 도구가 안 보임** | Claude Desktop 을 **완전히 종료**했다 켜세요. macOS 는 `⌘Q`, 윈도우는 창 닫기 ✕ 가 아니라 트레이 아이콘 → 종료입니다 |
-| **(Mac) 칩이 안 맞는 파일을 받았을 때** | 확장이 **어느 파일을 받아야 하는지 직접 알려 줍니다**(설정 → 확장에서 오류 내용을 보세요). 위 표에서 그 파일을 받아 다시 설치하세요 |
+| **(Mac) 칩이 안 맞는 파일** | 확장이 **어느 파일을 받아야 하는지 알려 줍니다** — 설정 → 확장에서 오류 내용을 보고 그 파일로 다시 설치하세요 |
 | **(Mac) 실행이 막히는 것 같을 때** | 내려받은 파일에 격리 딱지가 붙었을 수 있습니다. 터미널에서<br>`xattr -dr com.apple.quarantine ~/Library/Application\ Support/Claude/Claude\ Extensions/local.mcpb.MarcoYou.open-esg-korea`<br>실행 후 Claude Desktop 을 다시 켜세요 |
 | **회사 이름을 물으면 오류가 남** | 사내망이 KRX 접속을 막고 있을 수 있습니다. 브라우저로 [esg.krx.co.kr](https://esg.krx.co.kr) 이 열리는지 먼저 확인하세요 |
 | **그래도 안 됨** | [이슈로 알려주세요](https://github.com/MarcoYou/open-esg-korea/issues) — 확장 폴더 안 `BUILD_INFO.txt` 내용을 같이 붙여 주시면 빠릅니다 |
@@ -355,12 +344,8 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 
 ## 개발자용
 
-**준비물** — [위 1단계](#1단계--파이썬-설치하기)의 파이썬 3.10+ 와 [uv](https://docs.astral.sh/uv/):
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh                                   # macOS · 리눅스
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex" # Windows
-```
+**준비물** — [1단계](#1단계--파이썬-설치하기)의 파이썬과 [uv](https://docs.astral.sh/uv/)
+(`curl -LsSf https://astral.sh/uv/install.sh | sh`, Windows 는 [설치 안내](https://docs.astral.sh/uv/getting-started/installation/)).
 
 ```bash
 uv sync
