@@ -147,7 +147,7 @@ MCP 서버로 붙이며, 역시 명령 한 줄입니다. Codex 는 **ChatGPT 무
 | **설치 버튼이 회색이고 안 눌림** | 「요구 사항」에 ⚠ 가 하나라도 있으면 잠깁니다. `Python` 요구가 보이면 [**1단계**](#1단계--파이썬-설치하기)로 파이썬을 깔고 Claude Desktop 을 완전히 종료했다 다시 켜세요. 그래도 ⚠ 가 남으면 **옛날 파일**이니 최신 릴리스를 받으세요 |
 | **「확장 프로그램을 미리 볼 수 없습니다」** | 매니페스트를 못 읽은 것입니다. 최신 릴리스를 받으세요 |
 | **설치는 됐는데 도구가 안 보임** | Claude Desktop 을 **완전히 종료**했다 켜세요. macOS 는 `⌘Q`, 윈도우는 창 닫기 ✕ 가 아니라 트레이 아이콘 → 종료입니다 |
-| **(Mac) 「incompatible architecture」 오류** | 칩에 안 맞는 파일입니다 — 위 표에서 다른 쪽을 받으세요 |
+| **(Mac) 칩이 안 맞는 파일을 받았을 때** | 확장이 **어느 파일을 받아야 하는지 직접 알려 줍니다**(설정 → 확장에서 오류 내용을 보세요). 위 표에서 그 파일을 받아 다시 설치하세요 |
 | **(Mac) 실행이 막히는 것 같을 때** | 내려받은 파일에 격리 딱지가 붙었을 수 있습니다. 터미널에서<br>`xattr -dr com.apple.quarantine ~/Library/Application\ Support/Claude/Claude\ Extensions/local.mcpb.MarcoYou.open-esg-korea`<br>실행 후 Claude Desktop 을 다시 켜세요 |
 | **회사 이름을 물으면 오류가 남** | 사내망이 KRX 접속을 막고 있을 수 있습니다. 브라우저로 [esg.krx.co.kr](https://esg.krx.co.kr) 이 열리는지 먼저 확인하세요 |
 | **그래도 안 됨** | [이슈로 알려주세요](https://github.com/MarcoYou/open-esg-korea/issues) — 확장 폴더 안 `BUILD_INFO.txt` 내용을 같이 붙여 주시면 빠릅니다 |
@@ -160,6 +160,7 @@ MCP 서버로 붙이며, 역시 명령 한 줄입니다. Codex 는 **ChatGPT 무
 |---|---|
 | `runtime/` | 파이썬 3.12 배포판 — 확장은 **이 안의 파이썬으로** 돕니다<br><sub>Windows: python.org 임베드 배포판 · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
 | `lib/` | 의존성(mcp · httpx · pypdfium2 · pdfplumber) + 서버 본체 |
+| `launch-macos.sh` | (Mac 만) 칩이 안 맞는 파일을 받았을 때 **어느 파일을 받아야 하는지** 알려 줍니다 |
 | `manifest.json` | 확장 정보와 도구 12개 목록 |
 | `BUILD_INFO.txt` | 어느 커밋·언제·무엇으로 만들었는지 |
 

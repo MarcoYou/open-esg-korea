@@ -144,7 +144,7 @@ or the Codex app) — also one command. Codex is included **even on the ChatGPT 
 | **Install button is greyed out** | It locks if any "Requirements" row shows ⚠. If you see a `Python` requirement, install Python via [**Step 1**](#step-1--install-python), quit Claude Desktop completely and reopen it. If ⚠ persists you have an **old file** — get the latest release |
 | **"Cannot preview this extension"** | The manifest could not be read. Get the latest release |
 | **Installed, but no tools appear** | **Fully quit** Claude Desktop and reopen — `⌘Q` on macOS; on Windows the tray icon → Quit, not the window ✕ |
-| **(Mac) "incompatible architecture"** | Wrong file for your chip — take the other Mac row above |
+| **(Mac) wrong build for your chip** | The extension now **tells you which file to get** (check the error under Settings → Extensions). Grab that one from the table above and reinstall |
 | **(Mac) it seems to be blocked from running** | The download may carry a quarantine flag. In Terminal run<br>`xattr -dr com.apple.quarantine ~/Library/Application\ Support/Claude/Claude\ Extensions/local.mcpb.MarcoYou.open-esg-korea`<br>then restart Claude Desktop |
 | **Company lookups error out** | Your corporate network may be blocking KRX. Check that [esg.krx.co.kr](https://esg.krx.co.kr) opens in a browser first |
 | **Still stuck** | [Open an issue](https://github.com/MarcoYou/open-esg-korea/issues) — pasting the extension folder's `BUILD_INFO.txt` makes it much faster |
@@ -157,6 +157,7 @@ or the Codex app) — also one command. Codex is included **even on the ChatGPT 
 |---|---|
 | `runtime/` | A Python 3.12 distribution — the extension runs on **this** interpreter<br><sub>Windows: python.org embeddable build · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
 | `lib/` | Dependencies (mcp · httpx · pypdfium2 · pdfplumber) plus the server itself |
+| `launch-macos.sh` | (Mac only) tells you **which file to download** if you picked the wrong chip build |
 | `manifest.json` | Extension metadata and the list of 12 tools |
 | `BUILD_INFO.txt` | Which commit, when, and by what it was built |
 
