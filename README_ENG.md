@@ -51,14 +51,38 @@ All three are reachable **without an API key**. Ratings are never stored — the
 
 ## 🚀 Install in 5 minutes
 
-**Download one file and drop it in.** No Python, no developer tools, no API key.
+**Install Python, then download one file and drop it in.** No commands to memorise, no developer tools, no API key.
 
 <sub>**What you need** — [Claude Desktop](https://claude.com/download) (free download) and a Claude account.
 **The free plan is enough to start**, though its message allowance is tight for sustained use, and a work
 account may have extension installs locked down by an admin.
 **On ChatGPT instead? → [Connecting to ChatGPT](docs/connect-chatgpt.md)**</sub>
 
-### Step 1 — pick the file for your machine
+### Step 1 — install Python
+
+Get **Python 3.10 or newer** from [**python.org/downloads**](https://www.python.org/downloads/) — the site
+offers the right build for your OS automatically. **Already have it? Skip this step.**
+
+> [!IMPORTANT]
+> **On Windows, tick the "Add python.exe to PATH" checkbox at the bottom of the first installer screen.**
+> Miss it and your machine will not find Python even though it is installed.
+> If you already installed without it, re-run the installer and choose **Modify** to fix it.
+
+On a Mac, double-click the `.pkg` you downloaded and click through.
+
+**Check it worked** — open a *new* terminal (Command Prompt on Windows):
+
+```bash
+python3 --version     # on Windows:  python --version
+```
+
+A version number such as `Python 3.12.x` means you are set.
+
+<sub>The extension ships its own Python inside, so by design it should run without this. But some setups
+still show a Python requirement at install time or fail to start the server afterwards, so **installing it
+up front is the reliable path.** It is a small download and does not interfere with anything else.</sub>
+
+### Step 2 — pick the file for your machine
 
 <div align="center">
 
@@ -76,7 +100,7 @@ on Intel). Picking the wrong one only means the extension will not install — n
 
 <sub>There is no Linux bundle yet — use the [developer path](#for-developers).</sub>
 
-### Step 2 — drop it into Claude Desktop
+### Step 3 — drop it into Claude Desktop
 
 1. Open **Claude Desktop** — get it at [claude.com/download](https://claude.com/download) if you do not have it (free)
 2. Go to **Settings → Extensions**
@@ -94,7 +118,7 @@ on Intel). Picking the wrong one only means the extension will not install — n
 > If you'd rather not approve every tool call, open **Settings → Extensions → 한국 상장사 ESG 정보 (open-esg-korea) →
 > Configure** and turn on **Always Allow**. After that, answers come back without an approval prompt.
 
-### Step 3 — ask
+### Step 4 — ask
 
 Just talk to Claude.
 
@@ -117,10 +141,10 @@ or the Codex app) — also one command. Codex is included **even on the ChatGPT 
 
 | Symptom | Why / what to do |
 |---|---|
-| **Install button is greyed out** | It locks if any "Requirements" row shows ⚠. If you see a `Python` requirement you have an **old file** — get the latest release (Python is bundled) |
+| **Install button is greyed out** | It locks if any "Requirements" row shows ⚠. If you see a `Python` requirement, install Python via [**Step 1**](#step-1--install-python), quit Claude Desktop completely and reopen it. If ⚠ persists you have an **old file** — get the latest release |
 | **"Cannot preview this extension"** | The manifest could not be read. Get the latest release |
 | **Installed, but no tools appear** | **Fully quit** Claude Desktop and reopen — `⌘Q` on macOS; on Windows the tray icon → Quit, not the window ✕ |
-| **(Mac) "incompatible architecture"** | Wrong file for your chip — take the other Mac row above |
+| **(Mac) wrong build for your chip** | The extension now **tells you which file to get** (check the error under Settings → Extensions). Grab that one from the table above and reinstall |
 | **(Mac) it seems to be blocked from running** | The download may carry a quarantine flag. In Terminal run<br>`xattr -dr com.apple.quarantine ~/Library/Application\ Support/Claude/Claude\ Extensions/local.mcpb.MarcoYou.open-esg-korea`<br>then restart Claude Desktop |
 | **Company lookups error out** | Your corporate network may be blocking KRX. Check that [esg.krx.co.kr](https://esg.krx.co.kr) opens in a browser first |
 | **Still stuck** | [Open an issue](https://github.com/MarcoYou/open-esg-korea/issues) — pasting the extension folder's `BUILD_INFO.txt` makes it much faster |
@@ -131,8 +155,9 @@ or the Codex app) — also one command. Codex is included **even on the ChatGPT 
 
 | | |
 |---|---|
-| `runtime/` | A Python 3.12 distribution — **you do not need Python on the machine**<br><sub>Windows: python.org embeddable build · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
+| `runtime/` | A Python 3.12 distribution — the extension runs on **this** interpreter<br><sub>Windows: python.org embeddable build · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
 | `lib/` | Dependencies (mcp · httpx · pypdfium2 · pdfplumber) plus the server itself |
+| `launch-macos.sh` | (Mac only) tells you **which file to download** if you picked the wrong chip build |
 | `manifest.json` | Extension metadata and the list of 12 tools |
 | `BUILD_INFO.txt` | Which commit, when, and by what it was built |
 
@@ -326,6 +351,13 @@ figures come from GIR's published data under that agency's terms.
 The full statement is in [`NOTICE`](NOTICE).
 
 ## For developers
+
+**Prerequisites** — Python 3.10+ from [Step 1 above](#step-1--install-python), plus [uv](https://docs.astral.sh/uv/):
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh                                   # macOS · Linux
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex" # Windows
+```
 
 ```bash
 uv sync

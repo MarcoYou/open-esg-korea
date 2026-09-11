@@ -7,6 +7,7 @@ Why: 「설정 파일에 경로를 적고 uv 를 깔라」는 안내는 기술�
     runtime/   파이썬 배포판 — 파이썬이 안 깔린 기계에서도 돈다
     lib/       의존성(mcp·httpx·pypdfium2·pdfplumber)과 open_esg_korea 자신
     manifest.json
+    launch-macos.sh   (macOS 만) 칩이 어긋난 파일을 받았을 때 무엇을 받아야 하는지 알려 준다
 
 의존성은 **호스트 파이썬 버전·아키텍처가 아니라 번들 런타임 것에 맞춰** 받는다(`--python-version`·
 `--python-platform`). 이걸 빼먹으면 cp314 휠이 3.12 런타임에 들어가 `ModuleNotFoundError` 로 조용히 죽고,
@@ -31,7 +32,9 @@ arm64 기계에서 만든 x86_64 번들이 `mach-o file, but is an incompatible 
                   `.pth` 한 줄로 `lib` 을 잇는다(경로는 `sys.prefix` 기준이라 어디에 풀어도 따라온다).
 
 macOS 번들은 **아키텍처별로 따로** 낸다. 런타임도 이진 휠(pypdfium2·Pillow)도 arm64/x86_64 가 다르고,
-둘을 한 파일에 담으면 90MB 가 된다 — 받는 쪽이 한 번 고르는 편이 낫다.
+둘을 한 파일에 담으면 90MB 가 된다 — 받는 쪽이 한 번 고르는 편이 낫다. 다만 매니페스트로는 그 선택을
+**검사할 수 없어서**(`compatibility.platforms` 에 darwin 뿐, arch 개념이 없다) 어긋난 파일도 설치는 된다.
+그래서 macOS 번들만 파이썬을 `launch-macos.sh` 로 감싼다 — `macos_launcher()` 참고.
 """
 
 from __future__ import annotations
@@ -137,13 +140,13 @@ TARGETS: dict[str, Target] = {
     "macos-arm64": Target(
         key="macos-arm64", label="macOS Apple Silicon (M1 이상)", manifest_platform="darwin",
         py_version="3.12.14", uv_platform="aarch64-apple-darwin",
-        command="${__dirname}/runtime/bin/python3.12",
+        command="${__dirname}/launch-macos.sh",
         host_system="darwin", host_machine=("arm64", "aarch64"),
     ),
     "macos-x64": Target(
         key="macos-x64", label="macOS Intel (x86-64)", manifest_platform="darwin",
         py_version="3.12.14", uv_platform="x86_64-apple-darwin",
-        command="${__dirname}/runtime/bin/python3.12",
+        command="${__dirname}/launch-macos.sh",
         host_system="darwin", host_machine=("x86_64",),
     ),
 }
@@ -344,6 +347,64 @@ def tool_entries() -> list[dict[str, str]]:
     return out
 
 
+#: macOS 번들이 직접 파이썬을 부르지 않고 거치는 껍데기. 이름은 매니페스트 `command` 와 한 벌이다.
+LAUNCHER_NAME = "launch-macos.sh"
+
+
+def macos_launcher(target: Target) -> str:
+    """칩이 어긋난 번들을 받았을 때 **무엇을 받아야 하는지** 말하고 죽는 껍데기.
+
+    Why: MCPB 매니페스트의 `compatibility.platforms` 는 darwin·win32·linux 뿐이라 **arm64 와
+    x86_64 를 구분하지 못한다**(사양 확인 2026-09-11). 그래서 애플실리콘 사용자가 인텔용 파일을
+    받아도 설치 화면은 그냥 통과하고, 실행할 때 「Bad CPU type in executable」 같은 OS 오류만
+    남는다 — 어느 파일을 받아야 하는지는 어디에도 안 나온다. 파일이 둘인 것은 런타임도 이진
+    휠도 칩마다 다르기 때문이고, 하나로 합치면 90MB 가 된다(모듈 첫머리 참고).
+
+    `uname -m` 을 먼저 비교해 막지 않는다 — **Rosetta 2 가 깔린 애플실리콘에서는 x86_64 번들이
+    실제로 돈다**(실측 2026-09-08, 도구 12개 응답). 미리 막으면 잘 돌던 조합을 깨뜨린다.
+    그래서 「일단 돌려 보고, 안 될 때만 안내한다」 순서다. 성공하면 `exec` 로 껍데기를 파이썬에
+    넘겨 준다 — 중간에 셸이 남지 않아야 종료 신호가 그대로 전달된다.
+
+    안내는 **stderr 로만** 쓴다. stdout 은 MCP 가 JSON-RPC 로 쓰는 통로라 한 줄이라도 섞이면
+    프로토콜이 깨진다.
+    """
+    return (
+        "#!/bin/sh\n"
+        "# open-esg-korea — macOS 실행 껍데기.\n"
+        "# 왜 파이썬을 직접 부르지 않는지는 scripts/build_mcpb.py 의 macos_launcher() 에 적혀 있습니다.\n"
+        "set -u\n"
+        'DIR=$(cd "$(dirname "$0")" && pwd)\n'
+        'PY="$DIR/runtime/bin/python@@PYMINOR@@"\n'
+        "\n"
+        "# Rosetta 2 가 있으면 x86_64 번들도 돈다 — 칩을 비교하지 말고 실제로 돌려 본다.\n"
+        'if "$PY" -c "" 2>/dev/null; then\n'
+        '    exec "$PY" "$@"\n'
+        "fi\n"
+        "\n"
+        'case "$(uname -m)" in\n'
+        "    x86_64) need_key=macos-x64;   need_label='Intel'; need_en='Intel' ;;\n"
+        "    *)      need_key=macos-arm64; need_label='Apple 실리콘(M1 이상)'; need_en='Apple Silicon' ;;\n"
+        "esac\n"
+        "\n"
+        "cat >&2 <<EOF\n"
+        "\n"
+        "  이 확장은 이 Mac 에서 실행할 수 없습니다 — 칩에 맞지 않는 파일입니다.\n"
+        "\n"
+        "    받으신 파일 : @@LABEL@@\n"
+        "    이 Mac      : $(uname -m) → $need_label 용 파일이 필요합니다\n"
+        "\n"
+        "  아래 파일을 받아 설치하세요. 설정 → 확장에서 지금 것을 삭제한 뒤 끌어다 놓으면 됩니다.\n"
+        "\n"
+        "    @@REPO@@/releases/latest/download/open-esg-korea-$need_key.mcpb\n"
+        "\n"
+        "  This build targets @@LABEL@@ and cannot run on this Mac. Download the\n"
+        "  $need_en build from the link above and reinstall.\n"
+        "\n"
+        "EOF\n"
+        "exit 1\n"
+    ).replace("@@PYMINOR@@", target.py_minor).replace("@@LABEL@@", target.label).replace("@@REPO@@", REPO_URL)
+
+
 def manifest(target: Target) -> dict:
     return {
         # Claude Desktop 은 `dxt_version` 을 읽고 **"0.2" 만** 받는다(실측 2026-09-08: "0.1" 이면
@@ -407,6 +468,10 @@ def package(target: Target) -> pathlib.Path:
         build_runtime_windows(target, work / "runtime", work / "lib")
     else:
         build_runtime_macos(target, work / "runtime", work / "lib")
+        launcher = work / LAUNCHER_NAME
+        launcher.write_text(macos_launcher(target), encoding="utf-8")
+        # zip 이 st_mode 를 담고 푸는 쪽이 되살린다(unpack 참고) — 여기서 +x 를 줘야 설치본이 실행된다.
+        launcher.chmod(0o755)
     (work / "manifest.json").write_text(
         json.dumps(manifest(target), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 

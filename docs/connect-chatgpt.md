@@ -15,9 +15,10 @@
 |---|---|
 | **ChatGPT 계정** | Codex 는 Free · Go · Plus · Pro · Business · Edu · Enterprise 플랜에 **모두 포함**됩니다. 무료로도 시작할 수 있지만 무료 플랜은 「간단한 코딩 작업을 살펴보는」 수준이라 계속 쓰려면 Plus 이상이 편합니다 ([요금제](https://learn.chatgpt.com/docs/pricing)) |
 | **Codex** | 아래 1번에서 설치합니다 |
-| **[uv](https://docs.astral.sh/uv/)** | 서버를 띄우는 데 씁니다. `curl -LsSf https://astral.sh/uv/install.sh \| sh` (macOS·리눅스) |
+| **파이썬 3.10+** | [python.org/downloads](https://www.python.org/downloads/) 에서 받습니다. **Windows 는 설치 화면의 「Add python.exe to PATH」를 꼭 켜세요** — 안 켜면 설치해도 못 찾습니다 |
+| **[uv](https://docs.astral.sh/uv/)** | 서버를 띄우는 데 씁니다. `curl -LsSf https://astral.sh/uv/install.sh \| sh` (macOS·리눅스) · `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 \| iex"` (Windows) |
 
-파이썬은 따로 깔지 않아도 됩니다 — `uv` 가 알아서 맞춰 줍니다.
+`uv` 가 파이썬을 알아서 맞춰 주기는 하지만, **미리 깔아두는 편이 확실합니다** — 환경에 따라 어긋나는 일이 있습니다.
 KRX·GIR·KIND 조회에는 **API 키가 필요 없습니다.**
 
 ## 1. Codex 설치
