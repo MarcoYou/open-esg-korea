@@ -55,14 +55,38 @@ flowchart LR
 
 ## 🚀 5분 설치
 
-**파일 하나 받아서 끌어다 놓으면 끝입니다.** 파이썬도, 개발도구도, API 키도 필요 없습니다.
+**파이썬을 깔고, 파일 하나 받아서 끌어다 놓으면 끝입니다.** 명령어를 외울 일도, 개발도구도, API 키도 없습니다.
 
 <sub>**필요한 것** — [Claude Desktop](https://claude.com/download)(무료 다운로드)과 Claude 계정.
 **무료 플랜으로도 시작할 수 있습니다.** 다만 무료는 대화량이 빠듯해서 계속 쓰려면 유료 플랜이 편하고,
 회사 계정이라면 관리자가 확장 설치를 막아 뒀을 수 있습니다.
 **ChatGPT 를 쓰신다면 → [ChatGPT에 연결하기](docs/connect-chatgpt.md)**</sub>
 
-### 1단계 — 내 컴퓨터에 맞는 파일 받기
+### 1단계 — 파이썬 설치하기
+
+[**python.org/downloads**](https://www.python.org/downloads/) 에서 **Python 3.10 이상**을 받아 설치합니다.
+접속하면 내 운영체제에 맞는 최신 버전을 알아서 안내해 줍니다. **이미 깔려 있다면 건너뛰세요.**
+
+> [!IMPORTANT]
+> **Windows 는 설치 첫 화면 맨 아래의 「Add python.exe to PATH」 체크박스를 반드시 켜세요.**
+> 이걸 놓치면 설치를 해도 컴퓨터가 파이썬을 찾지 못합니다.
+> 이미 안 켜고 설치했다면, 받은 설치 파일을 다시 실행해 **Modify** 로 고칠 수 있습니다.
+
+Mac 은 받은 `.pkg` 파일을 두 번 눌러 그대로 진행하면 됩니다.
+
+**제대로 됐는지 확인** — 터미널(Windows 는 **명령 프롬프트**)을 **새로 열고**:
+
+```bash
+python3 --version     # Windows 는  python --version
+```
+
+`Python 3.12.x` 처럼 버전 번호가 나오면 성공입니다.
+
+<sub>확장 파일 안에도 파이썬이 들어 있어서 원래 설계는 「없어도 도는」 쪽입니다. 다만 환경에 따라
+설치 화면이 파이썬을 요구하거나 설치 후 서버가 안 뜨는 경우가 있어, **미리 깔아두는 편이 확실합니다.**
+용량도 얼마 안 되고 다른 프로그램에 영향을 주지 않습니다.</sub>
+
+### 2단계 — 내 컴퓨터에 맞는 파일 받기
 
 <div align="center">
 
@@ -81,7 +105,7 @@ flowchart LR
 
 <sub>리눅스용 번들은 아직 없습니다 — [개발자용](#개발자용)으로 연결하세요.</sub>
 
-### 2단계 — Claude Desktop 에 끌어다 놓기
+### 3단계 — Claude Desktop 에 끌어다 놓기
 
 1. **Claude Desktop** 을 엽니다 — 없으면 [claude.com/download](https://claude.com/download) 에서 받으세요 (무료)
 2. **설정 → 확장(Extensions)** 으로 갑니다
@@ -98,7 +122,7 @@ flowchart LR
 > 도구를 쓸 때마다 승인 창이 뜨는 게 번거롭다면, 확장 목록에서 **한국 상장사 ESG 정보 → 구성** 을 열고
 > **항상 승인**을 켜 두세요. 그 뒤로는 승인 창 없이 바로 답합니다.
 
-### 3단계 — 물어보기
+### 4단계 — 물어보기
 
 Claude 에게 그냥 한국어로 물어보세요.
 
@@ -120,7 +144,7 @@ MCP 서버로 붙이며, 역시 명령 한 줄입니다. Codex 는 **ChatGPT 무
 
 | 증상 | 왜 그런가 / 어떻게 하나 |
 |---|---|
-| **설치 버튼이 회색이고 안 눌림** | 「요구 사항」에 ⚠ 가 하나라도 있으면 잠깁니다. `Python` 요구가 보이면 **옛날 파일**입니다 — 최신 릴리스를 받으세요(파이썬을 번들로 넣어놨지만 안된다면 검색하여 별도로 다운로드 받는게 제일 확실하긴 합니다.) |
+| **설치 버튼이 회색이고 안 눌림** | 「요구 사항」에 ⚠ 가 하나라도 있으면 잠깁니다. `Python` 요구가 보이면 [**1단계**](#1단계--파이썬-설치하기)로 파이썬을 깔고 Claude Desktop 을 완전히 종료했다 다시 켜세요. 그래도 ⚠ 가 남으면 **옛날 파일**이니 최신 릴리스를 받으세요 |
 | **「확장 프로그램을 미리 볼 수 없습니다」** | 매니페스트를 못 읽은 것입니다. 최신 릴리스를 받으세요 |
 | **설치는 됐는데 도구가 안 보임** | Claude Desktop 을 **완전히 종료**했다 켜세요. macOS 는 `⌘Q`, 윈도우는 창 닫기 ✕ 가 아니라 트레이 아이콘 → 종료입니다 |
 | **(Mac) 「incompatible architecture」 오류** | 칩에 안 맞는 파일입니다 — 위 표에서 다른 쪽을 받으세요 |
@@ -134,7 +158,7 @@ MCP 서버로 붙이며, 역시 명령 한 줄입니다. Codex 는 **ChatGPT 무
 
 | | |
 |---|---|
-| `runtime/` | 파이썬 3.12 배포판 — **컴퓨터에 파이썬이 없어도 됩니다**<br><sub>Windows: python.org 임베드 배포판 · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
+| `runtime/` | 파이썬 3.12 배포판 — 확장은 **이 안의 파이썬으로** 돕니다<br><sub>Windows: python.org 임베드 배포판 · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
 | `lib/` | 의존성(mcp · httpx · pypdfium2 · pdfplumber) + 서버 본체 |
 | `manifest.json` | 확장 정보와 도구 12개 목록 |
 | `BUILD_INFO.txt` | 어느 커밋·언제·무엇으로 만들었는지 |
@@ -329,6 +353,13 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 자세한 것은 [`NOTICE`](NOTICE) 에 있습니다.
 
 ## 개발자용
+
+**준비물** — [위 1단계](#1단계--파이썬-설치하기)의 파이썬 3.10+ 와 [uv](https://docs.astral.sh/uv/):
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh                                   # macOS · 리눅스
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex" # Windows
+```
 
 ```bash
 uv sync
