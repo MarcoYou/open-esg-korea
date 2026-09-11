@@ -53,10 +53,9 @@ All three are reachable **without an API key**. Ratings are never stored — the
 
 **Install Python, then download one file and drop it in.** No commands to memorise, no developer tools, no API key.
 
-<sub>**What you need** — [Claude Desktop](https://claude.com/download) (free download) and a Claude account.
-**The free plan is enough to start**, though its message allowance is tight for sustained use, and a work
-account may have extension installs locked down by an admin.
-**On ChatGPT instead? → [Connecting to ChatGPT](docs/connect-chatgpt.md)**</sub>
+<sub>**What you need** — [Claude Desktop](https://claude.com/download) (free) and a Claude account. The free plan
+works, though its message allowance is tight. Work accounts may have extension installs locked down by an admin.
+**On ChatGPT? → [Connecting to ChatGPT](docs/connect-chatgpt.md)**</sub>
 
 ### Step 1 — install Python
 
@@ -86,9 +85,9 @@ python3 --version     # on Windows:  python --version
 
 </div>
 
-<sub>**Not sure which Mac you have?** The surest check is `uname -m` in Terminal — `arm64` means **Apple Silicon**,
-`x86_64` means **Intel**. Or use the Apple menu (top-left) → *About This Mac* and read the **Chip** row (**Processor**
-on Intel). Picking the wrong one only means the extension will not install — nothing breaks.</sub>
+<sub>**Not sure which Mac you have?** Run `uname -m` in Terminal — `arm64` means **Apple Silicon**, `x86_64` means
+**Intel** (the Apple menu → *About This Mac* → **Chip** row works too). Pick the wrong one and the extension tells you
+which file to get.</sub>
 
 <sub>There is no Linux bundle yet — use the [developer path](#for-developers).</sub>
 
