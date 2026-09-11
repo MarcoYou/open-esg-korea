@@ -60,27 +60,19 @@ account may have extension installs locked down by an admin.
 
 ### Step 1 — install Python
 
-Get **Python 3.10 or newer** from [**python.org/downloads**](https://www.python.org/downloads/) — the site
-offers the right build for your OS automatically. **Already have it? Skip this step.**
+Install it from [**python.org/downloads**](https://www.python.org/downloads/). Already have it? Skip this step.
 
 > [!IMPORTANT]
-> **On Windows, tick the "Add python.exe to PATH" checkbox at the bottom of the first installer screen.**
-> Miss it and your machine will not find Python even though it is installed.
-> If you already installed without it, re-run the installer and choose **Modify** to fix it.
+> **On Windows, tick "Add python.exe to PATH" at the bottom of the installer screen.** Without it your
+> machine will not find Python even though it is installed. Missed it? Re-run the installer → **Modify**.
 
-On a Mac, double-click the `.pkg` you downloaded and click through.
-
-**Check it worked** — open a *new* terminal (Command Prompt on Windows):
+Open a *new* terminal (Command Prompt on Windows) and check:
 
 ```bash
 python3 --version     # on Windows:  python --version
 ```
 
-A version number such as `Python 3.12.x` means you are set.
-
-<sub>The extension ships its own Python inside, so by design it should run without this. But some setups
-still show a Python requirement at install time or fail to start the server afterwards, so **installing it
-up front is the reliable path.** It is a small download and does not interfere with anything else.</sub>
+<sub>The extension ships its own Python, but some setups still trip over it — installing it up front is the reliable path.</sub>
 
 ### Step 2 — pick the file for your machine
 
@@ -141,10 +133,10 @@ or the Codex app) — also one command. Codex is included **even on the ChatGPT 
 
 | Symptom | Why / what to do |
 |---|---|
-| **Install button is greyed out** | It locks if any "Requirements" row shows ⚠. If you see a `Python` requirement, install Python via [**Step 1**](#step-1--install-python), quit Claude Desktop completely and reopen it. If ⚠ persists you have an **old file** — get the latest release |
+| **Install button is greyed out** | It locks if any "Requirements" row shows ⚠. For a `Python` ⚠, install it via [Step 1](#step-1--install-python) and fully quit/reopen Claude Desktop. Still there? You have an **old file** — get the latest release |
 | **"Cannot preview this extension"** | The manifest could not be read. Get the latest release |
 | **Installed, but no tools appear** | **Fully quit** Claude Desktop and reopen — `⌘Q` on macOS; on Windows the tray icon → Quit, not the window ✕ |
-| **(Mac) wrong build for your chip** | The extension now **tells you which file to get** (check the error under Settings → Extensions). Grab that one from the table above and reinstall |
+| **(Mac) wrong build for your chip** | The extension **tells you which file to get** — check the error under Settings → Extensions and reinstall with that one |
 | **(Mac) it seems to be blocked from running** | The download may carry a quarantine flag. In Terminal run<br>`xattr -dr com.apple.quarantine ~/Library/Application\ Support/Claude/Claude\ Extensions/local.mcpb.MarcoYou.open-esg-korea`<br>then restart Claude Desktop |
 | **Company lookups error out** | Your corporate network may be blocking KRX. Check that [esg.krx.co.kr](https://esg.krx.co.kr) opens in a browser first |
 | **Still stuck** | [Open an issue](https://github.com/MarcoYou/open-esg-korea/issues) — pasting the extension folder's `BUILD_INFO.txt` makes it much faster |
@@ -352,12 +344,8 @@ The full statement is in [`NOTICE`](NOTICE).
 
 ## For developers
 
-**Prerequisites** — Python 3.10+ from [Step 1 above](#step-1--install-python), plus [uv](https://docs.astral.sh/uv/):
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh                                   # macOS · Linux
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex" # Windows
-```
+**Prerequisites** — Python from [Step 1](#step-1--install-python) and [uv](https://docs.astral.sh/uv/)
+(`curl -LsSf https://astral.sh/uv/install.sh | sh`; [Windows instructions](https://docs.astral.sh/uv/getting-started/installation/)).
 
 ```bash
 uv sync
