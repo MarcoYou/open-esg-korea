@@ -88,3 +88,30 @@ def test_body_url_and_form_number_come_from_setpath():
         "'https://kind.krx.co.kr/external/a/99667.htm','/external/a/99667','01','30');")
     assert body.endswith("/99667.htm") and toc.endswith("_toc.htm")
     assert form_no(body) == codes.KIND_FORM_GOV_REPORT
+
+
+def _offline_client() -> KindClient:
+    return KindClient(httpx.AsyncClient(transport=httpx.MockTransport(lambda r: httpx.Response(404))),
+                      min_interval=0.0)
+
+
+def test_small_notices_do_not_push_each_other_out():
+    """지속가능경영보고서 서식(11KB)·첨부 목록(2KB)은 작다 — 10개사 × 2건을 동시에 열어도 캐시에 다 남는다.
+
+    예전엔 개수 8건으로 막아서, 10개사를 동시에 열자 도구 호출마다 KIND 를 다시 불렀다(2026-09-24 부하 재현).
+    """
+    client = _offline_client()
+    for i in range(20):
+        client._store(f"notice{i}", {"html": "x" * 11_000})
+    assert all(client._cached(f"notice{i}") is not None for i in range(20))
+
+
+def test_big_bodies_are_still_capped_by_size(monkeypatch):
+    """지배구조보고서 본문(5~12MB)은 여전히 막는다 — 상한을 개수가 아니라 글자 수로 옮긴 것뿐이다."""
+    from open_esg_korea.krx import kind
+    monkeypatch.setattr(kind, "_MAX_CACHE_CHARS", 30)
+    client = _offline_client()
+    for i in range(4):
+        client._store(f"body{i}", {"html": "y" * 12})
+    assert client._cached("body0") is None and client._cached("body3") is not None
+    assert client._cache_chars() <= 30

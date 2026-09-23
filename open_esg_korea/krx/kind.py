@@ -27,8 +27,12 @@ USER_AGENT = "open-esg-korea/0.1 (+https://github.com/MarcoYou/open-esg-korea)"
 _HEADERS = {"User-Agent": USER_AGENT, "Referer": f"{codes.KIND_BASE_URL}/"}
 
 DEFAULT_TTL = 24 * 3600
-#: 본문 한 건이 5~12MB 다 — 개수로만 막는다(삼성전자 2024 가 11.9MB).
-_MAX_CACHE_ENTRIES = 8
+#: 캐시 상한은 **글자 수로** 건다. 지배구조보고서 본문은 한 건 5~12MB(삼성전자 2024 가 11.9MB)지만
+#: 지속가능경영보고서 자율공시 서식은 11KB·첨부 목록은 2KB 다. 예전처럼 개수(8건)로만 막으면 한 회사에 두 건씩
+#: 쓰는 작은 서식이 서로 밀어낸다 — 2026-09-24 부하 재현(10개사 동시)에서 도구 호출마다 KIND 를 다섯 번 안팎
+#: 다시 불렀다. 글자 수 상한은 예전 최악(8건 × 12MB)을 넘지 않게 잡는다.
+_MAX_CACHE_CHARS = 32_000_000
+_MAX_CACHE_ENTRIES = 256
 #: 12MB 를 받는 데 30초는 모자랐다(실측). 연결은 짧게, 읽기는 넉넉히.
 _TIMEOUT = httpx.Timeout(connect=10.0, read=120.0, write=30.0, pool=10.0)
 #: 첨부 PDF 상한. 실측 분포는 4MB(삼성)~81MB(NAVER) 다 — 그 위는 받지 않고 주소만 준다.
@@ -157,10 +161,14 @@ class KindClient:
             return hit[1]
         return None
 
+    def _cache_chars(self) -> int:
+        return sum(len(v[1].get("html") or "") for v in self._cache.values())
+
     def _store(self, key: str, value: dict) -> None:
-        if len(self._cache) >= _MAX_CACHE_ENTRIES:
-            self._cache.pop(min(self._cache, key=lambda k: self._cache[k][0]), None)
         self._cache[key] = (time.monotonic() + self._ttl, value)
+        while len(self._cache) > 1 and (len(self._cache) > _MAX_CACHE_ENTRIES
+                                        or self._cache_chars() > _MAX_CACHE_CHARS):
+            self._cache.pop(min(self._cache, key=lambda k: self._cache[k][0]), None)
 
     # ── 화면별 ────────────────────────────────────────────────────────────────
     async def search(self, *, isu_cd: str, name: str, from_date: str, to_date: str,
