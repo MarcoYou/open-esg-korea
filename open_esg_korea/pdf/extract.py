@@ -55,11 +55,98 @@ def page_layout(data: bytes, page_no: int) -> str:
         with pdfplumber.open(io.BytesIO(data)) as pdf:
             if not 1 <= page_no <= len(pdf.pages):
                 raise PdfReadError(f"{page_no}쪽은 이 문서에 없습니다(전체 {len(pdf.pages)}쪽).")
-            return pdf.pages[page_no - 1].extract_text(layout=True) or ""
+            return compact_layout(pdf.pages[page_no - 1].extract_text(layout=True) or "")
     except PdfReadError:
         raise
     except Exception as exc:
         raise PdfReadError(f"{page_no}쪽을 읽지 못했습니다: {exc}") from exc
+
+
+def page_layouts(data: bytes, page_nos: list[int]) -> dict[int, str]:
+    """여러 쪽을 문서 한 번 열어 정렬 텍스트로. 못 읽은 쪽은 **빼고** 준다 — 한 쪽 때문에 전부를 버리지 않는다.
+
+    데이터 장을 처음 받을 때 미리 떠 두는 데 쓴다(실측 2026-09-24: 10~39쪽에 0.5~1.8초).
+    """
+    out: dict[int, str] = {}
+    try:
+        with pdfplumber.open(io.BytesIO(data)) as pdf:
+            for page_no in page_nos:
+                if not 1 <= page_no <= len(pdf.pages):
+                    continue
+                try:
+                    out[page_no] = compact_layout(pdf.pages[page_no - 1].extract_text(layout=True) or "")
+                except Exception:                      # noqa: BLE001 — 그 쪽만 빠진다. 요청 때 다시 시도한다.
+                    continue
+    except Exception as exc:
+        raise PdfReadError(f"문서를 열어 정렬하지 못했습니다: {exc}") from exc
+    return out
+
+
+def compact_layout(text: str) -> str:
+    """정렬 텍스트의 **빈 여백만** 걷는다 — 줄 끝 공백 · 이어진 빈 줄 · 모든 줄에 공통인 왼쪽 여백.
+
+    줄 **안의** 칸 간격은 건드리지 않는다 — 그래야 열 정렬이 그대로 남는다. 정렬 텍스트는 쪽 너비만큼
+    공백을 채워서, 수치 쪽 한 장이 6,000자를 쉽게 넘었다(30개사 실행에서 21번 잘림). 실측(2026-09-24, 3개 보고서
+    데이터 장 60쪽): 쪽 글자 수 35~50% 감소, 6,000자 초과 16쪽 → 2쪽.
+    """
+    lines: list[str] = []
+    for line in text.split("\n"):
+        line = line.rstrip()
+        if not line and (not lines or not lines[-1]):
+            continue
+        lines.append(line)
+    while lines and not lines[-1]:
+        lines.pop()
+    indent = min((len(l) - len(l.lstrip()) for l in lines if l.strip()), default=0)
+    return "\n".join(l[indent:] for l in lines)
+
+
+#: 수치 쪽의 신호 — 쉼표 묶음 숫자(1,420,912)와 소수(33.7). 쪽 번호·연도 같은 맨숫자는 세지 않는다.
+_DATA_NUMBER_RE = re.compile(r"(?<![\w.])\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![\w])|(?<![\w.,])\d+\.\d+(?![\w])")
+#: 연도 표기(2023·2023년). 수치 표는 여러 해를 나란히 싣는다 — 서로 다른 해가 둘 이상 있어야 수치 쪽으로 본다.
+#: 「2023 2024 2025 가 나란히」를 요구하지 않는 이유(2026-09-24): NAVER 2025 통합보고서는 글자가 **열 단위로**
+#: 나와서(2023 열의 값 전부 → 2024 열 …) 연도가 붙어 있지 않다 — 그 규칙으로는 데이터 장을 못 찾고 94쪽 한 장을 골랐다.
+_YEAR_RE = re.compile(r"(?<!\d)20[12]\d(?!\d)")
+DATA_PAGE_MIN_NUMBERS = 25
+DATA_PAGE_MIN_YEARS = 2
+#: 다음 수치 쪽이 이 쪽 수 안에 있으면 같은 장으로 잇는다 — 각주·설명 쪽 한두 장이 끼어도 끊지 않는다.
+_SECTION_STEP = 3
+#: 미리 떠 두는 쪽 수 상한. 실측 최대가 39쪽(현대모비스 2026)이었다 — 넘는 쪽은 요청 때 정렬한다.
+DATA_SECTION_MAX_PAGES = 40
+
+
+def is_data_page(text: str) -> bool:
+    return (len(_DATA_NUMBER_RE.findall(text)) >= DATA_PAGE_MIN_NUMBERS
+            and len(set(_YEAR_RE.findall(text))) >= DATA_PAGE_MIN_YEARS)
+
+
+def data_section(pages: list[str]) -> list[int]:
+    """수치 표가 모인 **데이터 장**의 쪽 번호(1부터, 연속 구간). 못 찾으면 `[]`.
+
+    30개사 실측(2026-09-22): 원문을 연 28개 보고서 중 23개가 뒤쪽 한 장(ESG Data·Factbook·Facts & Figures·
+    부록)에 수치 표를 모아 둔다 — 전체 쪽수의 66~93% 구간. 장 이름은 쓰지 않는다: 바닥글에 모든 장 이름을
+    나열하는 서식이 흔해서 「Appendix」 글자는 모든 쪽에 있다. 대신 쪽마다 「쉼표·소수 숫자 25개 이상 + 서로 다른
+    연도 둘 이상」을 세고, 가장 긴 연속 구간을 고른다(같으면 뒤쪽). 실측(2026-09-24, 보고서 7개 — 삼성전자·
+    LG에너지솔루션·현대모비스·NAVER·삼성생명·POSCO홀딩스·신한지주): 30개사 작업에서 수치를 읽은 쪽 28개 중 27개가
+    구간 안이었다. 빠진 하나(NAVER 228쪽)는 쉼표 숫자가 적은 비율 표다 — 구간 밖 쪽은 요청 때 정렬한다.
+
+    숫자만 세면(연도 조건 없이) NAVER 의 재무제표 쪽(219–223)까지 데이터 장으로 잡힌다. 쪽 지도로 사람에게 보여줄 때
+    재무제표를 「ESG 데이터」라고 부르면 틀리므로 연도 조건을 둔다.
+
+    `[]` 는 「데이터 장이 없다」가 아니라 「이 신호로 못 찾았다」다 — 수치가 본문 장에 흩어진 보고서(2/28)와
+    데이터를 별도 파일로 낸 보고서(3/28)가 있었다.
+    """
+    hits = [i for i, text in enumerate(pages, start=1) if is_data_page(text)]
+    runs: list[list[int]] = []
+    for page_no in hits:
+        if runs and page_no - runs[-1][-1] <= _SECTION_STEP:
+            runs[-1].append(page_no)
+        else:
+            runs.append([page_no])
+    if not runs:
+        return []
+    best = max(runs, key=lambda r: (len(r), r[-1]))
+    return list(range(best[0], best[-1] + 1))[:DATA_SECTION_MAX_PAGES]
 
 
 #: 괘선이 없는 서식이라 선 기반 검출은 0개다(실측) — 글자 정렬로 열을 잡는다.

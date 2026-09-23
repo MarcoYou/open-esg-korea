@@ -266,7 +266,7 @@ Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks �
 | `company` | Company name / ticker → portal ticker and ISIN. The entry point for every other tool |
 | `esg_ratings` | ESG/E/S/G grades by year from KCGS, MSCI, Korea ESG Research Institute, S&P and Sustinvest, plus a 3-year KCGS trend and **the distribution within that same agency** (how many companies at or above this grade, how many tied) |
 | `sustainability_reports` | List of sustainability reports plus the filing text of the most recent one — reporting period, table of contents, assurance provider, the company's own publication page, and the attached PDF address |
-| `sustainability_report_text` | **PDF body** of a sustainability report — which pages a keyword appears on, excerpts around it, or a whole page |
+| `sustainability_report_text` | **PDF body** of a sustainability report — which pages a keyword appears on, excerpts around it, or whole pages (a range like `"136-140"`, up to 5) |
 | `governance_indicators` | The 15 core corporate-governance indicators (O/X), compliance rate, and comparison against another company |
 | `governance_policies` | 74 governance policy-adoption items |
 | `governance_report` | **Full text** of the corporate-governance report — answers to the 28 detailed principles, the standard-form tables, and the stated reasons for non-compliance |
@@ -388,6 +388,7 @@ uv sync --dev && uv run pytest -q     # network 0
 
 - [**Connecting to ChatGPT**](docs/connect-chatgpt.md) — attaching the server to Codex (CLI, IDE, app)
 - [MCP draft and roadmap](docs/mcp-draft.md) — data-source map, what was confirmed about each endpoint, the reasoning per phase
+- [Design: reading the report's data section](docs/design-report-data-section.md) (Korean) — finding the back-of-report section where the numeric tables live and keeping it aligned (built), plus table-row candidates and metric lookup (draft)
 - [Field notes](docs/anecdotes.md) — things only learned by knocking on the door (a DART link opens a different company, letter-spacing is baked into the PDF, the benchmark-leading parser misses our numeric tables …)
 
 ### Refreshing snapshots

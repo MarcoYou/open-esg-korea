@@ -31,7 +31,7 @@ open_esg_korea/
   server.py        # build_mcp() / build_app() / main()
   krx/codes.py     # 화면 code · 기관 슬롯 · 지표/정책 라벨 사전 — 한 벌만
   krx/client.py    # POST 하나(ESG99000001.jspx) + 간격 0.5s + 24h 메모리 캐시
-  krx/kind.py      # KIND 공시 원문 3단(뷰어→경로→본문). 접수번호로 원문 HTML(5~12MB), 키 없음
+  krx/kind.py      # KIND 공시 원문 3단(뷰어→경로→본문). 접수번호로 원문 HTML(5~12MB), 키 없음. 캐시 상한은 글자 수
   gir/codes.py     # GIR·ETRS 화면 주소·계획기간·부문 사전 — 한 벌만
   gir/client.py    # 명세서 HTML(한 해 한 장)·ETRS CSV(cp949) + 간격 0.5s + 24h 메모리 캐시
   dart/corp_codes.py # 상장사 명부 3겹: 실시간(키, 7일 메모리 캐시) → data/listed_companies.json 스냅샷 → 없음
@@ -43,10 +43,10 @@ open_esg_korea/
   services/governance_report.py          # 지배구조보고서 원문 파서(세부원칙·서식 표·미준수 사유) — 정규식, lxml 없음
   services/governance_report_payload.py  # 접수번호 고르기 → 원문 → 파서 → scope/find
   services/sustainability_notice.py      # 지속가능경영보고서 자율공시 서식(61979) 파서 — 목차·검증·첨부 PDF 주소
-  services/report_text.py                # 첨부 PDF → 페이지 텍스트 캐시 → 검색·발췌 (바이트는 안 남긴다)
+  services/report_text.py                # 첨부 PDF → 페이지 텍스트 + 데이터 장 정렬 텍스트 캐시 → 검색·발췌·쪽(범위) 보기 (바이트는 안 남긴다)
   services/ghg_disclosure.py             # 보고서 공시 수치를 **범위 축**(경계·Scope2 방식·NF3)과 함께 집는다
   services/rating_context.py             # 같은 기관 안의 등급 분포 — 세기만 하고 백분위·점수로 바꾸지 않는다
-  pdf/extract.py                         # PDF → 텍스트. 훑기 pypdfium2(0.3s/87쪽) · 표 정렬 pdfplumber(0.18s/쪽)
+  pdf/extract.py                         # PDF → 텍스트. 훑기 pypdfium2(0.3s/87쪽) · 표 정렬 pdfplumber(0.18s/쪽) · 데이터 장 찾기
   services/company.py   # 회사 식별 — name_keys(법인격·음차·영문 브랜드·업종어 규칙) 한 곳
   services/aliases.py   # 규칙으로 못 잇는 통칭 사전(「현대차」→ 현대자동차). 값은 포털 약명
   tools/           # public MCP tool facade — 렌더링만 (자동 발견, register_tools)
@@ -54,6 +54,7 @@ open_esg_korea/
 tests/fixtures/    # 2026-09-07 실호출 응답 스냅샷
 docs/mcp-draft.md  # 설계 초안·로드맵
 docs/anecdotes.md  # 실측 노트 — 가정이 틀렸던 지점들. 새 소스를 붙이기 전에 읽는다
+docs/design-report-data-section.md  # 보고서 데이터 장 읽기 — L0 구현, L1~L3 초안(표 수치 원칙 변경 결정 전)
 ```
 
 ## Rules
@@ -98,8 +99,12 @@ docs/anecdotes.md  # 실측 노트 — 가정이 틀렸던 지점들. 새 소스
    갈음해 세부원칙이 없다(`no_data`). 서식 표는 `aclass="krx-cg_…"` 인 것만이다 — 자유편집 표는 회사마다 열이 달라 싣지 않는다.
    접수번호는 KIND 번호다. DART 뷰어(`rcpNo=`)에 넣으면 다른 회사 공시가 열린다(실측 2026-09-07) — DART 링크를 만들지 않는다.
 12. **PDF 는 두 엔진, 바이트는 안 남긴다.** 훑기는 pypdfium2(87쪽 0.3초), 표 정렬은 pdfplumber(0.18초/쪽).
-   pypdf 는 숫자를 깨뜨리고(`567 ,056` 56건) PyMuPDF 는 AGPL 이라 안 쓴다. 캐시에 남기는 것은 **페이지 텍스트뿐**이고
-   원본 바이트(4~80MB)는 버린다 — 「찾기→그 쪽 보기」를 위해 25MB 이하 한 건만 10분 들고 있는다.
+   pypdf 는 숫자를 깨뜨리고(`567 ,056` 56건) PyMuPDF 는 AGPL 이라 안 쓴다. 캐시에 남기는 것은 **텍스트뿐**이고
+   원본 바이트(4~80MB)는 버린다. 수치 표가 모인 **데이터 장**(`extract.data_section`)은 처음 받을 때 정렬 텍스트로
+   떠 둔다 — 원본은 25MB 이하 한 건만 10분 들고 있어서 동시 호출이 서로 밀어내기 때문이다(실측 노트 19).
+   그 밖의 쪽은 원본이 밀렸으면 다시 받아 정렬하고(25MB 이하), 평문으로 줄 때는 **진짜 이유**를 말한다.
+   PDF 해석은 **스레드에서만** 한다(`asyncio.to_thread`) — 루프에서 돌리면 해석하는 동안 모든 요청이 멈춘다.
+   pypdfium2 는 한 번에 하나만 돈다: PDFium 은 스레드 안전하지 않다.
    검색은 반드시 공백을 지우고 한다: 원문 자간 때문에 그냥 찾으면 「온실가스배출량」이 0쪽으로 나온다(실제 16쪽).
    표 격자(`table=True`)는 **기본값이 아니다.** 값 보존이 97.4%(정렬 텍스트는 100%)이고 좌우 2단 쪽에서
    숫자가 갈린다 — 격자 칸이 평문 토큰에 없으면 의심 칸으로 표시해 돌려준다. 조용히 틀린 값을 주지 않는다.

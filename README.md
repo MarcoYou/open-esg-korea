@@ -266,7 +266,7 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 | `company` | 회사명/종목코드 → 포털 종목코드·ISIN. 모든 도구의 입구 |
 | `esg_ratings` | KCGS·MSCI·한국ESG연구소·S&P·서스틴베스트 ESG/E/S/G 등급(연도별) + KCGS 3년 추이 + **같은 기관 안의 분포**(이 등급 이상 몇 사·동점 몇 사) |
 | `sustainability_reports` | 지속가능경영보고서 목록 + 최신 한 건의 공시 원문 — 보고 대상 기간·목차·검증기관·회사 공개처·첨부 PDF 주소 |
-| `sustainability_report_text` | 지속가능경영보고서 **PDF 본문** — 키워드가 몇 쪽에 있는지·그 대목 발췌·쪽 전체 보기 |
+| `sustainability_report_text` | 지속가능경영보고서 **PDF 본문** — 키워드가 몇 쪽에 있는지·그 대목 발췌·쪽 전체 보기(범위 `"136-140"` 로 5쪽까지) |
 | `governance_indicators` | 기업지배구조 핵심지표 15개 O/X · 준수율 · 회사 비교 |
 | `governance_policies` | 지배구조 정책 채택 여부 74개 항목 |
 | `governance_report` | 기업지배구조보고서 **원문** — 세부원칙 28개 답변·서식 표·미준수 사유(왜 미준수인지) |
@@ -391,6 +391,7 @@ uv sync --dev && uv run pytest -q     # network 0
 
 - [**ChatGPT에 연결하기**](docs/connect-chatgpt.md) — Codex(CLI·IDE·앱)에 MCP 서버로 붙이는 법
 - [MCP 초안·로드맵](docs/mcp-draft.md) — 데이터 소스 지도, 엔드포인트 확인 내용, Phase 별 근거
+- [보고서 데이터 장 읽기 설계](docs/design-report-data-section.md) — 수치 표가 모인 뒤쪽 장을 찾아 정렬해 두는 기반(구현)과 표 행 후보·지표 찾기(초안)
 - [실측 노트](docs/anecdotes.md) — 두드려 보고 나서야 알게 된 것들(DART 링크가 다른 회사를 연다, 자간 공백이 PDF 에 박혀 있다, 벤치마크 1위 파서가 우리 수치표를 못 잡는다…)
 
 ### 스냅샷 갱신

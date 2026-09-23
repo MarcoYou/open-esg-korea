@@ -194,3 +194,205 @@ async def test_markdown_marks_suspect_cells(krx_client, kind_client):
     text = _render(await build_report_text_payload("삼성전자", year=2025, page=3, table=True))
     assert "### 격자 (실험적" in text
     assert "⚠07,325" in text
+
+
+# ── 데이터 장 · 여백 정리 (네트워크 없음) ─────────────────────────────────────────
+def _numbers_page(years: str = "2023 2024 2025") -> str:
+    return years + " " + " ".join(f"{100 + i},{500 + i}" for i in range(30))
+
+
+def test_data_section_finds_the_numbers_page_in_the_fixture():
+    """표지·서술·수치 표 3쪽 중 수치 표 쪽만 데이터 장이다."""
+    assert extract.data_section(extract.page_texts(PDF)) == [3]
+
+
+def test_data_section_bridges_small_gaps_and_picks_the_longest_run():
+    """각주·설명 쪽 한두 장이 끼어도 한 장으로 잇고, 앞쪽 하이라이트 쪽 같은 외톨이는 고르지 않는다."""
+    narrative, numbers = "서술 문단", _numbers_page()
+    pages = [narrative, numbers] + [narrative] * 6 + [numbers, narrative, numbers, numbers, narrative, narrative, numbers]
+    #        1          2           3..8            9        10         11       12       13         14         15
+    assert extract.data_section(pages) == list(range(9, 16))
+
+
+def test_data_section_needs_several_years_not_just_numbers():
+    """숫자만 많고 연도가 하나뿐인 쪽(재무제표 「제 27 기」, 보고서 머리글 「2025 …」)은 ESG 수치 표 쪽이 아니다."""
+    assert extract.data_section([_numbers_page(years="")]) == []
+    assert extract.data_section([_numbers_page(years="2025 NAVER INTEGRATED REPORT 제 27 기")]) == []
+    assert extract.data_section(["서술"] * 5) == []            # 「없다」가 아니라 「이 신호로 못 찾았다」
+
+
+def test_data_section_reads_pdfs_that_come_out_column_by_column():
+    """NAVER 2025 통합보고서는 글자가 열 단위로 나온다(2023 열 값 전부 → 2024 열 …) — 연도가 나란하지 않아도 잡는다.
+
+    예전 규칙(「2023 2024 2025 가 나란히」)으로는 데이터 장을 못 찾고 94쪽 한 장을 골랐다(2026-09-24).
+    """
+    column = "\n".join(f"{100 + i},{500 + i}" for i in range(10))
+    page = f"에너지 총사용량\n단위 2023\n{column}\n2024\n{column}\n2025\n{column}"
+    assert extract.is_data_page(page)
+    assert extract.data_section(["서술", page, page, "서술"]) == [2, 3]
+
+
+def test_compact_layout_keeps_columns_and_drops_only_margins():
+    raw = "      \n      a     1    2      \n      bb    3    4\n\n\n   \n      c     5    6   \n\n"
+    lines = extract.compact_layout(raw).split("\n")
+    assert lines == ["a     1    2", "bb    3    4", "", "c     5    6"]
+    assert lines[0].index("1") == lines[1].index("3")          # 줄 안의 칸 간격은 그대로 — 열 정렬 유지
+
+
+def test_layout_page_has_no_blank_margins():
+    lines = extract.page_layout(PDF, 3).split("\n")
+    assert all(line == line.rstrip() for line in lines)
+    assert min(len(l) - len(l.lstrip()) for l in lines if l.strip()) == 0
+
+
+# ── 동시성: 원본이 밀려도 데이터 장은 정렬돼 나온다 ───────────────────────────────
+def _evict_pdf_bytes() -> None:
+    """다른 대화가 다른 보고서를 열어 원본 자리를 가져간 상황."""
+    from open_esg_korea.services import report_text
+    report_text._keep_bytes("https://kind.krx.co.kr/external/other.pdf", b"%PDF-other")
+
+
+async def test_data_section_page_stays_aligned_after_the_pdf_bytes_are_gone(krx_client, kind_client):
+    """30개사 동시 실행에서 쪽 보기 133회 중 100회가 평문으로 나갔다 — 원본 한 칸을 서로 밀어냈기 때문이다."""
+    await build_report_text_payload("삼성전자", year=2025, find="재생에너지")
+    _evict_pdf_bytes()
+    calls = kind_client.calls
+    payload = await build_report_text_payload("삼성전자", year=2025, page=3)
+    assert payload["data"]["aligned"] is True
+    assert payload["data"]["data_section"] == [3, 3]
+    assert kind_client.calls == calls                 # 처음 받을 때 떠 둔 정렬 텍스트 — 다시 받지 않는다
+    assert cache_stats()["aligned_pages"] >= 1
+
+
+async def test_other_pages_are_refetched_for_alignment_not_served_flat(krx_client, kind_client):
+    await build_report_text_payload("삼성전자", year=2025, find="재생에너지")
+    _evict_pdf_bytes()
+    calls = kind_client.calls
+    payload = await build_report_text_payload("삼성전자", year=2025, page=2)
+    assert payload["data"]["aligned"] is True
+    assert kind_client.calls > calls                  # 데이터 장 밖이라 원본을 다시 받았다(25MB 이하)
+    assert not any("평문으로" in w for w in payload["warnings"])
+
+
+async def test_big_document_fallback_says_why_and_points_to_the_aligned_section(krx_client, kind_client,
+                                                                                monkeypatch):
+    """평문으로 줄 때는 **진짜 이유**를 말한다 — 예전엔 원본이 밀린 경우도 「문서가 커서」라고 했다."""
+    from open_esg_korea.services import report_text
+    monkeypatch.setattr(report_text, "_BYTES_MAX", 1000)          # fixture(343KB)를 「큰 문서」로 만든다
+    flat = await build_report_text_payload("삼성전자", year=2025, page=2)
+    assert flat["data"]["aligned"] is False
+    reason = next(w for w in flat["warnings"] if "평문으로" in w)
+    assert "MB 라 정렬용으로 다시 받지 않았습니다" in reason and "데이터 장(3쪽)은" in reason
+    aligned = await build_report_text_payload("삼성전자", year=2025, page=3)
+    assert aligned["data"]["aligned"] is True                    # 데이터 장은 크기와 무관하게 정렬돼 있다
+
+
+async def test_refetch_failure_is_reported_as_a_refetch_failure(krx_client, kind_client, monkeypatch):
+    from open_esg_korea.krx.kind import KindClientError
+    await build_report_text_payload("삼성전자", year=2025, find="재생에너지")
+    _evict_pdf_bytes()
+
+    async def refuse(url, **_):
+        raise KindClientError("KIND 응답 없음")
+    monkeypatch.setattr(kind_client, "file", refuse)
+    payload = await build_report_text_payload("삼성전자", year=2025, page=2)
+    assert payload["data"]["aligned"] is False
+    assert any("정렬용 원본을 다시 받지 못했습니다" in w for w in payload["warnings"])
+
+
+# ── 쪽 범위 ──────────────────────────────────────────────────────────────────
+async def test_page_range_returns_each_page(krx_client, kind_client):
+    payload = await build_report_text_payload("삼성전자", year=2025, page="2-3")
+    data = payload["data"]
+    assert [v["page"] for v in data["page_views"]] == [2, 3]
+    assert all(v["aligned"] for v in data["page_views"])
+    assert "page_text" not in data                    # 한 쪽짜리 예전 키는 한 쪽일 때만
+    text = _render(payload)
+    assert "### 2쪽" in text and "### 3쪽" in text
+
+
+async def test_page_given_as_a_string_number_works_like_an_int(krx_client, kind_client):
+    payload = await build_report_text_payload("삼성전자", year=2025, page="3")
+    assert payload["data"]["aligned"] is True and "사업장 에너지 사용량" in payload["data"]["page_text"]
+
+
+async def test_page_range_past_the_end_is_clipped_and_says_so(krx_client, kind_client):
+    payload = await build_report_text_payload("삼성전자", year=2025, page="3-5")
+    assert [v["page"] for v in payload["data"]["page_views"]] == [3]
+    assert any("전체 3쪽이라 3쪽만 보여줍니다" in w for w in payload["warnings"])
+
+
+@pytest.mark.parametrize("page, message", [("1-9", "한 번에 5쪽까지"), ("3-2", "시작(3쪽)보다 앞"),
+                                           ("abc", "쪽 번호(73) 또는 범위")])
+async def test_bad_page_argument_is_explained_not_guessed(krx_client, kind_client, page, message):
+    payload = await build_report_text_payload("삼성전자", year=2025, page=page)
+    assert payload["status"] == "no_data"
+    assert any(message in w for w in payload["warnings"])
+
+
+async def test_grid_needs_a_single_page(krx_client, kind_client):
+    payload = await build_report_text_payload("삼성전자", year=2025, page="2-3", table=True)
+    assert "tables" not in payload["data"]
+    assert any("한 쪽씩만" in w for w in payload["warnings"])
+
+
+# ── 해석은 이벤트 루프를 막지 않는다 ─────────────────────────────────────────────
+class _Files:
+    """KIND 대신 fixture PDF 를 주는 가짜 — 주소가 달라도 같은 문서를 준다."""
+
+    async def file(self, url, **_):
+        import asyncio
+        await asyncio.sleep(0)                        # 실제 내려받기처럼 한 번은 양보한다
+        return PDF
+
+
+async def test_pdf_parsing_does_not_block_other_requests(monkeypatch):
+    """해석이 루프 위에서 돌면 그동안 서버의 모든 요청이 멈춘다 — 스레드로 넘겼는지 확인한다."""
+    import asyncio
+    import time as _time
+    from open_esg_korea.services import report_text
+
+    real = extract.page_texts
+
+    def slow(data):
+        _time.sleep(0.4)
+        return real(data)
+    monkeypatch.setattr(extract, "page_texts", slow)
+
+    stamps: list[float] = []
+
+    async def heartbeat():
+        for _ in range(30):
+            stamps.append(_time.perf_counter())
+            await asyncio.sleep(0.02)
+    await asyncio.gather(heartbeat(), report_text.load_pages("https://kind.krx.co.kr/x.pdf", _Files()))
+    # 루프 위에서 해석하면 박동 사이에 0.4초 넘는 틈이 생긴다(예전 코드 실측 0.438초) — 스레드면 수십 ms.
+    assert max(b - a for a, b in zip(stamps, stamps[1:])) < 0.2
+
+
+async def test_pdfium_never_runs_twice_at_once(monkeypatch):
+    """PDFium 은 스레드 안전하지 않다 — 여러 문서를 동시에 열어도 pypdfium2 는 한 번에 하나만."""
+    import asyncio
+    import threading
+    import time as _time
+    from open_esg_korea.services import report_text
+
+    real = extract.page_texts
+    guard = threading.Lock()
+    state = {"now": 0, "max": 0}
+
+    def tracked(data):
+        with guard:
+            state["now"] += 1
+            state["max"] = max(state["max"], state["now"])
+        try:
+            _time.sleep(0.05)
+            return real(data)
+        finally:
+            with guard:
+                state["now"] -= 1
+    monkeypatch.setattr(extract, "page_texts", tracked)
+    await asyncio.gather(*(report_text.load_document(f"https://kind.krx.co.kr/{i}.pdf", _Files())
+                           for i in range(4)))
+    assert state["max"] == 1
+    assert cache_stats()["documents"] == 4
