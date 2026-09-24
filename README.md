@@ -17,12 +17,12 @@
 [![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
-[![Tools](https://img.shields.io/badge/tools-12-orange.svg)](#도구-12개)
+[![Tools](https://img.shields.io/badge/tools-14-orange.svg)](#도구-14개)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
 **[English](README_ENG.md)**
 
-[설치](#-5분-설치) · [이렇게 물어보세요](#-이렇게-물어보세요) · [12가지 기능](#도구-12개) · [읽을 때 주의](#읽을-때-주의) · [라이선스](#라이선스) · [개발자용](#개발자용)
+[설치](#-5분-설치) · [이렇게 물어보세요](#-이렇게-물어보세요) · [14가지 기능](#도구-14개) · [읽을 때 주의](#읽을-때-주의) · [라이선스](#라이선스) · [개발자용](#개발자용)
 
 </div>
 
@@ -39,7 +39,7 @@ flowchart LR
     A["KRX ESG 포털<br/>5개 기관 등급 · 지배구조 핵심지표"] --> S
     B["KIND 공시<br/>지배구조보고서 · 지속가능경영보고서 PDF 데이터 추출"] --> S
     C["GIR<br/>온실가스 명세서 · 배출권거래제"] --> S
-    S["open-esg-korea<br/>MCP 서버 · 도구 12개<br/>값마다 출처 · 연도 · 이용조건"] --> D["Claude Desktop · ChatGPT<br/>「삼성전자 ESG 등급 어때?」"]
+    S["open-esg-korea<br/>MCP 서버 · 도구 14개<br/>값마다 출처 · 연도 · 이용조건"] --> D["Claude Desktop · ChatGPT<br/>「삼성전자 ESG 등급 어때?」"]
 ```
 
 세 곳 다 **API 키 없이** 조회됩니다. 등급은 저장하지 않고 물을 때마다 실시간으로 가져옵니다.
@@ -151,7 +151,7 @@ MCP 서버로 붙이며, 역시 명령 한 줄입니다. Codex 는 **ChatGPT 무
 | `runtime/` | 파이썬 3.12 배포판 — 확장은 **이 안의 파이썬으로** 돕니다<br><sub>Windows: python.org 임베드 배포판 · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
 | `lib/` | 의존성(mcp · httpx · pypdfium2 · pdfplumber) + 서버 본체 |
 | `launch-macos.sh` | (Mac 만) 칩이 안 맞는 파일을 받았을 때 **어느 파일을 받아야 하는지** 알려 줍니다 |
-| `manifest.json` | 확장 정보와 도구 12개 목록 |
+| `manifest.json` | 확장 정보와 도구 14개 목록 |
 | `BUILD_INFO.txt` | 어느 커밋·언제·무엇으로 만들었는지 |
 
 ---
@@ -213,6 +213,24 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 
 </details>
 
+<details open>
+<summary><b>📑 보고서 부록 수치를 표·엑셀로, 연도별로 받고 싶을 때</b></summary>
+
+> - 현대모비스 지속가능경영보고서 부록 표 엑셀로 뽑아줘
+> - LG에너지솔루션 보고서에서 전력 사용량 표만 보여줘
+> - LG에너지솔루션 용수 사용량 연도별로 정리해줘
+> - 그중 예전 보고서와 값이 달라진 해가 있어?
+
+보고서 뒤쪽 데이터 장(ESG Data · Factbook)을 찾아 표를 **행 이름 × 열 머리(연도·경계)** 로 풀어 줍니다.
+값은 **후보**입니다 — 행마다 검사를 해서 통과한 행만 값을 싣고, 걸린 행은 원문 줄을 그대로 줍니다.
+「연도별로」라고 하면 최근 보고서 3건을 **물어본 그 자리에서** 이어 5~6년치를 만들고, 같은 해를 보고서마다
+다르게 적었으면 「수정됨」(✎)과 이전 값을 함께 줍니다. 엑셀로 받으면 한 줄에 값 하나, 값마다 보고서·쪽 번호가 붙습니다.
+
+<sub>30개사 보고서에서 옮긴 값 271개와 대조해 83% 가 검사를 통과한 칸에서 맞는 해로 나왔고, 통과했는데 해가 틀린 칸은
+0 이었습니다. 해마다 표 모양(국내/해외를 열로 싣는 해와 행으로 싣는 해)이 바뀌면 연도끼리 잇지 못하고 따로 나옵니다.</sub>
+
+</details>
+
 <details>
 <summary><b>🔍 여러 회사를 한 번에 훑고 싶을 때</b></summary>
 
@@ -259,14 +277,16 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 
 ---
 
-## 도구 (12개)
+## 도구 (14개)
 
 | 도구 | 무엇을 답하나 |
 |---|---|
 | `company` | 회사명/종목코드 → 포털 종목코드·ISIN. 모든 도구의 입구 |
 | `esg_ratings` | KCGS·MSCI·한국ESG연구소·S&P·서스틴베스트 ESG/E/S/G 등급(연도별) + KCGS 3년 추이 + **같은 기관 안의 분포**(이 등급 이상 몇 사·동점 몇 사) |
 | `sustainability_reports` | 지속가능경영보고서 목록 + 최신 한 건의 공시 원문 — 보고 대상 기간·목차·검증기관·회사 공개처·첨부 PDF 주소 |
-| `sustainability_report_text` | 지속가능경영보고서 **PDF 본문** — 키워드가 몇 쪽에 있는지·그 대목 발췌·쪽 전체 보기 |
+| `sustainability_report_text` | 지속가능경영보고서 **PDF 본문** — 키워드가 몇 쪽에 있는지·그 대목 발췌·쪽 전체 보기(범위 `"136-140"` 로 5쪽까지) |
+| `sustainability_report_data` | 지속가능경영보고서 **부록(데이터 장) 수치 표를 행·열로** — 행 이름·단위·열 머리(연도·경계)·각주·쪽 번호가 붙은 **후보**. 검사를 통과한 행만 값, 걸린 행은 원문 줄. `format="csv"` 는 엑셀용(한 줄에 값 하나) |
+| `esg_timeseries` | 회사 하나의 **연도별 ESG 수치** — 최근 지속가능경영보고서 여러 건(기본 3건)의 부록 표를 **물어볼 때** 받아 행끼리 잇는다(대개 5~6개 연도). 이름·상위 행·단위·경계가 모두 같은 행만 잇고, 같은 해를 보고서마다 다르게 적었으면 최신 값과 「수정됨」(✎)·이전 값을 함께 준다. GIR 명세서 배출량·에너지는 경계가 달라 따로 싣는다. `format="csv"` 는 엑셀용 |
 | `governance_indicators` | 기업지배구조 핵심지표 15개 O/X · 준수율 · 회사 비교 |
 | `governance_policies` | 지배구조 정책 채택 여부 74개 항목 |
 | `governance_report` | 기업지배구조보고서 **원문** — 세부원칙 28개 답변·서식 표·미준수 사유(왜 미준수인지) |
@@ -290,7 +310,7 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 | **지배구조는 두 층입니다** | KRX 집계(O/X 15개 · 정책 74개)와 **회사가 쓴 원문**. 「왜 미준수인가」는 원문에만 있고, 원문을 못 읽으면 「0개 준수」가 아니라 「읽지 못함」입니다 |
 | **온실가스는 값보다 범위가 먼저** | 명세서 · 인증배출량 · 국가 인벤토리는 기준이 다릅니다. 보고서와 벌어지면 「값이 다르다」가 아니라 **「범위가 다르다」**(경계 · Scope 2 방식 · NF₃ 포함 여부) |
 | **GIR 에 없으면 `no_data`, 0 이 아닙니다** | 배출권거래제·목표관리제 대상(연 1,170개 안팎)만 있습니다 |
-| **보고서 수치를 자동 추출하지 않습니다** | 2단 조판에서 표가 섞이는 것을 확인했습니다. `table=True` 는 실험적입니다(값 보존 97.4%, 의심 칸은 ⚠) |
+| **보고서 표 수치는 후보입니다** | 행마다 검사해 통과한 행만 값을 싣고, 걸린 행은 원문 줄로 줍니다. 같은 지표가 국내/글로벌·시장/지역기반으로 여러 번 나와도 하나로 고르지 않습니다 — 열 머리와 표 제목·각주를 보고 고르세요. 연도별로 이을 때는 이름·단위·경계가 모두 같은 행만 잇습니다 |
 | **PDF 검색은 공백을 무시합니다** | 원문이 자간을 벌려 조판합니다. 못 찾으면 「없다」가 아니라 「이 표기로 못 찾았다」입니다. 이미지 PDF 는 못 읽습니다(OCR 없음) |
 | **접수번호는 KIND 번호입니다** | DART 뷰어에 넣으면 다른 회사 공시가 열립니다 |
 
@@ -376,7 +396,7 @@ uv run python scripts/build_mcpb.py --target all --check   # 셋 다 + 만든 �
 | `windows-x64` | python.org 임베드 배포판 | 윈도우에서 |
 
 `--check` 는 만든 번들을 풀어서 **매니페스트에 적힌 명령 그대로** 띄우고 stdio 핸드셰이크로
-도구 12개가 응답하는지 확인합니다 — 「빌드는 됐는데 안 열린다」를 막습니다.
+도구 14개가 응답하는지 확인합니다 — 「빌드는 됐는데 안 열린다」를 막습니다.
 이 기계에서 못 돌리는 타깃은 건너뜁니다.
 
 ### 테스트
@@ -391,6 +411,7 @@ uv sync --dev && uv run pytest -q     # network 0
 
 - [**ChatGPT에 연결하기**](docs/connect-chatgpt.md) — Codex(CLI·IDE·앱)에 MCP 서버로 붙이는 법
 - [MCP 초안·로드맵](docs/mcp-draft.md) — 데이터 소스 지도, 엔드포인트 확인 내용, Phase 별 근거
+- [보고서 데이터 장 읽기 설계](docs/design-report-data-section.md) — 수치 표가 모인 뒤쪽 장을 찾아 정렬해 두는 기반(구현)과 표 행 후보·지표 찾기(초안)
 - [실측 노트](docs/anecdotes.md) — 두드려 보고 나서야 알게 된 것들(DART 링크가 다른 회사를 연다, 자간 공백이 PDF 에 박혀 있다, 벤치마크 1위 파서가 우리 수치표를 못 잡는다…)
 
 ### 스냅샷 갱신

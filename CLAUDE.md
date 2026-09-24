@@ -19,6 +19,7 @@ uv run python -m open_esg_korea                    # streamable-http :8000 → /
 uv run python -m open_esg_korea --transport stdio  # Claude Desktop 로컬 연결용
 python3 scripts/probe_krx.py 005930 2025           # 포털 응답 스키마가 바뀌었는지 (network)
 uv run python scripts/smoke_kind.py                # KIND 원문(지배구조·지속가능)이 아직 읽히는지 (network)
+uv run python scripts/eval_report_tables.py --pdf-dir /tmp/sr-pdf   # 부록 표 파서 정답집 대조 — 해가 틀린 칸 0 이어야 통과 (network)
 uv run python scripts/refresh_krx_gics.py          # GICS 산업분류 스냅샷 갱신 (월간 워크플로가 대신 함, 키 불필요)
 OPENDART_API_KEY=… uv run python scripts/refresh_listed_companies.py   # 상장사 명부 스냅샷 갱신 (월간 워크플로가 대신 함)
 python3 scripts/refresh_ghg_inventory.py --url '<포털 15049589 다운로드 URL>'  # 국가 인벤토리 스냅샷 (연 1회, 12월 공표 후)
@@ -31,7 +32,7 @@ open_esg_korea/
   server.py        # build_mcp() / build_app() / main()
   krx/codes.py     # 화면 code · 기관 슬롯 · 지표/정책 라벨 사전 — 한 벌만
   krx/client.py    # POST 하나(ESG99000001.jspx) + 간격 0.5s + 24h 메모리 캐시
-  krx/kind.py      # KIND 공시 원문 3단(뷰어→경로→본문). 접수번호로 원문 HTML(5~12MB), 키 없음
+  krx/kind.py      # KIND 공시 원문 3단(뷰어→경로→본문). 접수번호로 원문 HTML(5~12MB), 키 없음. 캐시 상한은 글자 수
   gir/codes.py     # GIR·ETRS 화면 주소·계획기간·부문 사전 — 한 벌만
   gir/client.py    # 명세서 HTML(한 해 한 장)·ETRS CSV(cp949) + 간격 0.5s + 24h 메모리 캐시
   dart/corp_codes.py # 상장사 명부 3겹: 실시간(키, 7일 메모리 캐시) → data/listed_companies.json 스냅샷 → 없음
@@ -43,10 +44,13 @@ open_esg_korea/
   services/governance_report.py          # 지배구조보고서 원문 파서(세부원칙·서식 표·미준수 사유) — 정규식, lxml 없음
   services/governance_report_payload.py  # 접수번호 고르기 → 원문 → 파서 → scope/find
   services/sustainability_notice.py      # 지속가능경영보고서 자율공시 서식(61979) 파서 — 목차·검증·첨부 PDF 주소
-  services/report_text.py                # 첨부 PDF → 페이지 텍스트 캐시 → 검색·발췌 (바이트는 안 남긴다)
+  services/report_text.py                # 첨부 PDF → 페이지 텍스트 + 데이터 장 정렬 텍스트 캐시 → 검색·발췌·쪽(범위) 보기 (바이트는 안 남긴다)
   services/ghg_disclosure.py             # 보고서 공시 수치를 **범위 축**(경계·Scope2 방식·NF3)과 함께 집는다
   services/rating_context.py             # 같은 기관 안의 등급 분포 — 세기만 하고 백분위·점수로 바꾸지 않는다
-  pdf/extract.py                         # PDF → 텍스트. 훑기 pypdfium2(0.3s/87쪽) · 표 정렬 pdfplumber(0.18s/쪽)
+  pdf/extract.py                         # PDF → 텍스트. 훑기 pypdfium2(0.3s/87쪽) · 표 정렬 pdfplumber(0.18s/쪽) · 데이터 장 찾기 · 깨진 글꼴 줄 높이 보정
+  pdf/tables.py                          # 글자 좌표 → 표 행 후보(행 × 열 머리) + 행마다 검사. 순수 함수
+  services/report_data.py                # 부록 표 도구 — 데이터 장(또는 page=) 표 · find 로 좁히기 · 집계
+  services/esg_timeseries.py             # 연도별 ESG 수치 — 최근 보고서 N건 부록 표를 물어볼 때 잇기(저장 없음) + GIR 따로
   services/company.py   # 회사 식별 — name_keys(법인격·음차·영문 브랜드·업종어 규칙) 한 곳
   services/aliases.py   # 규칙으로 못 잇는 통칭 사전(「현대차」→ 현대자동차). 값은 포털 약명
   tools/           # public MCP tool facade — 렌더링만 (자동 발견, register_tools)
@@ -54,6 +58,7 @@ open_esg_korea/
 tests/fixtures/    # 2026-09-07 실호출 응답 스냅샷
 docs/mcp-draft.md  # 설계 초안·로드맵
 docs/anecdotes.md  # 실측 노트 — 가정이 틀렸던 지점들. 새 소스를 붙이기 전에 읽는다
+docs/design-report-data-section.md  # 보고서 데이터 장 읽기 — L0 구현, L1~L3 초안(표 수치 원칙 변경 결정 전)
 ```
 
 ## Rules
@@ -82,8 +87,9 @@ docs/anecdotes.md  # 실측 노트 — 가정이 틀렸던 지점들. 새 소스
 7. **커밋/푸시는 사용자 명시 요청 시만.**
 8. **온실가스는 GIR 값 그대로.** GIR 과 보고서는 범위만 맞추면 사실상 같은 값이다(실측 오차 0.001~0.5%) —
    회사가 GIR 에 낸 명세서를 보고서에도 싣기 때문이다. 벌어지면 「값이 다르다」가 아니라 「범위가 다르다」로 답한다
-   (경계 · Scope 2 지역/시장기반 · NF3 포함 여부). 보고서에서 수치를 뽑아 필드로 만들지 않는다 — 한 보고서 안에
-   값이 여럿이라(SK하이닉스 2024년은 셋) 범위를 잃으면 그 숫자는 틀린 것이나 같다. 명세서(규제 기준, 직접+간접)·인증 배출량·국가 인벤토리(kt)는 기준이 다르므로 한 표에 섞지 않는다. GIR 에 없는 회사는 `no_data` 이지 0 이 아니다. GIR 법인명과 포털·DART 이름은 다르다(「에스케이하이닉스 주식회사」) — 대조는 `services/company.name_keys`(법인격 제거·음차·브랜드 별칭) 한 곳에서만 한다. 통칭(「현대차」)은 `services/aliases.py` 사전에만 넣고, 규칙으로 되는 것은 사전에 넣지 않는다.
+   (경계 · Scope 2 지역/시장기반 · NF3 포함 여부). 보고서에서 수치를 뽑아 **하나로 확정한 필드**(「보고서 값 = N」)로
+   만들지 않는다 — 한 보고서 안에 값이 여럿이라(SK하이닉스 2024년은 셋) 범위를 잃으면 그 숫자는 틀린 것이나 같다.
+   보고서 표의 수치는 **검사를 통과한 후보로만** 준다(규칙 14). 명세서(규제 기준, 직접+간접)·인증 배출량·국가 인벤토리(kt)는 기준이 다르므로 한 표에 섞지 않는다. GIR 에 없는 회사는 `no_data` 이지 0 이 아니다. GIR 법인명과 포털·DART 이름은 다르다(「에스케이하이닉스 주식회사」) — 대조는 `services/company.name_keys`(법인격 제거·음차·브랜드 별칭) 한 곳에서만 한다. 통칭(「현대차」)은 `services/aliases.py` 사전에만 넣고, 규칙으로 되는 것은 사전에 넣지 않는다.
 9. **DART 명부는 보조다.** 포털에서 못 찾았을 때만 부른다. 키가 없으면 동봉 스냅샷, 실시간이 실패해도 스냅샷으로 내려간다 — 보조 색인이 죽어도 유가증권 조회는 살아야 한다. 스냅샷은 손으로 고치지 않고 `scripts/refresh_listed_companies.py` 로만 갱신한다(정렬·메타가 diff 의 근거). 테스트는 늘 `dart_index` fixture 를 주입한다(이 머신 환경변수에 좌우되지 않게).
 10. **포털 목록은 한 해 늦다 — KIND 로 메운다.** 포털의 지속가능경영보고서 목록은 발행년도 선택지가
    전년까지다(2026-09-08 실측: 2025 까지). 같은 날 KIND 에는 2026년 자율공시가 436건 있었다. 빠진 해가
@@ -98,8 +104,12 @@ docs/anecdotes.md  # 실측 노트 — 가정이 틀렸던 지점들. 새 소스
    갈음해 세부원칙이 없다(`no_data`). 서식 표는 `aclass="krx-cg_…"` 인 것만이다 — 자유편집 표는 회사마다 열이 달라 싣지 않는다.
    접수번호는 KIND 번호다. DART 뷰어(`rcpNo=`)에 넣으면 다른 회사 공시가 열린다(실측 2026-09-07) — DART 링크를 만들지 않는다.
 12. **PDF 는 두 엔진, 바이트는 안 남긴다.** 훑기는 pypdfium2(87쪽 0.3초), 표 정렬은 pdfplumber(0.18초/쪽).
-   pypdf 는 숫자를 깨뜨리고(`567 ,056` 56건) PyMuPDF 는 AGPL 이라 안 쓴다. 캐시에 남기는 것은 **페이지 텍스트뿐**이고
-   원본 바이트(4~80MB)는 버린다 — 「찾기→그 쪽 보기」를 위해 25MB 이하 한 건만 10분 들고 있는다.
+   pypdf 는 숫자를 깨뜨리고(`567 ,056` 56건) PyMuPDF 는 AGPL 이라 안 쓴다. 캐시에 남기는 것은 **텍스트뿐**이고
+   원본 바이트(4~80MB)는 버린다. 수치 표가 모인 **데이터 장**(`extract.data_section`)은 처음 받을 때 정렬 텍스트로
+   떠 둔다 — 원본은 25MB 이하 한 건만 10분 들고 있어서 동시 호출이 서로 밀어내기 때문이다(실측 노트 19).
+   그 밖의 쪽은 원본이 밀렸으면 다시 받아 정렬하고(25MB 이하), 평문으로 줄 때는 **진짜 이유**를 말한다.
+   PDF 해석은 **스레드에서만** 한다(`asyncio.to_thread`) — 루프에서 돌리면 해석하는 동안 모든 요청이 멈춘다.
+   pypdfium2 는 한 번에 하나만 돈다: PDFium 은 스레드 안전하지 않다.
    검색은 반드시 공백을 지우고 한다: 원문 자간 때문에 그냥 찾으면 「온실가스배출량」이 0쪽으로 나온다(실제 16쪽).
    표 격자(`table=True`)는 **기본값이 아니다.** 값 보존이 97.4%(정렬 텍스트는 100%)이고 좌우 2단 쪽에서
    숫자가 갈린다 — 격자 칸이 평문 토큰에 없으면 의심 칸으로 표시해 돌려준다. 조용히 틀린 값을 주지 않는다.
@@ -107,11 +117,19 @@ docs/anecdotes.md  # 실측 노트 — 가정이 틀렸던 지점들. 새 소스
    (`codes.UPJONG_CODES`) · GIR 지정업종은 서로 다른 분류다 — 삼성전자는 각각 「하드웨어및IT장비」·「전기·전자」·
    「반도체 제조업」이다. GICS 는 지수 포털(index.krx.co.kr)에서 OTP·쿠키로 받아야 해서 스냅샷으로 동봉하고
    `scripts/refresh_krx_gics.py` 로만 갱신한다(월간 워크플로 `refresh-krx-gics`, 휴장일이면 최대 7일 거슬러 올라간다). 스냅샷에 없는 종목은 「분류 없음」이지 「상장 아님」이 아니다.
+14. **보고서 표 수치는 후보다(2026-09-24 원칙 변경).** `sustainability_report_data` 는 부록 표를 행 × 열 머리(연도·경계)로
+   풀되, 행마다 검사(열 머리 완결 · 한 해 아래 여러 열을 가를 머리 · 열 수 · 붙은 숫자 · 행 이름 안의 옆 표 값 · 행 이름 유무)를
+   하고 **모두 통과한 행만 값을 싣는다.** 걸린 행은 값을 비우고 그 줄의 원문을 준다. 같은 지표의 여러 값(국내/글로벌·시장/지역기반·
+   회사별)은 고르지 않고 전부 준다. 연도별로 잇는 `esg_timeseries` 는 **물어볼 때 만든다**(저장하지 않는다 — 메모리 캐시뿐)
+   — 이름·상위 행·단위·경계가 모두 같은 행만 잇고, 한 보고서 안에 같은 이름이 여럿이면 잇지 않는다. 파서를 고칠 때는
+   `tests/fixtures/sr_words_*.json`(실제 보고서 9쪽의 글자 좌표) 회귀와
+   `scripts/eval_report_tables.py`(30개사 정답집 대조 — 검사를 통과했는데 해가 틀린 칸이 하나라도 있으면 실패)를 함께 돌린다.
+   무작위 표본을 원문과 눈으로 대조하는 것도 같이 한다 — 만들면서 나온 조용한 오답 넷은 하나도 정답집 대조에 안 걸렸다(실측 노트 21).
 
 ## Out of Scope (현재)
 
-- 보고서 **표의 수치 자동 추출** — 본문 텍스트는 `sustainability_report_text` 가 읽지만, 표 값을 (연도·부문)에
-  대응시키지 않는다. 2단 조판에서 두 표가 섞이는 것을 실측했다 — 틀린 숫자를 주느니 납작한 원문을 주고 넘긴다
+- 보고서 표 수치를 **하나로 확정한 필드** — 표는 후보(검사 통과 행만 값)로 준다(규칙 14). 어느 값을 쓸지(경계·Scope 2
+  기준) 고르는 것은 읽는 쪽이다. 격자(`table=True`)는 실험적 보기로 남는다
 - 스캔·이미지 PDF — OCR 하지 않는다. 「글자가 없다」를 「내용이 없다」로 답하지 않는다
 - 온실가스 Scope 1·2·3 분리 수치 — GIR 는 합산 규제치만 준다. 보고서 원문(Phase 2 후반)에서 읽어야 한다
 - 명세서 대상이 아닌 소규모 배출 회사의 배출량 — 공개 소스가 없다

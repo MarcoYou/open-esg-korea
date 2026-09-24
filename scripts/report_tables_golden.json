@@ -1,0 +1,2445 @@
+{
+ "_note": "시가총액 상위 30개사 지속가능경영보고서(2026년 공시, 2025 실적)에서 지표 5개(온실가스 Scope1+2·에너지·용수·폐기물·여성 임직원 비율)를 옮긴 값의 숫자 토큰. 2026-09-22 AI 작업자 5개가 보고서 쪽을 읽고 옮겼다 — 사람이 옮긴 정답이 아니며, 일부는 표 밖(본문 요약·검증의견서) 값이거나 작업자가 더한 합산값이라 표에서 못 찾는 것이 맞다. 파서 회귀용: 「검사를 통과했는데 해가 틀린 칸」이 0 인지를 본다.",
+ "collected": "2026-09-22",
+ "items": [
+  {
+   "company": "삼성전자",
+   "code": "005930",
+   "metric": "ghg_s12",
+   "page": 69,
+   "year": "2025",
+   "value": "14,157",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000871/20260623000652/Samsung_Electronics_Sustainability_Report_2026_KOR_f.pdf"
+  },
+  {
+   "company": "삼성전자",
+   "code": "005930",
+   "metric": "ghg_s12",
+   "page": 69,
+   "year": "2025",
+   "value": "4,646",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000871/20260623000652/Samsung_Electronics_Sustainability_Report_2026_KOR_f.pdf"
+  },
+  {
+   "company": "삼성전자",
+   "code": "005930",
+   "metric": "ghg_s12",
+   "page": 69,
+   "year": "2025",
+   "value": "9,511",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000871/20260623000652/Samsung_Electronics_Sustainability_Report_2026_KOR_f.pdf"
+  },
+  {
+   "company": "삼성전자",
+   "code": "005930",
+   "metric": "energy",
+   "page": 70,
+   "year": "2025",
+   "value": "40,249",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000871/20260623000652/Samsung_Electronics_Sustainability_Report_2026_KOR_f.pdf"
+  },
+  {
+   "company": "삼성전자",
+   "code": "005930",
+   "metric": "water",
+   "page": 71,
+   "year": "2025",
+   "value": "197,720",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000871/20260623000652/Samsung_Electronics_Sustainability_Report_2026_KOR_f.pdf"
+  },
+  {
+   "company": "삼성전자",
+   "code": "005930",
+   "metric": "waste",
+   "page": 71,
+   "year": "2025",
+   "value": "1,420,912",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000871/20260623000652/Samsung_Electronics_Sustainability_Report_2026_KOR_f.pdf"
+  },
+  {
+   "company": "삼성전자",
+   "code": "005930",
+   "metric": "female_ratio",
+   "page": 66,
+   "year": "2025",
+   "value": "33.0",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000871/20260623000652/Samsung_Electronics_Sustainability_Report_2026_KOR_f.pdf"
+  },
+  {
+   "company": "SK하이닉스",
+   "code": "000660",
+   "metric": "ghg_s12",
+   "page": 102,
+   "year": "2025",
+   "value": "5,555,285",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000489/20260625001146/SK%ED%95%98%EC%9D%B4%EB%8B%89%EC%8A%A4_%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_2026_KOR.pdf"
+  },
+  {
+   "company": "SK하이닉스",
+   "code": "000660",
+   "metric": "energy",
+   "page": 103,
+   "year": "2025",
+   "value": "109,404,663",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000489/20260625001146/SK%ED%95%98%EC%9D%B4%EB%8B%89%EC%8A%A4_%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_2026_KOR.pdf"
+  },
+  {
+   "company": "SK하이닉스",
+   "code": "000660",
+   "metric": "water",
+   "page": 105,
+   "year": "2025",
+   "value": "117,015",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000489/20260625001146/SK%ED%95%98%EC%9D%B4%EB%8B%89%EC%8A%A4_%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_2026_KOR.pdf"
+  },
+  {
+   "company": "SK하이닉스",
+   "code": "000660",
+   "metric": "waste",
+   "page": 107,
+   "year": "2025",
+   "value": "615,779",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000489/20260625001146/SK%ED%95%98%EC%9D%B4%EB%8B%89%EC%8A%A4_%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_2026_KOR.pdf"
+  },
+  {
+   "company": "SK하이닉스",
+   "code": "000660",
+   "metric": "female_ratio",
+   "page": 110,
+   "year": "2025",
+   "value": "16,118",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000489/20260625001146/SK%ED%95%98%EC%9D%B4%EB%8B%89%EC%8A%A4_%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_2026_KOR.pdf"
+  },
+  {
+   "company": "SK하이닉스",
+   "code": "000660",
+   "metric": "female_ratio",
+   "page": 110,
+   "year": "2025",
+   "value": "46,209",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000489/20260625001146/SK%ED%95%98%EC%9D%B4%EB%8B%89%EC%8A%A4_%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_2026_KOR.pdf"
+  },
+  {
+   "company": "SK스퀘어",
+   "code": "402340",
+   "metric": "ghg_s12",
+   "page": 98,
+   "year": "2025",
+   "value": "140.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000779/20260630001564/2025%20SK%20square%20Sustainability%20Report_KR.pdf"
+  },
+  {
+   "company": "SK스퀘어",
+   "code": "402340",
+   "metric": "ghg_s12",
+   "page": 98,
+   "year": "2025",
+   "value": "169.1",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000779/20260630001564/2025%20SK%20square%20Sustainability%20Report_KR.pdf"
+  },
+  {
+   "company": "SK스퀘어",
+   "code": "402340",
+   "metric": "energy",
+   "page": 98,
+   "year": "2025",
+   "value": "12,338.2",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000779/20260630001564/2025%20SK%20square%20Sustainability%20Report_KR.pdf"
+  },
+  {
+   "company": "SK스퀘어",
+   "code": "402340",
+   "metric": "water",
+   "page": 98,
+   "year": "2025",
+   "value": "4,021.3",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000779/20260630001564/2025%20SK%20square%20Sustainability%20Report_KR.pdf"
+  },
+  {
+   "company": "SK스퀘어",
+   "code": "402340",
+   "metric": "waste",
+   "page": 99,
+   "year": "2025",
+   "value": "12.2",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000779/20260630001564/2025%20SK%20square%20Sustainability%20Report_KR.pdf"
+  },
+  {
+   "company": "SK스퀘어",
+   "code": "402340",
+   "metric": "female_ratio",
+   "page": 101,
+   "year": "2025",
+   "value": "17.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000779/20260630001564/2025%20SK%20square%20Sustainability%20Report_KR.pdf"
+  },
+  {
+   "company": "삼성전기",
+   "code": "009150",
+   "metric": "ghg_s12",
+   "page": 34,
+   "year": "2025",
+   "value": "1,396,472",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000419/20260629002487/%EC%82%BC%EC%84%B1%EC%A0%84%EA%B8%B0%202025-2026%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성전기",
+   "code": "009150",
+   "metric": "energy",
+   "page": 125,
+   "year": "2025",
+   "value": "3,227,264",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000419/20260629002487/%EC%82%BC%EC%84%B1%EC%A0%84%EA%B8%B0%202025-2026%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성전기",
+   "code": "009150",
+   "metric": "water",
+   "page": 126,
+   "year": "2025",
+   "value": "23,975,054",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000419/20260629002487/%EC%82%BC%EC%84%B1%EC%A0%84%EA%B8%B0%202025-2026%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성전기",
+   "code": "009150",
+   "metric": "waste",
+   "page": 128,
+   "year": "2025",
+   "value": "147,292",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000419/20260629002487/%EC%82%BC%EC%84%B1%EC%A0%84%EA%B8%B0%202025-2026%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성전기",
+   "code": "009150",
+   "metric": "female_ratio",
+   "page": 129,
+   "year": "2025",
+   "value": "15,163",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000419/20260629002487/%EC%82%BC%EC%84%B1%EC%A0%84%EA%B8%B0%202025-2026%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성전기",
+   "code": "009150",
+   "metric": "female_ratio",
+   "page": 129,
+   "year": "2025",
+   "value": "36,500",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000419/20260629002487/%EC%82%BC%EC%84%B1%EC%A0%84%EA%B8%B0%202025-2026%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성전기",
+   "code": "009150",
+   "metric": "female_ratio",
+   "page": 129,
+   "year": "2025",
+   "value": "41.5",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000419/20260629002487/%EC%82%BC%EC%84%B1%EC%A0%84%EA%B8%B0%202025-2026%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "ghg_s12",
+   "page": 141,
+   "year": "2025",
+   "value": "1,412,029",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "energy",
+   "page": 140,
+   "year": "2025",
+   "value": "47,574",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "energy",
+   "page": 140,
+   "year": "2025",
+   "value": "6,676,790",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "water",
+   "page": 142,
+   "year": "2025",
+   "value": "12,236,348",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "water",
+   "page": 142,
+   "year": "2025",
+   "value": "14,389,217",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "water",
+   "page": 142,
+   "year": "2025",
+   "value": "2,152,869",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "waste",
+   "page": 143,
+   "year": "2025",
+   "value": "107,399",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "waste",
+   "page": 143,
+   "year": "2025",
+   "value": "19,620",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "waste",
+   "page": 143,
+   "year": "2025",
+   "value": "87,779",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "female_ratio",
+   "page": 146,
+   "year": "2025",
+   "value": "32,718",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "LG에너지솔루션",
+   "code": "373220",
+   "metric": "female_ratio",
+   "page": 146,
+   "year": "2025",
+   "value": "7,965",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/29/000753/20260629001569/LG%20Energy%20Solution_2025_ESG%20Report_KR.pdf"
+  },
+  {
+   "company": "현대자동차",
+   "code": "005380",
+   "metric": "ghg_s12",
+   "page": 136,
+   "year": "2025",
+   "value": "1,190,442",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000715/20260629002645/2026%20%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "현대자동차",
+   "code": "005380",
+   "metric": "ghg_s12",
+   "page": 136,
+   "year": "2025",
+   "value": "1,911,084",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000715/20260629002645/2026%20%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "현대자동차",
+   "code": "005380",
+   "metric": "ghg_s12",
+   "page": 136,
+   "year": "2025",
+   "value": "720,642",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000715/20260629002645/2026%20%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "현대자동차",
+   "code": "005380",
+   "metric": "energy",
+   "page": 136,
+   "year": "2025",
+   "value": "7,666,194",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000715/20260629002645/2026%20%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "현대자동차",
+   "code": "005380",
+   "metric": "water",
+   "page": 138,
+   "year": "2025",
+   "value": "20,603,304",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000715/20260629002645/2026%20%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "현대자동차",
+   "code": "005380",
+   "metric": "waste",
+   "page": 137,
+   "year": "2025",
+   "value": "927,556",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000715/20260629002645/2026%20%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "현대자동차",
+   "code": "005380",
+   "metric": "female_ratio",
+   "page": 142,
+   "year": "2025",
+   "value": "11.8",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000715/20260629002645/2026%20%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "현대자동차",
+   "code": "005380",
+   "metric": "female_ratio",
+   "page": 142,
+   "year": "2025",
+   "value": "123,360",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000715/20260629002645/2026%20%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "현대자동차",
+   "code": "005380",
+   "metric": "female_ratio",
+   "page": 142,
+   "year": "2025",
+   "value": "14,605",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000715/20260629002645/2026%20%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성바이오로직스",
+   "code": "207940",
+   "metric": "ghg_s12",
+   "page": 65,
+   "year": "2025",
+   "value": "197,922",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/01/001853/20260601002950/%EC%82%BC%EC%84%B1%EB%B0%94%EC%9D%B4%EC%98%A4%EB%A1%9C%EC%A7%81%EC%8A%A4%202026%20ESG%20Report.pdf"
+  },
+  {
+   "company": "삼성바이오로직스",
+   "code": "207940",
+   "metric": "ghg_s12",
+   "page": 65,
+   "year": "2025",
+   "value": "77,502",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/01/001853/20260601002950/%EC%82%BC%EC%84%B1%EB%B0%94%EC%9D%B4%EC%98%A4%EB%A1%9C%EC%A7%81%EC%8A%A4%202026%20ESG%20Report.pdf"
+  },
+  {
+   "company": "삼성바이오로직스",
+   "code": "207940",
+   "metric": "energy",
+   "page": 8,
+   "year": "2025",
+   "value": "1,062,142",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/01/001853/20260601002950/%EC%82%BC%EC%84%B1%EB%B0%94%EC%9D%B4%EC%98%A4%EB%A1%9C%EC%A7%81%EC%8A%A4%202026%20ESG%20Report.pdf"
+  },
+  {
+   "company": "삼성바이오로직스",
+   "code": "207940",
+   "metric": "water",
+   "page": 8,
+   "year": "2025",
+   "value": "1,487,440",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/01/001853/20260601002950/%EC%82%BC%EC%84%B1%EB%B0%94%EC%9D%B4%EC%98%A4%EB%A1%9C%EC%A7%81%EC%8A%A4%202026%20ESG%20Report.pdf"
+  },
+  {
+   "company": "삼성바이오로직스",
+   "code": "207940",
+   "metric": "female_ratio",
+   "page": 8,
+   "year": "2025",
+   "value": "2,429",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/01/001853/20260601002950/%EC%82%BC%EC%84%B1%EB%B0%94%EC%9D%B4%EC%98%A4%EB%A1%9C%EC%A7%81%EC%8A%A4%202026%20ESG%20Report.pdf"
+  },
+  {
+   "company": "삼성바이오로직스",
+   "code": "207940",
+   "metric": "female_ratio",
+   "page": 8,
+   "year": "2025",
+   "value": "5,455",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/01/001853/20260601002950/%EC%82%BC%EC%84%B1%EB%B0%94%EC%9D%B4%EC%98%A4%EB%A1%9C%EC%A7%81%EC%8A%A4%202026%20ESG%20Report.pdf"
+  },
+  {
+   "company": "KB금융",
+   "code": "105560",
+   "metric": "ghg_s12",
+   "page": 46,
+   "year": "2025",
+   "value": "126,673",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000958/20260630000815/2025%20KB%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_KSSB%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%20%EA%B3%B5%EC%8B%9C%EA%B8%B0%EC%A4%80%20%EC%A0%81%EC%9A%A9.pdf"
+  },
+  {
+   "company": "KB금융",
+   "code": "105560",
+   "metric": "ghg_s12",
+   "page": 46,
+   "year": "2025",
+   "value": "148,926",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000958/20260630000815/2025%20KB%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_KSSB%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%20%EA%B3%B5%EC%8B%9C%EA%B8%B0%EC%A4%80%20%EC%A0%81%EC%9A%A9.pdf"
+  },
+  {
+   "company": "KB금융",
+   "code": "105560",
+   "metric": "ghg_s12",
+   "page": 46,
+   "year": "2025",
+   "value": "22,253",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000958/20260630000815/2025%20KB%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_KSSB%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%20%EA%B3%B5%EC%8B%9C%EA%B8%B0%EC%A4%80%20%EC%A0%81%EC%9A%A9.pdf"
+  },
+  {
+   "company": "KB금융",
+   "code": "105560",
+   "metric": "energy",
+   "page": 109,
+   "year": "2025",
+   "value": "2,689.020",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000958/20260630000815/2025%20KB%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_KSSB%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%20%EA%B3%B5%EC%8B%9C%EA%B8%B0%EC%A4%80%20%EC%A0%81%EC%9A%A9.pdf"
+  },
+  {
+   "company": "삼성생명",
+   "code": "032830",
+   "metric": "ghg_s12",
+   "page": 27,
+   "year": "2025",
+   "value": "15,071",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001374/20260630001744/%EC%82%BC%EC%84%B1%EC%83%9D%EB%AA%85%202026%20ESG%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성생명",
+   "code": "032830",
+   "metric": "ghg_s12",
+   "page": 27,
+   "year": "2025",
+   "value": "41,342",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001374/20260630001744/%EC%82%BC%EC%84%B1%EC%83%9D%EB%AA%85%202026%20ESG%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성생명",
+   "code": "032830",
+   "metric": "ghg_s12",
+   "page": 27,
+   "year": "2025",
+   "value": "56,410",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001374/20260630001744/%EC%82%BC%EC%84%B1%EC%83%9D%EB%AA%85%202026%20ESG%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성생명",
+   "code": "032830",
+   "metric": "water",
+   "page": 132,
+   "year": "2025",
+   "value": "410,293",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001374/20260630001744/%EC%82%BC%EC%84%B1%EC%83%9D%EB%AA%85%202026%20ESG%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성생명",
+   "code": "032830",
+   "metric": "female_ratio",
+   "page": 133,
+   "year": "2025",
+   "value": "2,414",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001374/20260630001744/%EC%82%BC%EC%84%B1%EC%83%9D%EB%AA%85%202026%20ESG%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성생명",
+   "code": "032830",
+   "metric": "female_ratio",
+   "page": 133,
+   "year": "2025",
+   "value": "5,078",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001374/20260630001744/%EC%82%BC%EC%84%B1%EC%83%9D%EB%AA%85%202026%20ESG%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "ghg_s12",
+   "page": 88,
+   "year": "2025",
+   "value": "121,745",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "ghg_s12",
+   "page": 88,
+   "year": "2025",
+   "value": "40,333",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "ghg_s12",
+   "page": 88,
+   "year": "2025",
+   "value": "81,412",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "energy",
+   "page": 89,
+   "year": "2025",
+   "value": "2,379",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "water",
+   "page": 90,
+   "year": "2025",
+   "value": "2,094,334",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "waste",
+   "page": 91,
+   "year": "2025",
+   "value": "2,705",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "waste",
+   "page": 91,
+   "year": "2025",
+   "value": "4,525",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "waste",
+   "page": 91,
+   "year": "2025",
+   "value": "7,334",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "female_ratio",
+   "page": 92,
+   "year": "2025",
+   "value": "8,172",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "한화에어로스페이스",
+   "code": "012450",
+   "metric": "female_ratio",
+   "page": 92,
+   "year": "2025",
+   "value": "9.5",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000196/20260629000541/%ED%95%9C%ED%99%94%EC%97%90%EC%96%B4%EB%A1%9C%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "ghg_s12",
+   "page": 87,
+   "year": "2025",
+   "value": "118,597",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "ghg_s12",
+   "page": 87,
+   "year": "2025",
+   "value": "129,665",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "ghg_s12",
+   "page": 87,
+   "year": "2025",
+   "value": "22,796",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "ghg_s12",
+   "page": 87,
+   "year": "2025",
+   "value": "225,466",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "ghg_s12",
+   "page": 87,
+   "year": "2025",
+   "value": "248,262",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "energy",
+   "page": 87,
+   "year": "2025",
+   "value": "832,628",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "water",
+   "page": 88,
+   "year": "2025",
+   "value": "1,684,391",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "waste",
+   "page": 89,
+   "year": "2025",
+   "value": "4,345",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "waste",
+   "page": 89,
+   "year": "2025",
+   "value": "61,746",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "waste",
+   "page": 89,
+   "year": "2025",
+   "value": "66,091",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "female_ratio",
+   "page": 91,
+   "year": "2025",
+   "value": "6,233",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "두산에너빌리티",
+   "code": "034020",
+   "metric": "female_ratio",
+   "page": 91,
+   "year": "2025",
+   "value": "7.5",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000070/20260630000106/2026_%EB%91%90%EC%82%B0%EC%97%90%EB%84%88%EB%B9%8C%EB%A6%AC%ED%8B%B0%20%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "신한지주",
+   "code": "055550",
+   "metric": "ghg_s12",
+   "page": 11,
+   "year": "2025",
+   "value": "12,390",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001439/20260630002292/SFG_2025ESG_Data_KOR.pdf"
+  },
+  {
+   "company": "신한지주",
+   "code": "055550",
+   "metric": "ghg_s12",
+   "page": 11,
+   "year": "2025",
+   "value": "51,772",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001439/20260630002292/SFG_2025ESG_Data_KOR.pdf"
+  },
+  {
+   "company": "신한지주",
+   "code": "055550",
+   "metric": "ghg_s12",
+   "page": 11,
+   "year": "2025",
+   "value": "64,154",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001439/20260630002292/SFG_2025ESG_Data_KOR.pdf"
+  },
+  {
+   "company": "신한지주",
+   "code": "055550",
+   "metric": "energy",
+   "page": 14,
+   "year": "2025",
+   "value": "1,829.3",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001439/20260630002292/SFG_2025ESG_Data_KOR.pdf"
+  },
+  {
+   "company": "신한지주",
+   "code": "055550",
+   "metric": "water",
+   "page": 15,
+   "year": "2025",
+   "value": "428,921",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001439/20260630002292/SFG_2025ESG_Data_KOR.pdf"
+  },
+  {
+   "company": "신한지주",
+   "code": "055550",
+   "metric": "female_ratio",
+   "page": 19,
+   "year": "2025",
+   "value": "10,300",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001439/20260630002292/SFG_2025ESG_Data_KOR.pdf"
+  },
+  {
+   "company": "신한지주",
+   "code": "055550",
+   "metric": "female_ratio",
+   "page": 19,
+   "year": "2025",
+   "value": "22,711",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/001439/20260630002292/SFG_2025ESG_Data_KOR.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "ghg_s12",
+   "page": 158,
+   "year": "2025",
+   "value": "354,784",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "ghg_s12",
+   "page": 158,
+   "year": "2025",
+   "value": "471,676",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "ghg_s12",
+   "page": 158,
+   "year": "2025",
+   "value": "826,449",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "energy",
+   "page": 160,
+   "year": "2025",
+   "value": "14,704",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "water",
+   "page": 161,
+   "year": "2025",
+   "value": "4,943,705",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "waste",
+   "page": 162,
+   "year": "2025",
+   "value": "12,867",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "waste",
+   "page": 162,
+   "year": "2025",
+   "value": "212,601",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "waste",
+   "page": 162,
+   "year": "2025",
+   "value": "306,510",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "waste",
+   "page": 162,
+   "year": "2025",
+   "value": "81,042",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "female_ratio",
+   "page": 163,
+   "year": "2025",
+   "value": "18,880",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "HD현대중공업",
+   "code": "329180",
+   "metric": "female_ratio",
+   "page": 163,
+   "year": "2025",
+   "value": "18,885",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000399/20260818000648/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28%EC%A0%95%EC%A0%95%29.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "ghg_s12",
+   "page": 130,
+   "year": "2025",
+   "value": "1,096.4",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "ghg_s12",
+   "page": 130,
+   "year": "2025",
+   "value": "398.5",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "ghg_s12",
+   "page": 130,
+   "year": "2025",
+   "value": "697.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "energy",
+   "page": 131,
+   "year": "2025",
+   "value": "21,983",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "energy",
+   "page": 131,
+   "year": "2025",
+   "value": "4,328,433",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "water",
+   "page": 133,
+   "year": "2025",
+   "value": "7,094,878",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "waste",
+   "page": 132,
+   "year": "2025",
+   "value": "165,049.5",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "waste",
+   "page": 132,
+   "year": "2025",
+   "value": "174,650.4",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "waste",
+   "page": 132,
+   "year": "2025",
+   "value": "9,600.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "female_ratio",
+   "page": 136,
+   "year": "2025",
+   "value": "1,902",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "female_ratio",
+   "page": 136,
+   "year": "2025",
+   "value": "36,566",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "기아",
+   "code": "000270",
+   "metric": "female_ratio",
+   "page": 136,
+   "year": "2025",
+   "value": "5.2",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/01/000677/20260701000003/2026%20%EA%B8%B0%EC%95%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "ghg_s12",
+   "page": 75,
+   "year": "2025",
+   "value": "1,048,485",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "ghg_s12",
+   "page": 75,
+   "year": "2025",
+   "value": "242,521",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "ghg_s12",
+   "page": 75,
+   "year": "2025",
+   "value": "805,964",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "energy",
+   "page": 75,
+   "year": "2025",
+   "value": "28,991",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "water",
+   "page": 76,
+   "year": "2025",
+   "value": "6,455,082",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "waste",
+   "page": 76,
+   "year": "2025",
+   "value": "100,619",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "waste",
+   "page": 76,
+   "year": "2025",
+   "value": "41,813",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "waste",
+   "page": 76,
+   "year": "2025",
+   "value": "58,806",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "female_ratio",
+   "page": 80,
+   "year": "2025",
+   "value": "26,098",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "삼성SDI",
+   "code": "006400",
+   "metric": "female_ratio",
+   "page": 80,
+   "year": "2025",
+   "value": "6,581",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000097/20260625001486/Samsung%20SDI_Sustainability%20Report_2026_Korean.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "ghg_s12",
+   "page": 152,
+   "year": "2025",
+   "value": "19,608,833.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "ghg_s12",
+   "page": 152,
+   "year": "2025",
+   "value": "3,550,962.8",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "energy",
+   "page": 152,
+   "year": "2025",
+   "value": "111,815,703.8",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "energy",
+   "page": 152,
+   "year": "2025",
+   "value": "112,139,892.6",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "energy",
+   "page": 152,
+   "year": "2025",
+   "value": "324,188.8",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "water",
+   "page": 153,
+   "year": "2025",
+   "value": "65,016,636.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "waste",
+   "page": 154,
+   "year": "2025",
+   "value": "3,085.6",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "waste",
+   "page": 154,
+   "year": "2025",
+   "value": "34,034.1",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "waste",
+   "page": 154,
+   "year": "2025",
+   "value": "66,738.7",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "waste",
+   "page": 154,
+   "year": "2025",
+   "value": "7,853.0",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "female_ratio",
+   "page": 156,
+   "year": "2025",
+   "value": "26,199",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "SK",
+   "code": "034730",
+   "metric": "female_ratio",
+   "page": 156,
+   "year": "2025",
+   "value": "6,267",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/28/000648/20260727000201/2026%20SK%EC%A3%BC%EC%8B%9D%ED%9A%8C%EC%82%AC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "ghg_s12",
+   "page": 196,
+   "year": "2025",
+   "value": "62,615",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "ghg_s12",
+   "page": 196,
+   "year": "2025",
+   "value": "69,897",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "ghg_s12",
+   "page": 196,
+   "year": "2025",
+   "value": "7,281",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "energy",
+   "page": 196,
+   "year": "2025",
+   "value": "1,244",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "energy",
+   "page": 196,
+   "year": "2025",
+   "value": "1,437",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "water",
+   "page": 197,
+   "year": "2025",
+   "value": "207,428",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "water",
+   "page": 197,
+   "year": "2025",
+   "value": "322,487",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "water",
+   "page": 197,
+   "year": "2025",
+   "value": "48,372",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "water",
+   "page": 197,
+   "year": "2025",
+   "value": "66,687",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "female_ratio",
+   "page": 198,
+   "year": "2025",
+   "value": "18,524",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "하나금융지주",
+   "code": "086790",
+   "metric": "female_ratio",
+   "page": 198,
+   "year": "2025",
+   "value": "55.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000995/20260630000668/%ED%95%98%EB%82%98%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%202025%EB%85%84%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "ghg_s12",
+   "page": 135,
+   "year": "2025",
+   "value": "305,096",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "ghg_s12",
+   "page": 135,
+   "year": "2025",
+   "value": "358,358",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "ghg_s12",
+   "page": 135,
+   "year": "2025",
+   "value": "53,263",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "energy",
+   "page": 137,
+   "year": "2025",
+   "value": "1,212,101",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "energy",
+   "page": 137,
+   "year": "2025",
+   "value": "7,032",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "water",
+   "page": 144,
+   "year": "2025",
+   "value": "1,914,850",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "waste",
+   "page": 147,
+   "year": "2025",
+   "value": "66,539",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "waste",
+   "page": 147,
+   "year": "2025",
+   "value": "75,905",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "waste",
+   "page": 147,
+   "year": "2025",
+   "value": "9,366",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "female_ratio",
+   "page": 153,
+   "year": "2025",
+   "value": "10,816",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "female_ratio",
+   "page": 153,
+   "year": "2025",
+   "value": "20.8",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "현대모비스",
+   "code": "012330",
+   "metric": "female_ratio",
+   "page": 153,
+   "year": "2025",
+   "value": "51,899",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000643/20260616000432/%ED%98%84%EB%8C%80%EB%AA%A8%EB%B9%84%EC%8A%A4%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EC%84%B1%EB%B3%B4%EA%B3%A0%EC%84%9C%202026.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "ghg_s12",
+   "page": 116,
+   "year": "2025",
+   "value": "131,613",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "ghg_s12",
+   "page": 116,
+   "year": "2025",
+   "value": "222,281",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "ghg_s12",
+   "page": 116,
+   "year": "2025",
+   "value": "412,172",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "ghg_s12",
+   "page": 116,
+   "year": "2025",
+   "value": "75,462",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "ghg_s12",
+   "page": 116,
+   "year": "2025",
+   "value": "841,528",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "energy",
+   "page": 116,
+   "year": "2025",
+   "value": "1,864,137",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "energy",
+   "page": 116,
+   "year": "2025",
+   "value": "6,711",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "water",
+   "page": 119,
+   "year": "2025",
+   "value": "2,169",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "water",
+   "page": 119,
+   "year": "2025",
+   "value": "4,995",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "water",
+   "page": 119,
+   "year": "2025",
+   "value": "7,164",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "waste",
+   "page": 117,
+   "year": "2025",
+   "value": "158,808",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "waste",
+   "page": 117,
+   "year": "2025",
+   "value": "187,457",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "waste",
+   "page": 117,
+   "year": "2025",
+   "value": "28,649",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "female_ratio",
+   "page": 123,
+   "year": "2025",
+   "value": "16,466",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "female_ratio",
+   "page": 123,
+   "year": "2025",
+   "value": "22.2",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "LG전자",
+   "code": "066570",
+   "metric": "female_ratio",
+   "page": 123,
+   "year": "2025",
+   "value": "57,541",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000321/20260630000146/2025-2026%20LG%EC%A0%84%EC%9E%90%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "ghg_s12",
+   "page": 37,
+   "year": "2025",
+   "value": "7,651.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "ghg_s12",
+   "page": 37,
+   "year": "2025",
+   "value": "73,126.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "ghg_s12",
+   "page": 37,
+   "year": "2025",
+   "value": "80,778.7",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "energy",
+   "page": 78,
+   "year": "2025",
+   "value": "598.3",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "energy",
+   "page": 78,
+   "year": "2025",
+   "value": "684.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "energy",
+   "page": 78,
+   "year": "2025",
+   "value": "86.6",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "water",
+   "page": 78,
+   "year": "2025",
+   "value": "142,207",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "waste",
+   "page": 79,
+   "year": "2025",
+   "value": "181.56",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "waste",
+   "page": 79,
+   "year": "2025",
+   "value": "2,341.55",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "waste",
+   "page": 79,
+   "year": "2025",
+   "value": "2,523.11",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "엘에스일렉트릭",
+   "code": "010120",
+   "metric": "female_ratio",
+   "page": 79,
+   "year": "2025",
+   "value": "3,486",
+   "pdf": "https://kind.krx.co.kr/external/2026/05/22/000449/20260522001079/2025-2026%20LS%20ELECTRIC%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C_%EA%B5%AD%EB%AC%B8.pdf"
+  },
+  {
+   "company": "NAVER",
+   "code": "035420",
+   "metric": "ghg_s12",
+   "page": 226,
+   "year": "2025",
+   "value": "154,332",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000114/20260624002248/NAVER_2025_%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9Cf.pdf"
+  },
+  {
+   "company": "NAVER",
+   "code": "035420",
+   "metric": "ghg_s12",
+   "page": 226,
+   "year": "2025",
+   "value": "2,290",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000114/20260624002248/NAVER_2025_%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9Cf.pdf"
+  },
+  {
+   "company": "NAVER",
+   "code": "035420",
+   "metric": "energy",
+   "page": 225,
+   "year": "2025",
+   "value": "356,945",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000114/20260624002248/NAVER_2025_%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9Cf.pdf"
+  },
+  {
+   "company": "NAVER",
+   "code": "035420",
+   "metric": "water",
+   "page": 226,
+   "year": "2025",
+   "value": "392,446",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000114/20260624002248/NAVER_2025_%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9Cf.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "ghg_s12",
+   "page": 58,
+   "year": "2025",
+   "value": "21,431.98",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "ghg_s12",
+   "page": 58,
+   "year": "2025",
+   "value": "28,273",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "ghg_s12",
+   "page": 58,
+   "year": "2025",
+   "value": "6,841.44",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "energy",
+   "page": 62,
+   "year": "2025",
+   "value": "324.40",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "water",
+   "page": 66,
+   "year": "2025",
+   "value": "276,535",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "waste",
+   "page": 66,
+   "year": "2025",
+   "value": "2.45",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "waste",
+   "page": 66,
+   "year": "2025",
+   "value": "3.46",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "waste",
+   "page": 66,
+   "year": "2025",
+   "value": "389.7",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "waste",
+   "page": 66,
+   "year": "2025",
+   "value": "8.06",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "female_ratio",
+   "page": 82,
+   "year": "2025",
+   "value": "2,538",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "female_ratio",
+   "page": 82,
+   "year": "2025",
+   "value": "2,997",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "삼성화재해상보험",
+   "code": "000810",
+   "metric": "female_ratio",
+   "page": 82,
+   "year": "2025",
+   "value": "5,535",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000857/20260629002575/2026%20%EC%82%BC%EC%84%B1%ED%99%94%EC%9E%AC%20ESG%20Report%28%ED%86%B5%ED%95%A9%EB%B3%B4%EA%B3%A0%EC%84%9C%29.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "ghg_s12",
+   "page": 113,
+   "year": "2025",
+   "value": "10,767",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "ghg_s12",
+   "page": 113,
+   "year": "2025",
+   "value": "46,211",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "ghg_s12",
+   "page": 113,
+   "year": "2025",
+   "value": "56,969",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "energy",
+   "page": 113,
+   "year": "2025",
+   "value": "1,201",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "water",
+   "page": 114,
+   "year": "2025",
+   "value": "121,985",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "water",
+   "page": 114,
+   "year": "2025",
+   "value": "339,317",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "water",
+   "page": 114,
+   "year": "2025",
+   "value": "387,251",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "water",
+   "page": 114,
+   "year": "2025",
+   "value": "848,553",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "waste",
+   "page": 115,
+   "year": "2025",
+   "value": "1,322",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "waste",
+   "page": 115,
+   "year": "2025",
+   "value": "61,355",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "waste",
+   "page": 115,
+   "year": "2025",
+   "value": "7,726",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "waste",
+   "page": 115,
+   "year": "2025",
+   "value": "70,402",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "효성중공업",
+   "code": "298040",
+   "metric": "female_ratio",
+   "page": 117,
+   "year": "2025",
+   "value": "11.9",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/25/000757/20260625001786/2025%20%ED%9A%A8%EC%84%B1%EC%A4%91%EA%B3%B5%EC%97%85%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf"
+  },
+  {
+   "company": "우리금융지주",
+   "code": "316140",
+   "metric": "ghg_s12",
+   "page": 182,
+   "year": "2025",
+   "value": "13,117.237",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000162/20260629000963/2025_WFG_Sustainability%20Report_KOR.pdf"
+  },
+  {
+   "company": "우리금융지주",
+   "code": "316140",
+   "metric": "ghg_s12",
+   "page": 182,
+   "year": "2025",
+   "value": "55,124.746",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000162/20260629000963/2025_WFG_Sustainability%20Report_KOR.pdf"
+  },
+  {
+   "company": "우리금융지주",
+   "code": "316140",
+   "metric": "energy",
+   "page": 155,
+   "year": "2025",
+   "value": "1,843.8",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000162/20260629000963/2025_WFG_Sustainability%20Report_KOR.pdf"
+  },
+  {
+   "company": "우리금융지주",
+   "code": "316140",
+   "metric": "water",
+   "page": 156,
+   "year": "2025",
+   "value": "0.15",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000162/20260629000963/2025_WFG_Sustainability%20Report_KOR.pdf"
+  },
+  {
+   "company": "우리금융지주",
+   "code": "316140",
+   "metric": "waste",
+   "page": 156,
+   "year": "2025",
+   "value": "207.0",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000162/20260629000963/2025_WFG_Sustainability%20Report_KOR.pdf"
+  },
+  {
+   "company": "우리금융지주",
+   "code": "316140",
+   "metric": "waste",
+   "page": 156,
+   "year": "2025",
+   "value": "312.0",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000162/20260629000963/2025_WFG_Sustainability%20Report_KOR.pdf"
+  },
+  {
+   "company": "우리금융지주",
+   "code": "316140",
+   "metric": "waste",
+   "page": 156,
+   "year": "2025",
+   "value": "519.0",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000162/20260629000963/2025_WFG_Sustainability%20Report_KOR.pdf"
+  },
+  {
+   "company": "우리금융지주",
+   "code": "316140",
+   "metric": "female_ratio",
+   "page": 157,
+   "year": "2025",
+   "value": "52.2",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/30/000162/20260629000963/2025_WFG_Sustainability%20Report_KOR.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "ghg_s12",
+   "page": 41,
+   "year": "2025",
+   "value": "31,510",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "ghg_s12",
+   "page": 41,
+   "year": "2025",
+   "value": "38,017",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "ghg_s12",
+   "page": 41,
+   "year": "2025",
+   "value": "6,510",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "water",
+   "page": 47,
+   "year": "2025",
+   "value": "12,322",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "water",
+   "page": 47,
+   "year": "2025",
+   "value": "208,515",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "water",
+   "page": 47,
+   "year": "2025",
+   "value": "24,293",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "water",
+   "page": 47,
+   "year": "2025",
+   "value": "245,130",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "waste",
+   "page": 49,
+   "year": "2025",
+   "value": "3,116",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "waste",
+   "page": 49,
+   "year": "2025",
+   "value": "3,511",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "HD현대일렉트릭",
+   "code": "267260",
+   "metric": "female_ratio",
+   "page": 69,
+   "year": "2025",
+   "value": "8.58",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/001057/20260626002155/%5B2025%5D%20HD%ED%98%84%EB%8C%80%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%20-%202026%EB%85%84%20%EB%B0%9C%EA%B0%84.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "ghg_s12",
+   "page": 99,
+   "year": "2025",
+   "value": "1,943,743",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "ghg_s12",
+   "page": 99,
+   "year": "2025",
+   "value": "74,333,745",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "ghg_s12",
+   "page": 99,
+   "year": "2025",
+   "value": "76,277,472",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "energy",
+   "page": 99,
+   "year": "2025",
+   "value": "450,250,601",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "water",
+   "page": 100,
+   "year": "2025",
+   "value": "189,001,669",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "waste",
+   "page": 101,
+   "year": "2025",
+   "value": "119,968",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "waste",
+   "page": 101,
+   "year": "2025",
+   "value": "20,111,731",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "waste",
+   "page": 101,
+   "year": "2025",
+   "value": "20,710,816",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "waste",
+   "page": 101,
+   "year": "2025",
+   "value": "479,118",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "female_ratio",
+   "page": 102,
+   "year": "2025",
+   "value": "2,978",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "female_ratio",
+   "page": 102,
+   "year": "2025",
+   "value": "2,992",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "POSCO홀딩스",
+   "code": "005490",
+   "metric": "female_ratio",
+   "page": 102,
+   "year": "2025",
+   "value": "33,211",
+   "pdf": "https://kind.krx.co.kr/external/2026/06/26/000833/20260626001711/POSCO%20Holdings_2025SR.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "ghg_s12",
+   "page": 109,
+   "year": "2025",
+   "value": "180,195",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "ghg_s12",
+   "page": 109,
+   "year": "2025",
+   "value": "257,540",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "ghg_s12",
+   "page": 109,
+   "year": "2025",
+   "value": "437,734",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "energy",
+   "page": 109,
+   "year": "2025",
+   "value": "2,573.8",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "energy",
+   "page": 109,
+   "year": "2025",
+   "value": "5,382.6",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "energy",
+   "page": 109,
+   "year": "2025",
+   "value": "7,956.4",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "water",
+   "page": 112,
+   "year": "2025",
+   "value": "3,236,827",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "waste",
+   "page": 111,
+   "year": "2025",
+   "value": "4,805",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "waste",
+   "page": 111,
+   "year": "2025",
+   "value": "78,811",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "waste",
+   "page": 111,
+   "year": "2025",
+   "value": "83,616",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "한화오션",
+   "code": "042660",
+   "metric": "female_ratio",
+   "page": 121,
+   "year": "2025",
+   "value": "11,178",
+   "pdf": "https://kind.krx.co.kr/external/2026/07/22/000398/20260714000820/%ED%95%9C%ED%99%94%EC%98%A4%EC%85%98%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202025%28%EA%B5%AD%EB%AC%B8%29_Rev.1.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "ghg_s12",
+   "page": 158,
+   "year": "2025",
+   "value": "272,844",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "ghg_s12",
+   "page": 158,
+   "year": "2025",
+   "value": "8,441",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "ghg_s12",
+   "page": 158,
+   "year": "2025",
+   "value": "826,449",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "energy",
+   "page": 160,
+   "year": "2025",
+   "value": "14,704",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "energy",
+   "page": 160,
+   "year": "2025",
+   "value": "4,724",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "water",
+   "page": 161,
+   "year": "2025",
+   "value": "2,774,846",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "water",
+   "page": 161,
+   "year": "2025",
+   "value": "4,943,705",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "water",
+   "page": 161,
+   "year": "2025",
+   "value": "49,813",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "waste",
+   "page": 162,
+   "year": "2025",
+   "value": "107,548",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "waste",
+   "page": 162,
+   "year": "2025",
+   "value": "306,510",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "female_ratio",
+   "page": 163,
+   "year": "2025",
+   "value": "1,428",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "female_ratio",
+   "page": 163,
+   "year": "2025",
+   "value": "1,548",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "female_ratio",
+   "page": 163,
+   "year": "2025",
+   "value": "18,885",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "female_ratio",
+   "page": 163,
+   "year": "2025",
+   "value": "24,437",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  },
+  {
+   "company": "HD한국조선해양",
+   "code": "009540",
+   "metric": "female_ratio",
+   "page": 163,
+   "year": "2025",
+   "value": "4,004",
+   "pdf": "https://kind.krx.co.kr/external/2026/08/20/000402/20260820000979/2025%20HD%ED%95%9C%EA%B5%AD%EC%A1%B0%EC%84%A0%ED%95%B4%EC%96%91%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%28KOR%29.pdf"
+  }
+ ]
+}

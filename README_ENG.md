@@ -13,12 +13,12 @@
 [![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
-[![Tools](https://img.shields.io/badge/tools-12-orange.svg)](#tools-12)
+[![Tools](https://img.shields.io/badge/tools-14-orange.svg)](#tools-14)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
 **[한국어](README.md)**
 
-[Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [12 Features](#tools-12) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers)
+[Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [14 Features](#tools-14) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers)
 
 </div>
 
@@ -36,7 +36,7 @@ flowchart LR
     A["KRX ESG Portal<br/>5 agency ratings · governance core indicators"] --> S
     B["KIND filings<br/>governance reports · sustainability report PDF extraction"] --> S
     C["GIR<br/>GHG statements · emissions trading"] --> S
-    S["open-esg-korea<br/>MCP server · 12 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · ChatGPT<br/>'How is Samsung Electronics rated?'"]
+    S["open-esg-korea<br/>MCP server · 14 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · ChatGPT<br/>'How is Samsung Electronics rated?'"]
 ```
 
 All three are reachable **without an API key**. Ratings are never stored — they are fetched live on each question.
@@ -149,7 +149,7 @@ or the Codex app) — also one command. Codex is included **even on the ChatGPT 
 | `runtime/` | A Python 3.12 distribution — the extension runs on **this** interpreter<br><sub>Windows: python.org embeddable build · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
 | `lib/` | Dependencies (mcp · httpx · pypdfium2 · pdfplumber) plus the server itself |
 | `launch-macos.sh` | (Mac only) tells you **which file to download** if you picked the wrong chip build |
-| `manifest.json` | Extension metadata and the list of 12 tools |
+| `manifest.json` | Extension metadata and the list of 14 tools |
 | `BUILD_INFO.txt` | Which commit, when, and by what it was built |
 
 ---
@@ -212,6 +212,26 @@ keyword is on and quote around it. Search ignores whitespace, so letter-spaced t
 
 </details>
 
+<details open>
+<summary><b>📑 Report appendix figures as tables, spreadsheets or by year</b></summary>
+
+> - Pull Hyundai Mobis's sustainability report appendix tables into Excel
+> - Show only the electricity-use table from LG Energy Solution's report
+> - Line up LG Energy Solution's water use by year
+> - Did any year change between the older and newer reports?
+
+Finds the data section at the back of the report (ESG Data · Factbook) and returns its tables as **row name × column
+head (year · boundary)**. Values are **candidates** — each row is checked, only rows that pass carry values, and the rest
+come back as the original line. Asked "by year", it fetches the latest three reports **at that moment** and stitches them
+into five or six years; a year stated differently in a later report is marked ✎ (restated) with the earlier value. As a
+spreadsheet it is one value per line, each with its report and page number.
+
+<sub>Against 271 values transcribed from 30 companies' reports, 83% came out in a checked cell under the right year and no
+checked cell had the wrong year. When a table changes shape between years (boundary as columns one year, rows the next),
+the years are not joined and come out as separate lines.</sub>
+
+</details>
+
 <details>
 <summary><b>🔍 Screening many companies at once</b></summary>
 
@@ -259,14 +279,16 @@ Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks �
 
 ---
 
-## Tools (12)
+## Tools (14)
 
 | Tool | What it answers |
 |---|---|
 | `company` | Company name / ticker → portal ticker and ISIN. The entry point for every other tool |
 | `esg_ratings` | ESG/E/S/G grades by year from KCGS, MSCI, Korea ESG Research Institute, S&P and Sustinvest, plus a 3-year KCGS trend and **the distribution within that same agency** (how many companies at or above this grade, how many tied) |
 | `sustainability_reports` | List of sustainability reports plus the filing text of the most recent one — reporting period, table of contents, assurance provider, the company's own publication page, and the attached PDF address |
-| `sustainability_report_text` | **PDF body** of a sustainability report — which pages a keyword appears on, excerpts around it, or a whole page |
+| `sustainability_report_text` | **PDF body** of a sustainability report — which pages a keyword appears on, excerpts around it, or whole pages (a range like `"136-140"`, up to 5) |
+| `sustainability_report_data` | The report's **appendix (data section) tables as rows and columns** — each value a **candidate** carrying its row name, unit, column head (year · boundary), footnote and page. Only rows that pass the checks carry values; the rest come back as the original line. `format="csv"` gives a long table for Excel (one value per line) |
+| `esg_timeseries` | One company's **ESG figures by year** — fetches its latest few sustainability reports (3 by default) **when asked** and stitches their appendix rows together (usually 5–6 years). Rows are joined only when name, parent row, unit and boundary all match; a year restated in a later report shows the latest value marked ✎ with the earlier one. GIR statement emissions and energy stay in a separate block (different boundary). `format="csv"` for Excel |
 | `governance_indicators` | The 15 core corporate-governance indicators (O/X), compliance rate, and comparison against another company |
 | `governance_policies` | 74 governance policy-adoption items |
 | `governance_report` | **Full text** of the corporate-governance report — answers to the 28 detailed principles, the standard-form tables, and the stated reasons for non-compliance |
@@ -288,7 +310,7 @@ Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks �
 | **Governance comes in two layers** | KRX aggregates (15 O/X · 74 policy items); the company writes the report. The *reason* for non-compliance exists only in the latter, and an unparseable filing is "could not read it", never "complied with zero" |
 | **For emissions, scope comes before the number** | Statements, verified ETS emissions and the national inventory use different bases. Where a report diverges, the answer is **"the scope differs"**, not "the value differs" (boundary · Scope 2 method · whether NF₃ is included) |
 | **Absent from GIR is `no_data`, not zero** | Only entities under the ETS or target-management schemes (~1,170 a year) are there |
-| **Report figures are not mechanically extracted** | Two tables were observed bleeding together on a two-column page. `table=True` is experimental (97.4% value preservation; suspect cells flagged `⚠`) |
+| **Report table figures are candidates** | Every row is checked; only rows that pass carry values, the rest come back as the original line. When one metric appears several times (domestic/global, market/location-based) none is picked for you — read the column head, table title and footnotes. Stitching by year joins only rows whose name, unit and boundary all match |
 | **PDF search ignores whitespace** | The source is typeset with letter-spacing. A miss means "not found under this spelling", not "not present". Image-only PDFs cannot be read (no OCR) |
 | **Acceptance numbers are KIND numbers** | Opening the same number in the DART viewer brings up a different company's filing |
 
@@ -373,7 +395,7 @@ uv run python scripts/build_mcpb.py --target all --check   # all three, each act
 | `macos-x64` | python-build-standalone (x86_64) | Intel Macs, or **Apple Silicon with Rosetta 2** |
 | `windows-x64` | python.org embeddable build | Windows |
 
-`--check` unpacks what it built, launches it **with the exact command in the manifest**, and confirms 12 tools answer a
+`--check` unpacks what it built, launches it **with the exact command in the manifest**, and confirms 14 tools answer a
 stdio handshake — that is what stops "it built fine but will not open". Targets this machine cannot run are skipped.
 
 ### Tests
@@ -388,6 +410,7 @@ uv sync --dev && uv run pytest -q     # network 0
 
 - [**Connecting to ChatGPT**](docs/connect-chatgpt.md) — attaching the server to Codex (CLI, IDE, app)
 - [MCP draft and roadmap](docs/mcp-draft.md) — data-source map, what was confirmed about each endpoint, the reasoning per phase
+- [Design: reading the report's data section](docs/design-report-data-section.md) (Korean) — finding the back-of-report section where the numeric tables live and keeping it aligned (built), plus table-row candidates and metric lookup (draft)
 - [Field notes](docs/anecdotes.md) — things only learned by knocking on the door (a DART link opens a different company, letter-spacing is baked into the PDF, the benchmark-leading parser misses our numeric tables …)
 
 ### Refreshing snapshots
