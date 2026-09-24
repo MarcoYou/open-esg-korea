@@ -212,6 +212,26 @@ keyword is on and quote around it. Search ignores whitespace, so letter-spaced t
 
 </details>
 
+<details open>
+<summary><b>📑 Report appendix figures as tables, spreadsheets or by year</b></summary>
+
+> - Pull Hyundai Mobis's sustainability report appendix tables into Excel
+> - Show only the electricity-use table from LG Energy Solution's report
+> - Line up LG Energy Solution's water use by year
+> - Did any year change between the older and newer reports?
+
+Finds the data section at the back of the report (ESG Data · Factbook) and returns its tables as **row name × column
+head (year · boundary)**. Values are **candidates** — each row is checked, only rows that pass carry values, and the rest
+come back as the original line. Asked "by year", it fetches the latest three reports **at that moment** and stitches them
+into five or six years; a year stated differently in a later report is marked ✎ (restated) with the earlier value. As a
+spreadsheet it is one value per line, each with its report and page number.
+
+<sub>Against 271 values transcribed from 30 companies' reports, 83% came out in a checked cell under the right year and no
+checked cell had the wrong year. When a table changes shape between years (boundary as columns one year, rows the next),
+the years are not joined and come out as separate lines.</sub>
+
+</details>
+
 <details>
 <summary><b>🔍 Screening many companies at once</b></summary>
 
@@ -290,7 +310,7 @@ Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks �
 | **Governance comes in two layers** | KRX aggregates (15 O/X · 74 policy items); the company writes the report. The *reason* for non-compliance exists only in the latter, and an unparseable filing is "could not read it", never "complied with zero" |
 | **For emissions, scope comes before the number** | Statements, verified ETS emissions and the national inventory use different bases. Where a report diverges, the answer is **"the scope differs"**, not "the value differs" (boundary · Scope 2 method · whether NF₃ is included) |
 | **Absent from GIR is `no_data`, not zero** | Only entities under the ETS or target-management schemes (~1,170 a year) are there |
-| **Report figures are not mechanically extracted** | Two tables were observed bleeding together on a two-column page. `table=True` is experimental (97.4% value preservation; suspect cells flagged `⚠`) |
+| **Report table figures are candidates** | Every row is checked; only rows that pass carry values, the rest come back as the original line. When one metric appears several times (domestic/global, market/location-based) none is picked for you — read the column head, table title and footnotes. Stitching by year joins only rows whose name, unit and boundary all match |
 | **PDF search ignores whitespace** | The source is typeset with letter-spacing. A miss means "not found under this spelling", not "not present". Image-only PDFs cannot be read (no OCR) |
 | **Acceptance numbers are KIND numbers** | Opening the same number in the DART viewer brings up a different company's filing |
 
