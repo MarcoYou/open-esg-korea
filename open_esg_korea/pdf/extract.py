@@ -26,6 +26,7 @@ import pdfplumber
 import pypdfium2
 
 _WS_RE = re.compile(r"\s+")
+_CONTROL_RE = re.compile(r"[\x00-\x1f\x7f]")
 #: 이 아래면 「글자가 없는 PDF」로 본다 — 스캔본·이미지 PDF. OCR 은 하지 않는다.
 MIN_CHARS_PER_PAGE = 20
 
@@ -67,14 +68,69 @@ def page_layouts(data: bytes, page_nos: list[int]) -> dict[int, str]:
 
     데이터 장을 처음 받을 때 미리 떠 두는 데 쓴다(실측 2026-09-24: 10~39쪽에 0.5~1.8초).
     """
-    out: dict[int, str] = {}
+    return {p: layout for p, (layout, _words) in page_words_layouts(data, page_nos).items()}
+
+
+#: 글자 윗끝을 기준선에서 글자 크기의 이만큼 위로 둔다(본문 글꼴 실측 0.70).
+_ASCENT = 0.7
+#: 윗끝이 기준선 위 크기의 이 비율보다 낮으면 글꼴 정보가 깨진 글자로 본다.
+_BROKEN_BELOW = 0.25
+
+
+def _broken_top(c: dict[str, Any]) -> float | None:
+    """글꼴 정보가 깨진 글자면 기준선에서 다시 잡은 윗끝, 멀쩡하면 None.
+
+    글꼴 정보(FontBBox)가 빠진 글꼴(주로 NotoSansCJKkr)은 pdfplumber 가 글자 상자를 기준선 **아래**에 놓아, 그 글꼴
+    글자만 크기의 3/4(5pt 안팎) 아래 줄로 읽힌다. 표에서는 「행 이름이 값 아래 줄에 있는」 것처럼 보여 이름이 한 칸씩
+    밀렸다(LG에너지솔루션 2024 p120 — 그림으로는 같은 줄). 시총 상위 28개 보고서 중 9건의 데이터 장이 이 글꼴을 쓴다
+    (2026-09-24 실측). 글자마다 든 위치 행렬의 기준선은 맞으므로 그걸로 윗끝을 다시 계산한다. 멀쩡한 글꼴(윗끝이
+    기준선 위 크기의 0.4~0.9)과 가로쓰기가 아닌 글자는 건드리지 않는다 — 모든 글자를 다시 잡으면 표 판정의 거리
+    기준이 흔들려 SK p152 · 삼성SDI p75 가 풀리지 않았다.
+    """
+    m = c.get("matrix")
+    size = c.get("size") or 0
+    if not m or not size or not c.get("upright", True) or abs(m[1]) > 1e-3 or abs(m[2]) > 1e-3 or m[3] <= 0:
+        return None
+    if (c["y1"] - m[5]) / size >= _BROKEN_BELOW:
+        return None
+    return c["top"] + (c["y1"] - m[5]) - _ASCENT * size
+
+
+#: 표 행 후보(`pdf/tables.py`)에 넘기는 글자 좌표. 자간 공백이 박힌 서식이라 낱말 틈 허용을 좁게 둔다.
+_WORD_SETTINGS = {"x_tolerance": 1.5, "y_tolerance": 2}
+
+
+def _words(page: Any) -> list[dict[str, Any]]:
+    """낱말 좌표. 낱말은 원래 좌표로 묶고(위첨자 「3)」가 값에 붙어 「1,048,4853)」이 되지 않게 — 삼성SDI p75),
+    글꼴 정보가 깨진 글자가 든 낱말만 **줄 높이**를 기준선에서 다시 잡는다."""
+    out = []
+    for w in page.extract_words(return_chars=True, **_WORD_SETTINGS):
+        top, bottom = w["top"], w["bottom"]
+        fixed = [_broken_top(c) for c in w["chars"]]
+        if any(f is not None for f in fixed):
+            tops = [c["top"] if f is None else f for f, c in zip(fixed, w["chars"])]
+            top = min(tops)
+            bottom = max(t + (c["bottom"] - c["top"]) for t, c in zip(tops, w["chars"]))
+        text = _CONTROL_RE.sub("", w["text"])              # 글자 사이 제어문자(「30대 이상~\x07」, 삼성생명 p133)
+        if not text:
+            continue
+        out.append({"text": text, "x0": round(w["x0"], 1), "x1": round(w["x1"], 1),
+                    "top": round(top, 1), "bottom": round(bottom, 1)})
+    return out
+
+
+def page_words_layouts(data: bytes, page_nos: list[int]) -> dict[int, tuple[str, list[dict[str, Any]]]]:
+    """여러 쪽의 (정렬 텍스트, 글자 좌표)를 문서 한 번 열어 함께 — 두 작업이 같은 글자 해석을 나눠 써서 싸다.
+    못 읽은 쪽은 빼고 준다."""
+    out: dict[int, tuple[str, list[dict[str, Any]]]] = {}
     try:
         with pdfplumber.open(io.BytesIO(data)) as pdf:
             for page_no in page_nos:
                 if not 1 <= page_no <= len(pdf.pages):
                     continue
                 try:
-                    out[page_no] = compact_layout(pdf.pages[page_no - 1].extract_text(layout=True) or "")
+                    page = pdf.pages[page_no - 1]
+                    out[page_no] = (compact_layout(page.extract_text(layout=True) or ""), _words(page))
                 except Exception:                      # noqa: BLE001 — 그 쪽만 빠진다. 요청 때 다시 시도한다.
                     continue
     except Exception as exc:

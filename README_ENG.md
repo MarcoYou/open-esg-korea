@@ -13,12 +13,12 @@
 [![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
-[![Tools](https://img.shields.io/badge/tools-12-orange.svg)](#tools-12)
+[![Tools](https://img.shields.io/badge/tools-14-orange.svg)](#tools-14)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
 **[한국어](README.md)**
 
-[Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [12 Features](#tools-12) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers)
+[Install](#-install-in-5-minutes) · [What to ask](#-what-to-ask) · [14 Features](#tools-14) · [Reading the output](#reading-the-output) · [License](#license) · [For developers](#for-developers)
 
 </div>
 
@@ -36,7 +36,7 @@ flowchart LR
     A["KRX ESG Portal<br/>5 agency ratings · governance core indicators"] --> S
     B["KIND filings<br/>governance reports · sustainability report PDF extraction"] --> S
     C["GIR<br/>GHG statements · emissions trading"] --> S
-    S["open-esg-korea<br/>MCP server · 12 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · ChatGPT<br/>'How is Samsung Electronics rated?'"]
+    S["open-esg-korea<br/>MCP server · 14 tools<br/>every value carries source · year · terms"] --> D["Claude Desktop · ChatGPT<br/>'How is Samsung Electronics rated?'"]
 ```
 
 All three are reachable **without an API key**. Ratings are never stored — they are fetched live on each question.
@@ -149,7 +149,7 @@ or the Codex app) — also one command. Codex is included **even on the ChatGPT 
 | `runtime/` | A Python 3.12 distribution — the extension runs on **this** interpreter<br><sub>Windows: python.org embeddable build · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
 | `lib/` | Dependencies (mcp · httpx · pypdfium2 · pdfplumber) plus the server itself |
 | `launch-macos.sh` | (Mac only) tells you **which file to download** if you picked the wrong chip build |
-| `manifest.json` | Extension metadata and the list of 12 tools |
+| `manifest.json` | Extension metadata and the list of 14 tools |
 | `BUILD_INFO.txt` | Which commit, when, and by what it was built |
 
 ---
@@ -259,7 +259,7 @@ Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks �
 
 ---
 
-## Tools (12)
+## Tools (14)
 
 | Tool | What it answers |
 |---|---|
@@ -267,6 +267,8 @@ Semiconductors & Semiconductor Equipment · Automobiles & Components · Banks �
 | `esg_ratings` | ESG/E/S/G grades by year from KCGS, MSCI, Korea ESG Research Institute, S&P and Sustinvest, plus a 3-year KCGS trend and **the distribution within that same agency** (how many companies at or above this grade, how many tied) |
 | `sustainability_reports` | List of sustainability reports plus the filing text of the most recent one — reporting period, table of contents, assurance provider, the company's own publication page, and the attached PDF address |
 | `sustainability_report_text` | **PDF body** of a sustainability report — which pages a keyword appears on, excerpts around it, or whole pages (a range like `"136-140"`, up to 5) |
+| `sustainability_report_data` | The report's **appendix (data section) tables as rows and columns** — each value a **candidate** carrying its row name, unit, column head (year · boundary), footnote and page. Only rows that pass the checks carry values; the rest come back as the original line. `format="csv"` gives a long table for Excel (one value per line) |
+| `esg_timeseries` | One company's **ESG figures by year** — fetches its latest few sustainability reports (3 by default) **when asked** and stitches their appendix rows together (usually 5–6 years). Rows are joined only when name, parent row, unit and boundary all match; a year restated in a later report shows the latest value marked ✎ with the earlier one. GIR statement emissions and energy stay in a separate block (different boundary). `format="csv"` for Excel |
 | `governance_indicators` | The 15 core corporate-governance indicators (O/X), compliance rate, and comparison against another company |
 | `governance_policies` | 74 governance policy-adoption items |
 | `governance_report` | **Full text** of the corporate-governance report — answers to the 28 detailed principles, the standard-form tables, and the stated reasons for non-compliance |
@@ -373,7 +375,7 @@ uv run python scripts/build_mcpb.py --target all --check   # all three, each act
 | `macos-x64` | python-build-standalone (x86_64) | Intel Macs, or **Apple Silicon with Rosetta 2** |
 | `windows-x64` | python.org embeddable build | Windows |
 
-`--check` unpacks what it built, launches it **with the exact command in the manifest**, and confirms 12 tools answer a
+`--check` unpacks what it built, launches it **with the exact command in the manifest**, and confirms 14 tools answer a
 stdio handshake — that is what stops "it built fine but will not open". Targets this machine cannot run are skipped.
 
 ### Tests

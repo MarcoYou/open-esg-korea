@@ -17,12 +17,12 @@
 [![Release](https://img.shields.io/github/v/release/MarcoYou/open-esg-korea?label=release&color=blue)](https://github.com/MarcoYou/open-esg-korea/releases/latest)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
-[![Tools](https://img.shields.io/badge/tools-12-orange.svg)](#도구-12개)
+[![Tools](https://img.shields.io/badge/tools-14-orange.svg)](#도구-14개)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/MarcoYou)
 
 **[English](README_ENG.md)**
 
-[설치](#-5분-설치) · [이렇게 물어보세요](#-이렇게-물어보세요) · [12가지 기능](#도구-12개) · [읽을 때 주의](#읽을-때-주의) · [라이선스](#라이선스) · [개발자용](#개발자용)
+[설치](#-5분-설치) · [이렇게 물어보세요](#-이렇게-물어보세요) · [14가지 기능](#도구-14개) · [읽을 때 주의](#읽을-때-주의) · [라이선스](#라이선스) · [개발자용](#개발자용)
 
 </div>
 
@@ -39,7 +39,7 @@ flowchart LR
     A["KRX ESG 포털<br/>5개 기관 등급 · 지배구조 핵심지표"] --> S
     B["KIND 공시<br/>지배구조보고서 · 지속가능경영보고서 PDF 데이터 추출"] --> S
     C["GIR<br/>온실가스 명세서 · 배출권거래제"] --> S
-    S["open-esg-korea<br/>MCP 서버 · 도구 12개<br/>값마다 출처 · 연도 · 이용조건"] --> D["Claude Desktop · ChatGPT<br/>「삼성전자 ESG 등급 어때?」"]
+    S["open-esg-korea<br/>MCP 서버 · 도구 14개<br/>값마다 출처 · 연도 · 이용조건"] --> D["Claude Desktop · ChatGPT<br/>「삼성전자 ESG 등급 어때?」"]
 ```
 
 세 곳 다 **API 키 없이** 조회됩니다. 등급은 저장하지 않고 물을 때마다 실시간으로 가져옵니다.
@@ -151,7 +151,7 @@ MCP 서버로 붙이며, 역시 명령 한 줄입니다. Codex 는 **ChatGPT 무
 | `runtime/` | 파이썬 3.12 배포판 — 확장은 **이 안의 파이썬으로** 돕니다<br><sub>Windows: python.org 임베드 배포판 · macOS: [python-build-standalone](https://github.com/astral-sh/python-build-standalone)</sub> |
 | `lib/` | 의존성(mcp · httpx · pypdfium2 · pdfplumber) + 서버 본체 |
 | `launch-macos.sh` | (Mac 만) 칩이 안 맞는 파일을 받았을 때 **어느 파일을 받아야 하는지** 알려 줍니다 |
-| `manifest.json` | 확장 정보와 도구 12개 목록 |
+| `manifest.json` | 확장 정보와 도구 14개 목록 |
 | `BUILD_INFO.txt` | 어느 커밋·언제·무엇으로 만들었는지 |
 
 ---
@@ -259,7 +259,7 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 
 ---
 
-## 도구 (12개)
+## 도구 (14개)
 
 | 도구 | 무엇을 답하나 |
 |---|---|
@@ -267,6 +267,8 @@ GIR 명세서(회사별) · 배출권거래제 할당 대비 인증배출량 · 
 | `esg_ratings` | KCGS·MSCI·한국ESG연구소·S&P·서스틴베스트 ESG/E/S/G 등급(연도별) + KCGS 3년 추이 + **같은 기관 안의 분포**(이 등급 이상 몇 사·동점 몇 사) |
 | `sustainability_reports` | 지속가능경영보고서 목록 + 최신 한 건의 공시 원문 — 보고 대상 기간·목차·검증기관·회사 공개처·첨부 PDF 주소 |
 | `sustainability_report_text` | 지속가능경영보고서 **PDF 본문** — 키워드가 몇 쪽에 있는지·그 대목 발췌·쪽 전체 보기(범위 `"136-140"` 로 5쪽까지) |
+| `sustainability_report_data` | 지속가능경영보고서 **부록(데이터 장) 수치 표를 행·열로** — 행 이름·단위·열 머리(연도·경계)·각주·쪽 번호가 붙은 **후보**. 검사를 통과한 행만 값, 걸린 행은 원문 줄. `format="csv"` 는 엑셀용(한 줄에 값 하나) |
+| `esg_timeseries` | 회사 하나의 **연도별 ESG 수치** — 최근 지속가능경영보고서 여러 건(기본 3건)의 부록 표를 **물어볼 때** 받아 행끼리 잇는다(대개 5~6개 연도). 이름·상위 행·단위·경계가 모두 같은 행만 잇고, 같은 해를 보고서마다 다르게 적었으면 최신 값과 「수정됨」(✎)·이전 값을 함께 준다. GIR 명세서 배출량·에너지는 경계가 달라 따로 싣는다. `format="csv"` 는 엑셀용 |
 | `governance_indicators` | 기업지배구조 핵심지표 15개 O/X · 준수율 · 회사 비교 |
 | `governance_policies` | 지배구조 정책 채택 여부 74개 항목 |
 | `governance_report` | 기업지배구조보고서 **원문** — 세부원칙 28개 답변·서식 표·미준수 사유(왜 미준수인지) |
@@ -376,7 +378,7 @@ uv run python scripts/build_mcpb.py --target all --check   # 셋 다 + 만든 �
 | `windows-x64` | python.org 임베드 배포판 | 윈도우에서 |
 
 `--check` 는 만든 번들을 풀어서 **매니페스트에 적힌 명령 그대로** 띄우고 stdio 핸드셰이크로
-도구 12개가 응답하는지 확인합니다 — 「빌드는 됐는데 안 열린다」를 막습니다.
+도구 14개가 응답하는지 확인합니다 — 「빌드는 됐는데 안 열린다」를 막습니다.
 이 기계에서 못 돌리는 타깃은 건너뜁니다.
 
 ### 테스트

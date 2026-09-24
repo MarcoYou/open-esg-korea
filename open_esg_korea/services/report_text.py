@@ -30,6 +30,7 @@ from open_esg_korea.krx import codes
 from open_esg_korea.krx.client import KrxEsgClient
 from open_esg_korea.krx.kind import KindClient, KindClientError, get_kind_client
 from open_esg_korea.pdf import extract
+from open_esg_korea.pdf import tables as table_parser
 from open_esg_korea.services.contracts import AnalysisStatus, ToolEnvelope, source_block
 from open_esg_korea.services.reports import build_sustainability_reports_payload
 
@@ -53,9 +54,11 @@ class _Doc:
     size: int                                                  # 원본 바이트 수
     section: list[int]                                         # 데이터 장 쪽 번호(1부터), 못 찾으면 []
     layouts: dict[int, str] = field(default_factory=dict)      # 쪽 번호 → 정렬 텍스트(pdfplumber)
+    tables: dict[int, list[table_parser.Table]] = field(default_factory=dict)   # 쪽 번호 → 표 행 후보
 
     def chars(self) -> int:
-        return sum(len(p) for p in self.pages) + sum(len(t) for t in self.layouts.values())
+        return (sum(len(p) for p in self.pages) + sum(len(t) for t in self.layouts.values())
+                + sum(len(r.line) * 3 for ts in self.tables.values() for t in ts for r in t.rows))
 
 
 _cache: dict[str, _Doc] = {}
@@ -101,7 +104,8 @@ def _keep_bytes(url: str, data: bytes) -> None:
 
 def cache_stats() -> dict[str, int]:
     return {"documents": len(_cache), "chars": sum(d.chars() for d in _cache.values()),
-            "aligned_pages": sum(len(d.layouts) for d in _cache.values())}
+            "aligned_pages": sum(len(d.layouts) for d in _cache.values()),
+            "table_pages": sum(len(d.tables) for d in _cache.values())}
 
 
 def clear_cache() -> None:
@@ -145,15 +149,44 @@ async def load_document(url: str, kind: KindClient | None = None) -> _Doc:
     pages = await _parse(extract.page_texts, data, pdfium=True)
     section = [] if extract.looks_scanned(pages) else extract.data_section(pages)
     layouts: dict[int, str] = {}
+    tables: dict[int, list[table_parser.Table]] = {}
     if section:
         try:
-            layouts = await _parse(extract.page_layouts, data, section)
+            layouts, tables = await _parse(_layouts_and_tables, data, section)
         except extract.PdfReadError:
-            layouts = {}                  # 훑기는 됐으니 찾기·평문 보기는 된다. 정렬은 요청 때 다시 시도한다.
-    doc = _Doc(expires=time.monotonic() + _TTL, pages=pages, size=len(data), section=section, layouts=layouts)
+            layouts, tables = {}, {}      # 훑기는 됐으니 찾기·평문 보기는 된다. 정렬은 요청 때 다시 시도한다.
+    doc = _Doc(expires=time.monotonic() + _TTL, pages=pages, size=len(data), section=section,
+               layouts=layouts, tables=tables)
     _store(url, doc)
     _keep_bytes(url, data)
     return doc
+
+
+def _layouts_and_tables(data: bytes, page_nos: list[int]) -> tuple[dict[int, str], dict[int, list[table_parser.Table]]]:
+    """정렬 텍스트와 표 행 후보를 한 번에(스레드 안에서). 글자 좌표는 표로 풀고 나면 버린다 — 캐시에 남기지 않는다."""
+    both = extract.page_words_layouts(data, page_nos)
+    return ({p: layout for p, (layout, _) in both.items()},
+            {p: table_parser.parse_page(words, p) for p, (_, words) in both.items()})
+
+
+async def page_tables(url: str, doc: _Doc, page_no: int,
+                      kind: KindClient) -> tuple[list[table_parser.Table] | None, str]:
+    """한 쪽의 표 행 후보. 데이터 장이면 캐시에서, 아니면 원본에서 풀어 캐시에 더한다. 못 풀면 (None, 이유)."""
+    if page_no in doc.tables:
+        return doc.tables[page_no], ""
+    data, reason = await _bytes_for_alignment(url, doc, kind)
+    if data is None:
+        return None, reason
+    try:
+        layouts, tables = await _parse(_layouts_and_tables, data, [page_no])
+    except extract.PdfReadError as exc:
+        return None, f"{page_no}쪽을 읽지 못했습니다: {exc}"
+    if page_no not in tables:
+        return None, f"{page_no}쪽을 읽지 못했습니다."
+    doc.layouts.update(layouts)
+    doc.tables.update(tables)
+    _trim()
+    return tables[page_no], ""
 
 
 async def load_pages(url: str, kind: KindClient | None = None) -> list[str]:
@@ -239,31 +272,41 @@ def _grids(data: bytes, page: int, flat: str) -> tuple[list[dict[str, Any]], int
     return out, total_bad
 
 
-async def build_report_text_payload(company: str, *, find: str = "", page: int | str | None = None,
-                                    table: bool = False, year: int | None = None,
-                                    client: KrxEsgClient | None = None,
-                                    kind: KindClient | None = None) -> dict[str, Any]:
-    # 목록·자율공시 서식은 이미 있는 도구가 만든다 — 첨부 주소를 그쪽에서 받아 온다(규칙: 같은 일을 두 번 짜지 않는다).
+@dataclass
+class OpenedReport:
+    """보고서 한 건을 여는 공통 단계의 결과 — `doc` 가 None 이면 `env` 가 이미 답(no_data 등)이다."""
+
+    env: ToolEnvelope
+    out: dict[str, Any]
+    doc: _Doc | None = None
+    url: str = ""
+    kind: KindClient | None = None
+    detail: dict[str, Any] = field(default_factory=dict)      # 자율공시 서식(목차 요약 등)
+
+
+async def open_report(tool: str, company: str, *, year: int | None, client: KrxEsgClient | None,
+                      kind: KindClient | None, out: dict[str, Any]) -> OpenedReport:
+    """목록 → 첨부 고르기 → PDF 읽기 → 스캔본 판정. 본문 도구와 부록 표 도구가 같이 쓴다(같은 일을 두 번 짜지 않는다)."""
+    # 목록·자율공시 서식은 이미 있는 도구가 만든다 — 첨부 주소를 그쪽에서 받아 온다.
     base = await build_sustainability_reports_payload(company, year=year, client=client, kind=kind)
-    env = ToolEnvelope(tool="sustainability_report_text", status=base["status"], subject=company,
+    env = ToolEnvelope(tool=tool, status=base["status"], subject=company,
                        warnings=list(base["warnings"]), source=base["source"],
                        license=codes.KIND_LICENSE_NOTICE)
     data_in = base["data"]
     if base["status"] != AnalysisStatus.EXACT.value:
         env.data = data_in
-        return env.to_dict()
+        return OpenedReport(env=env, out=data_in)
 
     detail = data_in.get("detail") or {}
     attachment = _pick_attachment(detail.get("attachments") or [])
-    out: dict[str, Any] = {"company": data_in["company"], "find": find, "page": page, "table": table,
-                           "report": {k: detail.get(k) for k in ("year", "acpt_no", "report_title")},
-                           "attachment": attachment}
+    out = {"company": data_in["company"], **out,
+           "report": {k: detail.get(k) for k in ("year", "acpt_no", "report_title")}, "attachment": attachment}
     if attachment is None:
         env.status = AnalysisStatus.NO_DATA
         env.warnings.append("공시에 첨부된 보고서 파일이 없습니다 — 회사 사이트에만 올렸을 수 있습니다. "
                             "보고서를 안 냈다는 뜻이 아닙니다.")
         env.data = out
-        return env.to_dict()
+        return OpenedReport(env=env, out=out)
 
     env.source = source_block("reports", provider="KRX KIND 공시 첨부(회사 제출 PDF)",
                               page_url=attachment["url"])
@@ -275,17 +318,31 @@ async def build_report_text_payload(company: str, *, find: str = "", page: int |
         env.status = AnalysisStatus.NO_DATA
         env.warnings.append(f"보고서 PDF 를 읽지 못했습니다 — 내용이 없다는 뜻이 아닙니다: {exc}")
         env.data = out
-        return env.to_dict()
+        return OpenedReport(env=env, out=out)
 
-    pages = doc.pages
-    out["page_count"] = len(pages)
+    out["page_count"] = len(doc.pages)
     out["data_section"] = [doc.section[0], doc.section[-1]] if doc.section else None
-    if extract.looks_scanned(pages):
+    if extract.looks_scanned(doc.pages):
         env.status = AnalysisStatus.NO_DATA
         env.warnings.append("이미지로만 된 PDF 라 글자를 읽지 못했습니다(OCR 은 하지 않습니다) — "
                             "「내용이 없다」가 아닙니다. 원문 주소로 직접 확인하세요.")
         env.data = out
+        return OpenedReport(env=env, out=out)
+    return OpenedReport(env=env, out=out, doc=doc, url=url, kind=kind, detail=detail)
+
+
+async def build_report_text_payload(company: str, *, find: str = "", page: int | str | None = None,
+                                    table: bool = False, year: int | None = None,
+                                    client: KrxEsgClient | None = None,
+                                    kind: KindClient | None = None) -> dict[str, Any]:
+    opened = await open_report("sustainability_report_text", company, year=year, client=client, kind=kind,
+                               out={"find": find, "page": page, "table": table})
+    env, out, doc = opened.env, opened.out, opened.doc
+    if doc is None:
         return env.to_dict()
+    url, kind, detail = opened.url, opened.kind, opened.detail
+    assert kind is not None
+    pages = doc.pages
 
     if page is not None:
         out["mode"] = "page"
